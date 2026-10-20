@@ -1,0 +1,10 @@
+# Course documents stay out of the public repo (the proposal lists matric numbers and emails)
+CS3263_Project_Proposal_Final.pdf
+CS3263-Project-Guidelines-2627.docx
+
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.env
+.DS_Store
