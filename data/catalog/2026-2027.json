@@ -1,0 +1,2226 @@
+{
+ "acad_year": "2026-2027",
+ "source": "https://api.nusmods.com/v2/",
+ "built": "2026-10-20",
+ "courses": {
+  "CS1101S": {
+   "title": "Programming Methodology",
+   "units": 4,
+   "level": 1000,
+   "hours": 10,
+   "prereq": null,
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1000",
+       "1200"
+      ],
+      [
+       "Wed",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-25T09:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Wed",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-30T14:30",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS1231S": {
+   "title": "Discrete Structures",
+   "units": 4,
+   "level": 1000,
+   "hours": 10,
+   "prereq": null,
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1200",
+       "1300"
+      ],
+      [
+       "Thu",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-26T09:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1000",
+       "1200"
+      ],
+      [
+       "Wed",
+       "0900",
+       "1000"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-03T17:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2030S": {
+   "title": "Programming Methodology II",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": "CS1101S",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-30T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-27T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2040S": {
+   "title": "Data Structures and Algorithms",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS1101S",
+     "CS1231S"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1100",
+       "1200"
+      ],
+      [
+       "Thu",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-24T09:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1400",
+       "1600"
+      ],
+      [
+       "Wed",
+       "1300",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-24T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2100": {
+   "title": "Computer Organisation",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": "CS1101S",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-25T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-27T17:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2101": {
+   "title": "Effective Communication for Computing Professionals",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": null,
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [],
+     "exam": null
+    },
+    "2": {
+     "lectures": [],
+     "exam": null
+    }
+   }
+  },
+  "CS2102": {
+   "title": "Database Systems",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS1231S",
+     {
+      "or": [
+       "CS2030S",
+       "CS2040S"
+      ]
+     }
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1600",
+       "1800"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-28T13:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-28T17:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2103T": {
+   "title": "Software Engineering",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2030S",
+     "CS2040S"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1600",
+       "1800"
+      ],
+      [
+       "Mon",
+       "1000",
+       "1200"
+      ],
+      [
+       "Mon",
+       "1400",
+       "1600"
+      ],
+      [
+       "Wed",
+       "0900",
+       "1000"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-30T09:00",
+      "minutes": 90
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1600",
+       "1800"
+      ],
+      [
+       "Mon",
+       "1000",
+       "1200"
+      ],
+      [
+       "Mon",
+       "1400",
+       "1600"
+      ],
+      [
+       "Wed",
+       "0800",
+       "0900"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-03T09:00",
+      "minutes": 90
+     }
+    }
+   }
+  },
+  "CS2104": {
+   "title": "Programming Language Concepts",
+   "units": 4,
+   "level": 2000,
+   "hours": 9,
+   "prereq": "CS2030S",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-12-01T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2105": {
+   "title": "Introduction to Computer Networks",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": "CS2040S",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Wed",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-23T13:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-24T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2106": {
+   "title": "Introduction to Operating Systems",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": "CS2100",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Wed",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-27T09:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Wed",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-26T17:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2107": {
+   "title": "Introduction to Information Security",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": "CS1101S",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2026-12-01T09:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-04T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2108": {
+   "title": "Introduction to Media Computing",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "MA1522"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-28T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2109S": {
+   "title": "Introduction to AI and Machine Learning",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "MA1521"
+    ]
+   },
+   "preclusions": [
+    "CS3243",
+    "CS3244"
+   ],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "0800",
+       "1000"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-26T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-03T17:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS2111": {
+   "title": "Human-Centred Computing",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": "CS1101S",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-04T13:00",
+      "minutes": 90
+     }
+    }
+   }
+  },
+  "CS3103": {
+   "title": "Computer Networks Practice",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2105",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "0800",
+       "1000"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS3210": {
+   "title": "Parallel Computing",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2100",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2026-12-01T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-05T17:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3211": {
+   "title": "Concurrent Programming",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2106",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-03T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3213": {
+   "title": "Software Requirements Specification and Validation",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2103T",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "1600",
+       "1800"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-05T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3217": {
+   "title": "Software Engineering on Modern Application Platforms",
+   "units": 5,
+   "level": 3000,
+   "hours": 13,
+   "prereq": "CS2103T",
+   "preclusions": [],
+   "semesters": {}
+  },
+  "CS3219": {
+   "title": "Software Design and Architecture",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2103T",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-28T13:00",
+      "minutes": 90
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-29T17:00",
+      "minutes": 90
+     }
+    }
+   }
+  },
+  "CS3223": {
+   "title": "Database Systems Implementation",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "CS2102"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Tue",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-25T13:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-27T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3227": {
+   "title": "Agentic Software Engineering",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2103T",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Tue",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": null
+    },
+    "2": {
+     "lectures": [
+      [
+       "Wed",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS3230": {
+   "title": "Design and Analysis of Algorithms",
+   "units": 4,
+   "level": 3000,
+   "hours": 9,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "CS1231S"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-26T09:00",
+      "minutes": 150
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Wed",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-24T09:00",
+      "minutes": 150
+     }
+    }
+   }
+  },
+  "CS3231": {
+   "title": "Theory of Computation",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS1231S",
+     "CS2040S"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-21T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3235": {
+   "title": "Computer Security",
+   "units": 4,
+   "level": 3000,
+   "hours": 6,
+   "prereq": {
+    "and": [
+     "CS2105",
+     "CS2106",
+     "CS2107"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": null
+    },
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1600",
+       "1800"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS3236": {
+   "title": "Introduction to Information Theory",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS1231S",
+     "ST2334"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-03T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3240": {
+   "title": "Interaction Design",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2111",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "0800",
+       "1000"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS3241": {
+   "title": "Computer Graphics",
+   "units": 4,
+   "level": 3000,
+   "hours": 9,
+   "prereq": {
+    "and": [
+     "CS2030S",
+     "CS2040S"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1600",
+       "1800"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-25T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3242": {
+   "title": "3D Modeling and Animation",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": false,
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-26T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3243": {
+   "title": "Introduction to Artificial Intelligence",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "CS1231S"
+    ]
+   },
+   "preclusions": [
+    "CS2109S",
+    "CS3263"
+   ],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1600",
+       "1800"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-05T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3244": {
+   "title": "Machine Learning",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "ST2334",
+     {
+      "and": [
+       "MA1522",
+       "MA1521"
+      ]
+     }
+    ]
+   },
+   "preclusions": [
+    "CS2109S",
+    "CS3264"
+   ],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1400",
+       "1600"
+      ],
+      [
+       "Thu",
+       "1100",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-26T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1400",
+       "1600"
+      ],
+      [
+       "Thu",
+       "1300",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-29T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3245": {
+   "title": "Information Retrieval",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2040S",
+   "preclusions": [],
+   "semesters": {}
+  },
+  "CS3247": {
+   "title": "Game Development",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS3241",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS3249": {
+   "title": "Conversational User Interface",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": "CS2111",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1600",
+       "1800"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS3263": {
+   "title": "Foundations of Artificial Intelligence",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2109S",
+     "CS2040S",
+     "MA1522",
+     "ST2334"
+    ]
+   },
+   "preclusions": [
+    "CS3243"
+   ],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-21T09:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS3264": {
+   "title": "Foundations of Machine Learning",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2109S",
+     "CS2040S",
+     "MA1522",
+     "ST2334"
+    ]
+   },
+   "preclusions": [
+    "CS3244"
+   ],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Tue",
+       "1600",
+       "1800"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-25T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-26T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS3268": {
+   "title": "Responsible AI: from Algorithms to Impact",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     {
+      "or": [
+       "CS2109S",
+       "CS3243"
+      ]
+     },
+     "ST2334"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Tue",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS3282": {
+   "title": "Software Engineering for Evolving Production Systems II",
+   "units": 4,
+   "level": 3000,
+   "hours": 10,
+   "prereq": false,
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4211": {
+   "title": "Formal Methods for Software Engineering",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": "CS2103T",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Wed",
+       "1200",
+       "1500"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4212": {
+   "title": "Compiler Design",
+   "units": 4,
+   "level": 4000,
+   "hours": 9,
+   "prereq": "CS2104",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1500",
+       "1800"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-28T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4215": {
+   "title": "Programming Language Implementation",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "CS2030S"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Wed",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-27T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4218": {
+   "title": "Software Testing",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "or": [
+     "CS3213",
+     "CS3219"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-30T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "0800",
+       "1000"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-28T17:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4221": {
+   "title": "Database Applications Design and Tuning",
+   "units": 4,
+   "level": 4000,
+   "hours": 7,
+   "prereq": "CS3223",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4222": {
+   "title": "Wireless Networking",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2105",
+     "ST2334"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-03T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4223": {
+   "title": "Multi-core Architectures",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2106",
+     "CS3210"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Tue",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4224": {
+   "title": "Distributed Databases",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": "CS3223",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-27T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4225": {
+   "title": "Big Data Systems for Data Science",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": "CS2102",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-28T09:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-29T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4226": {
+   "title": "Internet Architecture",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2105",
+     "ST2334"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-12-01T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4230": {
+   "title": "Foundations of Modern Cryptography",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS1231S",
+     "CS3230",
+     "ST2334"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1500",
+       "1700"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4231": {
+   "title": "Parallel and Distributed Algorithms",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "or": [
+     "CS3210",
+     "CS3230"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-05T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4234": {
+   "title": "Optimisation Algorithms",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "MA1522",
+     "CS3230"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-23T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4236": {
+   "title": "Cryptography in Practice: Systems and Applications",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "CS2107",
+     "CS1231S"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Wed",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-27T14:30",
+      "minutes": 150
+     }
+    }
+   }
+  },
+  "CS4238": {
+   "title": "Computer Security Practice",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": "CS3235",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Tue",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": null
+    },
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4239": {
+   "title": "Software Security",
+   "units": 4,
+   "level": 4000,
+   "hours": 8,
+   "prereq": {
+    "and": [
+     "CS3235",
+     "CS2103T"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4242": {
+   "title": "Social Media Computing",
+   "units": 4,
+   "level": 4000,
+   "hours": 7,
+   "prereq": {
+    "and": [
+     "CS2108",
+     "CS3245"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {}
+  },
+  "CS4243": {
+   "title": "Computer Vision and Pattern Recognition",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "MA1522",
+     "ST2334",
+     "CS2030S",
+     "CS2040S",
+     "MA1521"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Wed",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-12-01T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1600",
+       "1800"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-04T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4244": {
+   "title": "Knowledge Representation and Reasoning",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "or": [
+     "CS3263",
+     "CS3243"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {}
+  },
+  "CS4246": {
+   "title": "Reinforcement Learning and Sequential Decision Making",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "ST2334",
+     {
+      "or": [
+       "CS3243",
+       "CS3263"
+      ]
+     }
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Wed",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": null
+    },
+    "2": {
+     "lectures": [
+      [
+       "Wed",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": {
+      "start": "2027-05-04T17:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4247": {
+   "title": "Graphics Rendering Techniques",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": "CS3241",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "1000",
+       "1200"
+      ],
+      [
+       "Wed",
+       "1400",
+       "1500"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-26T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4248": {
+   "title": "Introduction to Large Language Models",
+   "units": 4,
+   "level": 4000,
+   "hours": 10.0,
+   "prereq": {
+    "and": [
+     {
+      "or": [
+       "CS2109S",
+       "CS3244"
+      ]
+     },
+     "ST2334",
+     "MA1521"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1200",
+       "1500"
+      ]
+     ],
+     "exam": {
+      "start": "2026-12-01T09:00",
+      "minutes": 90
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Tue",
+       "1500",
+       "1800"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-30T14:30",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4249": {
+   "title": "Quantitative Methods of Human-Computer Interaction",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": "CS3240",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1500",
+       "1700"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4262": {
+   "title": "Machine Learning Systems",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2106",
+     {
+      "or": [
+       "CS3244",
+       "CS3264"
+      ]
+     }
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4263": {
+   "title": "Artificial Intelligence Principles",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2040S",
+     "CS1231S"
+    ]
+   },
+   "preclusions": [
+    "CS2109S",
+    "CS3243",
+    "CS3263"
+   ],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Thu",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4310": {
+   "title": "High-Performance Computing for Science and AI",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS3210",
+     "CS2106"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {}
+  },
+  "CS4330": {
+   "title": "Combinatorial Methods in Bioinformatics",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": false,
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1400",
+       "1600"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-28T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "CS4347": {
+   "title": "Sound and Music Computing",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2108",
+     "MA1522",
+     "MA1521"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {}
+  },
+  "CS4350": {
+   "title": "Game Development Project",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": "CS3247",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [],
+     "exam": null
+    }
+   }
+  },
+  "CS4353": {
+   "title": "Interactive Systems Development Project",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": {
+    "and": [
+     "CS2103T",
+     "CS3240"
+    ]
+   },
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": null
+    }
+   }
+  },
+  "CS4430": {
+   "title": "Computational Complexity",
+   "units": 4,
+   "level": 4000,
+   "hours": 10,
+   "prereq": "CS3231",
+   "preclusions": [],
+   "semesters": {
+    "2": {
+     "lectures": [
+      [
+       "Wed",
+       "1830",
+       "2030"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-27T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "MA1521": {
+   "title": "Calculus for Computing",
+   "units": 4,
+   "level": 1000,
+   "hours": 10,
+   "prereq": null,
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Mon",
+       "1000",
+       "1200"
+      ],
+      [
+       "Wed",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-23T09:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Fri",
+       "1600",
+       "1800"
+      ],
+      [
+       "Tue",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-28T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "MA1522": {
+   "title": "Linear Algebra for Computing",
+   "units": 4,
+   "level": 1000,
+   "hours": 10,
+   "prereq": null,
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "0800",
+       "1000"
+      ],
+      [
+       "Tue",
+       "1000",
+       "1200"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-24T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Mon",
+       "0800",
+       "1000"
+      ],
+      [
+       "Thu",
+       "1200",
+       "1400"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-29T13:00",
+      "minutes": 120
+     }
+    }
+   }
+  },
+  "ST2334": {
+   "title": "Probability and Statistics",
+   "units": 4,
+   "level": 2000,
+   "hours": 10,
+   "prereq": "MA1521",
+   "preclusions": [],
+   "semesters": {
+    "1": {
+     "lectures": [
+      [
+       "Fri",
+       "0800",
+       "1000"
+      ]
+     ],
+     "exam": {
+      "start": "2026-11-23T17:00",
+      "minutes": 120
+     }
+    },
+    "2": {
+     "lectures": [
+      [
+       "Thu",
+       "1800",
+       "2000"
+      ]
+     ],
+     "exam": {
+      "start": "2027-04-29T09:00",
+      "minutes": 120
+     }
+    }
+   }
+  }
+ }
+}
