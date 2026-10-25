@@ -273,15 +273,15 @@ data/requirements/<AY>.json  degree rules, hand-typed                           
 scenarios/*.json           test students                                            Zechary
 planner/data.py            loaders and the semester-to-year mapping (done)          shared
 planner/validate.py        checks a plan against section 4                          Zechary (proposed)
-planner/solver.py          finds a plan or proves none exists                       Weng Mun
+planner/solver.py          finds a plan or proves none exists (written)             Weng Mun
 planner/translate.py       LLM: message -> scenario JSON                            Weng Mun
 planner/llm.py             the one place that calls the LLM API                     Javier
 planner/direct.py          LLM writes the plan itself                               Javier
 planner/run.py             runs an approach over the scenarios and scores it        Javier
-tests/                     data checks (pass) and acceptance tests (skip until the code exists)
+tests/                     data checks and solver tests (pass); acceptance tests (skip until validate() exists)
 ```
 
-The stubs already define each function's inputs and outputs. Run `pytest` before pushing.
+The stubs define the inputs and outputs of the functions that aren't written yet. Run `pytest` before pushing.
 
 ## 10. Work plan
 

@@ -25,8 +25,9 @@ def exams_clash(a, b):
     """True if two exams ({"start": ISO time, "minutes": n}, or None for no exam) overlap."""
     if a is None or b is None:
         return False
-    (s1, s2), (m1, m2) = ((datetime.fromisoformat(e["start"]) for e in (a, b)), (e["minutes"] for e in (a, b)))
-    return s1 < s2 + timedelta(minutes=m2) and s2 < s1 + timedelta(minutes=m1)
+    start_a, start_b = datetime.fromisoformat(a["start"]), datetime.fromisoformat(b["start"])
+    end_a, end_b = start_a + timedelta(minutes=a["minutes"]), start_b + timedelta(minutes=b["minutes"])
+    return start_a < end_b and start_b < end_a
 
 
 def build_model(scenario):

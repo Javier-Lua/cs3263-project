@@ -268,3 +268,36 @@ def test_clashing_courses_are_fine_if_one_is_already_completed():
     assert solve(s)["status"] == "plan"
     s = scenario(current_semester=8, completed=[c for c in DONE if c != "CS2109S"], must_take=["CS2108"])
     assert solve(s) == {"status": "impossible"}  # CS2109S is required and only Sem 2 is left
+
+
+def test_plan_uses_only_known_courses_and_never_repeats_or_replans_completed_ones():
+    s = scenario(current_semester=1, completed=[], min_units=18, max_units=23)
+    plan = solve(s)
+    assert plan["status"] == "plan"
+    known = set().union(*(c["courses"] for c in load_catalogs().values())) | {"ELECTIVE"}
+    courses = [c for cs in plan["semesters"].values() for c in cs]
+    assert set(courses) <= known
+    assert len([c for c in courses if c != "ELECTIVE"]) == len(set(courses) - {"ELECTIVE"})  # no repeats
+    assert set(plan["semesters"]) == {str(k) for k in range(1, 9)}  # nothing before semester 1, nothing after 8
+
+
+def test_plan_does_not_include_completed_courses():
+    done = ["CS1101S", "CS1231S", "MA1521", "MA1522"]
+    plan = solve(scenario(current_semester=3, completed=done, min_units=18, max_units=23))
+    assert not planned(plan) & set(done)
+    assert set(plan["semesters"]) == {str(k) for k in range(3, 9)}
+
+
+def test_every_example_scenario_gets_a_plan_that_passes_the_independent_prereq_check():
+    from planner.data import load_scenarios
+    catalogs = load_catalogs()
+    for e in load_scenarios():
+        plan = solve(e["scenario"])
+        assert plan["status"] == ("plan" if e["expected"] == "feasible" else "impossible"), e["id"]
+        if plan["status"] == "plan":
+            s, taken = e["scenario"], set(e["scenario"]["completed"])
+            for k in range(s["current_semester"], 9):
+                courses = catalog_for(catalogs, term(s["matric_ay"], k)[0])[0]["courses"]
+                for c in plan["semesters"][str(k)]:
+                    assert c == "ELECTIVE" or prereq_met(courses[c]["prereq"], taken), (e["id"], c, k)
+                taken |= set(plan["semesters"][str(k)])
