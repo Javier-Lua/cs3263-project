@@ -3,6 +3,8 @@
 Owner: Weng Mun. Suggested: OR-Tools CP-SAT (pip install ortools); encoding sketch in design.md section 6.2.
 """
 import re
+from datetime import datetime, timedelta
+from itertools import combinations
 
 from ortools.sat.python import cp_model
 
@@ -12,6 +14,19 @@ from planner.data import ELECTIVE, ELECTIVE_UNITS, catalog_for, load_catalogs, l
 def level(code):
     """Course level from the code: the first digit times 1000, e.g. CS4248 -> 4000."""
     return int(re.search(r"\d", code).group()) * 1000
+
+
+def lectures_clash(a, b):
+    """True if two lecture lists ([[day, start, end], ...]) overlap. One ending exactly as the other starts is fine."""
+    return any(d1 == d2 and s1 < e2 and s2 < e1 for d1, s1, e1 in a for d2, s2, e2 in b)
+
+
+def exams_clash(a, b):
+    """True if two exams ({"start": ISO time, "minutes": n}, or None for no exam) overlap."""
+    if a is None or b is None:
+        return False
+    (s1, s2), (m1, m2) = ((datetime.fromisoformat(e["start"]) for e in (a, b)), (e["minutes"] for e in (a, b)))
+    return s1 < s2 + timedelta(minutes=m2) and s2 < s1 + timedelta(minutes=m1)
 
 
 def build_model(scenario):
@@ -28,7 +43,7 @@ def build_model(scenario):
     completed = set(scenario["completed"])
 
     model = cp_model.CpModel()
-    x, units, prereq = {}, {}, {}
+    x, units, prereq, lectures, exam = {}, {}, {}, {}, {}
     for k in range(k0, 9):
         ay, sem = term(scenario["matric_ay"], k)
         catalog, _ = catalog_for(catalogs, ay)
@@ -37,6 +52,8 @@ def build_model(scenario):
                 x[code, k] = model.NewBoolVar(f"x_{code}_{k}")
                 units[code, k] = course["units"]
                 prereq[code, k] = course["prereq"]
+                lectures[code, k] = course["semesters"][str(sem)]["lectures"]
+                exam[code, k] = course["semesters"][str(sem)]["exam"]
 
     planned = {}  # course -> its variables, one per semester it can be taken in
     for (code, _), v in x.items():
@@ -83,6 +100,11 @@ def build_model(scenario):
             model.Add(v == 0)
         elif ok is not True:
             model.AddImplication(v, ok)
+
+    for k in range(k0, 9):  # rules 8 `lecture_clash` and 9 `exam_clash`
+        for a, b in combinations(sorted(c for c, kk in x if kk == k), 2):
+            if lectures_clash(lectures[a, k], lectures[b, k]) or exams_clash(exam[a, k], exam[b, k]):
+                model.Add(x[a, k] + x[b, k] <= 1)
 
     precluding = {frozenset((code, p)) for catalog in catalogs.values()  # rule 7 `preclusion`, in either direction
                   for code, course in catalog["courses"].items() for p in course["preclusions"]}

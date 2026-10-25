@@ -3,7 +3,7 @@ import pytest
 from ortools.sat.python import cp_model
 
 from planner.data import catalog_for, load_catalogs, load_requirements, term
-from planner.solver import build_model, solve
+from planner.solver import build_model, exams_clash, lectures_clash, solve
 
 REQUIRED = load_requirements("2025-2026")["required"]
 DONE = REQUIRED + ["CS3263", "CS4248"]  # also meets the AI focus area, so nothing is forced
@@ -128,7 +128,7 @@ def test_semesters_with_no_courses_to_take_are_filled_with_electives():
 
 
 def test_unit_limits_can_make_the_required_courses_impossible():
-    left = ["CS2106", "CS3230", "ST2334"]  # 12 units, all offered in Sem 2
+    left = ["CS2106", "ST2334", "MA1522"]  # 12 units, offered in Sem 2 with no clash between them
     s = scenario(current_semester=8, completed=[c for c in REQUIRED if c not in left] + ["CS3263", "CS4248"])
     assert solve({**s, "max_units": 8}) == {"status": "impossible"}
     assert planned(solve({**s, "max_units": 12})) >= set(left)
@@ -229,3 +229,42 @@ def test_the_same_semester_rule_can_make_a_scenario_impossible():
                  min_units=4, max_units=4)
     assert solve(s) == {"status": "impossible"}
     assert solve({**s, "max_units": 8, "min_units": 0})["status"] == "plan"
+
+
+def test_lectures_clash_only_when_they_overlap_on_the_same_day():
+    mon_8_10 = [["Mon", "0800", "1000"]]
+    assert lectures_clash(mon_8_10, [["Mon", "0900", "1100"]])
+    assert not lectures_clash(mon_8_10, [["Mon", "1000", "1200"]])  # ends exactly as the other starts
+    assert not lectures_clash(mon_8_10, [["Tue", "0800", "1000"]])
+    assert not lectures_clash(mon_8_10, [])  # a course with no lectures never clashes
+
+
+def test_exams_clash_only_when_they_overlap():
+    exam = {"start": "2026-11-23T09:00", "minutes": 120}
+    assert exams_clash(exam, {"start": "2026-11-23T10:30", "minutes": 120})
+    assert not exams_clash(exam, {"start": "2026-11-23T11:00", "minutes": 120})  # starts as the first ends
+    assert not exams_clash(exam, {"start": "2026-11-24T09:00", "minutes": 120})
+    assert not exams_clash(exam, None)  # a course with no exam never clashes
+
+
+def test_courses_with_clashing_lectures_cannot_share_a_semester():
+    # CS2104 and CS4234 both run in Sem 1 only and their lectures overlap, so they cannot both be taken in semester 7.
+    both = scenario(completed=DONE, must_take=["CS2104", "CS4234"])
+    assert solve({**both, "must_take": ["CS2104"]})["status"] == "plan"
+    assert solve({**both, "must_take": ["CS4234"]})["status"] == "plan"
+    assert solve(both) == {"status": "impossible"}
+
+
+def test_courses_with_clashing_exams_cannot_share_a_semester():
+    # CS2104 and CS4226 both run in Sem 1 only and their exams overlap.
+    both = scenario(completed=DONE + ["CS2105"], must_take=["CS2104", "CS4226"])  # CS2105 is CS4226's prereq
+    assert solve({**both, "must_take": ["CS4226"]})["status"] == "plan"
+    assert solve(both) == {"status": "impossible"}
+
+
+def test_clashing_courses_are_fine_if_one_is_already_completed():
+    # CS2108 and CS2109S lectures clash in Sem 2, but only if both are planned.
+    s = scenario(current_semester=8, completed=DONE, must_take=["CS2108"])
+    assert solve(s)["status"] == "plan"
+    s = scenario(current_semester=8, completed=[c for c in DONE if c != "CS2109S"], must_take=["CS2108"])
+    assert solve(s) == {"status": "impossible"}  # CS2109S is required and only Sem 2 is left
