@@ -1,42 +1,42 @@
 [
  {
   "id": "S001",
-  "text": "Hi! I matriculated in AY2025/26 as a Computer Science student and I'm about to start Year 2 Semester 1. So far I've completed CS1101S, CS1231S, MA1521 and MA1522. I want to do the Artificial Intelligence focus area, and I definitely want to take CS3263 at some point. I'd like between 16 and 20 units each semester. Can you plan the rest of my degree?",
+  "text": "Hi! I matriculated in AY2025/26 as a Computer Science student and I'm about to start Year 2 Semester 1. So far I've completed CS1101S, CS1231S, MA1521 and MA1522. I want to do the Artificial Intelligence focus area, and I definitely want to take CS3263 at some point. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
   "scenario": {
    "matric_ay": "2025-2026",
    "current_semester": 3,
    "completed": ["CS1101S", "CS1231S", "MA1521", "MA1522"],
    "focus_area": "Artificial Intelligence",
-   "min_units": 16,
-   "max_units": 20,
+   "min_units": 18,
+   "max_units": 23,
    "must_take": ["CS3263"]
   },
   "expected": "feasible",
   "witness": {
    "status": "plan",
    "semesters": {
-    "3": ["CS2030S", "CS2040S", "CS2100", "ST2334"],
-    "4": ["CS2101", "CS2103T", "CS2106", "CS2109S"],
-    "5": ["CS3230", "CS3263", "ELECTIVE", "ELECTIVE"],
-    "6": ["ELECTIVE", "ELECTIVE", "ELECTIVE", "ELECTIVE"],
-    "7": ["CS4248", "ELECTIVE", "ELECTIVE", "ELECTIVE"],
-    "8": ["ELECTIVE", "ELECTIVE", "ELECTIVE", "ELECTIVE"]
+    "3": ["CS2030S", "CS2040S", "CS2100", "ST2334", "ELECTIVE"],
+    "4": ["CS2101", "CS2103T", "CS2106", "CS2109S", "ELECTIVE"],
+    "5": ["CS3230", "CS3263", "ELECTIVE", "ELECTIVE", "ELECTIVE"],
+    "6": ["ELECTIVE", "ELECTIVE", "ELECTIVE", "ELECTIVE", "ELECTIVE"],
+    "7": ["CS4248", "ELECTIVE", "ELECTIVE", "ELECTIVE", "ELECTIVE"],
+    "8": ["ELECTIVE", "ELECTIVE", "ELECTIVE", "ELECTIVE", "ELECTIVE"]
    }
   }
  },
  {
   "id": "S002",
-  "text": "I'm a CS student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 1. I've completed CS1101S, CS1231S, CS2030S, CS2040S, CS2100, CS2101, CS2103T, CS2109S, MA1521, MA1522, CS3219 and CS4218. My focus area is Software Engineering. Because I work part-time, I can only take exactly 4 units a semester. Please plan my remaining semesters.",
+  "text": "I'm a CS student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my last semester. I've completed CS1101S, CS1231S, CS2030S, CS2040S, CS2100, MA1521 and MA1522. My focus area is Software Engineering. I'd like between 18 and 23 units. Please plan my remaining semester.",
   "scenario": {
    "matric_ay": "2025-2026",
-   "current_semester": 7,
-   "completed": ["CS1101S", "CS1231S", "CS2030S", "CS2040S", "CS2100", "CS2101", "CS2103T", "CS2109S", "MA1521", "MA1522", "CS3219", "CS4218"],
+   "current_semester": 8,
+   "completed": ["CS1101S", "CS1231S", "CS2030S", "CS2040S", "CS2100", "MA1521", "MA1522"],
    "focus_area": "Software Engineering",
-   "min_units": 4,
-   "max_units": 4,
+   "min_units": 18,
+   "max_units": 23,
    "must_take": []
   },
   "expected": "impossible",
-  "why": "CS2106, CS3230 and ST2334 (12 units) are still required, but only semesters 7 and 8 remain and each allows at most 4 units (8 in total)."
+  "why": "CS2101, CS2103T, CS2106, CS2109S, CS3230 and ST2334 (24 units) are still required, but only semester 8 remains and it allows at most 23 units."
  }
 ]
