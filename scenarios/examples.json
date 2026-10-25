@@ -26,17 +26,17 @@
  },
  {
   "id": "S002",
-  "text": "I'm a CS student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my last semester. I've completed CS1101S, CS1231S, CS2030S, CS2040S, CS2100, MA1521 and MA1522. My focus area is Software Engineering. I'd like between 18 and 23 units. Please plan my remaining semester.",
+  "text": "I'm a CS student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my last semester. I've completed CS1101S, CS1231S, CS2030S, CS2040S, CS2100, CS2101, CS2103T, CS2106, CS2109S, CS3230, MA1521, MA1522, ST2334, CS3263 and CS4248. My focus area is Artificial Intelligence, and I really want to take CS4234 before I graduate. I'd like between 18 and 23 units. Please plan my remaining semester.",
   "scenario": {
    "matric_ay": "2025-2026",
    "current_semester": 8,
-   "completed": ["CS1101S", "CS1231S", "CS2030S", "CS2040S", "CS2100", "MA1521", "MA1522"],
-   "focus_area": "Software Engineering",
+   "completed": ["CS1101S", "CS1231S", "CS2030S", "CS2040S", "CS2100", "CS2101", "CS2103T", "CS2106", "CS2109S", "CS3230", "MA1521", "MA1522", "ST2334", "CS3263", "CS4248"],
+   "focus_area": "Artificial Intelligence",
    "min_units": 18,
    "max_units": 23,
-   "must_take": []
+   "must_take": ["CS4234"]
   },
   "expected": "impossible",
-  "why": "CS2101, CS2103T, CS2106, CS2109S, CS3230 and ST2334 (24 units) are still required, but only semester 8 remains and it allows at most 23 units."
+  "why": "CS4234 only runs in Semester 1, but only semester 8 (a Semester 2) remains."
  }
 ]
