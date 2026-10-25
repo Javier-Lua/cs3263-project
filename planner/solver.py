@@ -84,7 +84,23 @@ def build_model(scenario):
         elif ok is not True:
             model.AddImplication(v, ok)
 
+    precluding = {frozenset((code, p)) for catalog in catalogs.values()  # rule 7 `preclusion`, in either direction
+                  for code, course in catalog["courses"].items() for p in course["preclusions"]}
+    for pair in precluding:
+        a, b = pair
+        if not (a in completed and b in completed):  # two completed courses can no longer be changed
+            model.Add(sum(1 if c in completed else sum(taken([c])) for c in pair) <= 1)
+
     requirements = load_requirements(scenario["matric_ay"])
+    for a, b in requirements["same_semester"]:  # rule 6 `same_semester`
+        for k in range(k0, 9):
+            va, vb = x.get((a, k)), x.get((b, k))
+            if va is not None and vb is not None:
+                model.Add(va == vb)
+            else:  # one is missing: already completed (so the other can't share its semester) or not offered in k
+                for v in (va, vb):
+                    if v is not None:
+                        model.Add(v == 0)
     for code in (set(requirements["required"]) | set(scenario["must_take"])) - completed:  # rules 11 and 13
         model.Add(sum(taken([code])) >= 1)
 

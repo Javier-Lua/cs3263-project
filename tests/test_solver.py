@@ -160,7 +160,7 @@ def prereq_met(tree, taken):
 def test_every_planned_course_has_its_prerequisites_taken_earlier():
     catalogs = load_catalogs()
     for s in [scenario(current_semester=3, completed=["CS1101S", "CS1231S", "MA1521", "MA1522"], must_take=["CS3263"]),
-              scenario(current_semester=1, must_take=["CS3243", "CS4234"])]:
+              scenario(current_semester=1, must_take=["CS3264", "CS4234"])]:
         plan = solve(s)
         assert plan["status"] == "plan"
         taken = set(s["completed"])
@@ -189,3 +189,43 @@ def test_a_course_with_an_unmeetable_prerequisite_is_never_planned():
     # CS3242 needs physics, which the catalog cannot express, so its prereq is false.
     assert solve(scenario(completed=DONE, must_take=["CS3242"])) == {"status": "impossible"}
     assert solve(scenario(completed=DONE + ["CS3242"]))["status"] == "plan"  # but it can already be completed
+
+
+def test_a_course_cannot_be_planned_if_a_completed_course_precludes_it():
+    # CS2109S (completed) precludes CS3243, whose own prereqs CS2040S and CS1231S are met and which runs in Sem 2.
+    assert solve(scenario(completed=DONE, must_take=["CS3243"])) == {"status": "impossible"}
+
+
+def test_two_planned_courses_cannot_preclude_each_other():
+    # CS2109S still has to be planned (it is required); CS3243 is precluded by it, both listed in each other's catalog entry.
+    s = scenario(completed=[c for c in REQUIRED if c != "CS2109S"] + ["CS3219", "CS4218"], focus_area="Software Engineering")
+    plan = solve(s)
+    assert plan["status"] == "plan" and "CS2109S" in planned(plan)
+    assert solve({**s, "must_take": ["CS3243"]}) == {"status": "impossible"}
+
+
+def test_a_preclusion_listed_in_only_one_direction_still_applies():
+    # Only CS4263's entry lists CS2109S; CS2109S's own entry does not list CS4263.
+    assert solve(scenario(completed=DONE, must_take=["CS4263"])) == {"status": "impossible"}
+
+
+def test_completed_courses_that_preclude_each_other_are_not_an_error():
+    assert solve(scenario(completed=DONE + ["CS3243"]))["status"] == "plan"
+
+
+def test_cs2101_and_cs2103t_are_planned_in_the_same_semester():
+    s = scenario(current_semester=5, completed=[c for c in DONE if c not in ("CS2101", "CS2103T")])
+    plan = solve(s)
+    assert semester_of(plan, "CS2101") == semester_of(plan, "CS2103T")
+
+
+def test_cs2101_and_cs2103t_cannot_be_split_across_completed_and_planned():
+    assert solve(scenario(completed=[c for c in DONE if c != "CS2103T"])) == {"status": "impossible"}
+
+
+def test_the_same_semester_rule_can_make_a_scenario_impossible():
+    # Exactly 4 units a semester: CS2101 and CS2103T (4 units each) fit in separate semesters but not in the same one.
+    s = scenario(current_semester=5, completed=[c for c in DONE if c not in ("CS2101", "CS2103T")],
+                 min_units=4, max_units=4)
+    assert solve(s) == {"status": "impossible"}
+    assert solve({**s, "max_units": 8, "min_units": 0})["status"] == "plan"
