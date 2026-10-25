@@ -125,7 +125,7 @@ A plan is valid if it breaks none of these rules.
 | 12 | `focus_area` | At least 3 primaries of the chosen focus area are taken, and at least one of them is level 4000+. |
 | 13 | `must_take` | Every `must_take` course is taken. |
 
-The validator (`planner/validate.py`) shares no code with the solver, so a solver bug can't be copied into the checker. `tests/test_examples.py` already holds the validator's acceptance tests: the S001 witness must pass, and 12 broken versions of it must fail with the right ids (the file still has a 13th, `blocked`, to remove, see §11). Every broken case is a real clash, preclusion and so on from the AY2026/27 data, checked by hand.
+The validator (`planner/validate.py`) shares no code with the solver, so a solver bug can't be copied into the checker. `tests/test_examples.py` already holds the validator's acceptance tests: the S001 witness must pass, and 12 broken versions of it must fail with the right ids. Every broken case is a real clash, preclusion and so on from the AY2026/27 data, checked by hand.
 
 ## 5. Formats
 
@@ -312,5 +312,4 @@ The proposal's FP2 milestone (multi-semester planning by Fri 23 Oct) becomes the
 4. **Older cohorts.** A student who matriculated before AY2025/26 (e.g. a real Year 4 student today) needs their own requirements file.
 5. **Hybrid definition.** The proposal and §6.3 differ; pick one or drop it. The structured-steps version is simpler to build.
 6. **Optimisation** stays a stretch goal and is not decided.
-7. **Follow-ups from removing blocked semesters** (not done yet): drop `blocked_semesters` from `scenarios/examples.json` and rewrite S001's witness and S002's `why`; update `SCENARIO_FIELDS` in `tests/test_data.py`; remove the `blocked` case in `tests/test_examples.py`.
-8. **Responsible AI section (Zechary).** Possible points: the risk of trusting an LLM-made plan, stand-in years, and the validator as a safeguard.
+7. **Responsible AI section.** Possible points: the risk of trusting an LLM-made plan, stand-in years, and the validator as a safeguard.

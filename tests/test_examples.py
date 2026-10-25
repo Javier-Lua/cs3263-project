@@ -22,7 +22,6 @@ BROKEN = [
     ([("4", None, "CS2108")], {"lecture_clash"}),  # with CS2109S
     ([("7", "ELECTIVE", "CS2107")], {"exam_clash"}),  # with CS4248
     ([("3", None, "ELECTIVE"), ("3", None, "ELECTIVE")], {"workload"}),  # 24 units
-    ([("6", None, "ELECTIVE")], {"blocked"}),
     ([("4", "CS2106", "ELECTIVE")], {"required"}),
     ([("7", "CS4248", "ELECTIVE")], {"focus_area"}),  # no level-4000 primary left
     ([("5", "CS3263", "ELECTIVE")], {"must_take"}),
