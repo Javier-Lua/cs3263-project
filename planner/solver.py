@@ -6,7 +6,7 @@ import re
 
 from ortools.sat.python import cp_model
 
-from planner.data import catalog_for, load_catalogs, load_requirements, term
+from planner.data import ELECTIVE, ELECTIVE_UNITS, catalog_for, load_catalogs, load_requirements, term
 
 
 def level(code):
@@ -15,7 +15,8 @@ def level(code):
 
 
 def build_model(scenario):
-    """Return (model, x): x[(course, k)] is 1 when the course is taken in semester k.
+    """Return (model, x, e): x[(course, k)] is 1 when the course is taken in semester k, and e[k] is the number of
+    ELECTIVE slots in semester k.
 
     A variable exists only for a course that is offered in that semester (in the catalog of that semester's academic
     year) and that the student has not already completed, so rules 2 `repeat` (part) and 4 `offered` hold by construction.
@@ -27,13 +28,14 @@ def build_model(scenario):
     completed = set(scenario["completed"])
 
     model = cp_model.CpModel()
-    x = {}
+    x, units = {}, {}
     for k in range(k0, 9):
         ay, sem = term(scenario["matric_ay"], k)
         catalog, _ = catalog_for(catalogs, ay)
         for code, course in catalog["courses"].items():
             if code not in completed and str(sem) in course["semesters"]:
                 x[code, k] = model.NewBoolVar(f"x_{code}_{k}")
+                units[code, k] = course["units"]
 
     planned = {}  # course -> its variables, one per semester it can be taken in
     for (code, _), v in x.items():
@@ -55,15 +57,23 @@ def build_model(scenario):
     model.Add(len(done) + sum(taken(primaries)) >= rule["min_primaries"])
     done_4000 = sum(level(p) >= 4000 for p in done)
     model.Add(done_4000 + sum(taken(p for p in primaries if level(p) >= 4000)) >= rule["min_primaries_level_4000"])
-    return model, x
+
+    e = {k: model.NewIntVar(0, max(scenario["max_units"], 0) // ELECTIVE_UNITS, f"e_{k}") for k in range(k0, 9)}
+    for k in e:  # rule 10 `workload`
+        total = sum(units[c, kk] * v for (c, kk), v in x.items() if kk == k) + ELECTIVE_UNITS * e[k]
+        model.Add(total >= scenario["min_units"])
+        model.Add(total <= scenario["max_units"])
+    return model, x, e
 
 
 def solve(scenario):
     """Return {"status": "plan", "semesters": {...}} or {"status": "impossible"} (design.md section 5)."""
-    model, x = build_model(scenario)
+    model, x, e = build_model(scenario)
     solver = cp_model.CpSolver()
     if solver.Solve(model) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         return {"status": "impossible"}
-    semesters = {str(k): sorted(c for (c, kk), v in x.items() if kk == k and solver.Value(v))
-                 for k in range(scenario["current_semester"], 9)}
+    semesters = {}
+    for k in e:
+        courses = sorted(c for (c, kk), v in x.items() if kk == k and solver.Value(v))
+        semesters[str(k)] = courses + [ELECTIVE] * solver.Value(e[k])
     return {"status": "plan", "semesters": semesters}

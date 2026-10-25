@@ -16,7 +16,7 @@ def scenario(**overrides):
 
 def max_courses(s):
     """Solve the model while taking as many courses as possible, so the variables are actually exercised."""
-    model, x = build_model(s)
+    model, x, _ = build_model(s)
     model.Maximize(sum(x.values()))
     solver = cp_model.CpSolver()
     assert solver.Solve(model) == cp_model.OPTIMAL
@@ -100,3 +100,39 @@ def test_focus_area_needs_a_level_4000_primary():
     s = scenario(current_semester=8, completed=REQUIRED + ["CS2111", "CS3240", "CS3249"],
                  focus_area="Human-Computer Interaction")
     assert "CS4249" in planned(solve(s))
+
+
+def units_per_semester(s, plan):
+    catalogs = load_catalogs()
+    result = {}
+    for k, courses in plan["semesters"].items():
+        courses_in_year = catalog_for(catalogs, term(s["matric_ay"], int(k))[0])[0]["courses"]
+        result[int(k)] = sum(4 if c == "ELECTIVE" else courses_in_year[c]["units"] for c in courses)
+    return result
+
+
+def test_every_open_semester_stays_within_the_unit_limits():
+    s = scenario(current_semester=3, completed=["CS1101S", "CS1231S", "MA1521", "MA1522"], min_units=16, max_units=20)
+    plan = solve(s)
+    assert plan["status"] == "plan"
+    units = units_per_semester(s, plan)
+    assert set(units) == {3, 4, 5, 6, 7, 8}
+    assert all(16 <= u <= 20 for u in units.values()), units
+
+
+def test_semesters_with_no_courses_to_take_are_filled_with_electives():
+    # Nothing is left to plan, so with a 4-unit minimum every semester needs something: only ELECTIVE can fill it.
+    s = scenario(completed=REQUIRED + ["CS3263", "CS4248"], min_units=4, max_units=4)
+    plan = solve(s)
+    assert units_per_semester(s, plan) == {7: 4, 8: 4}
+
+
+def test_unit_limits_can_make_the_required_courses_impossible():
+    left = ["CS2106", "CS3230", "ST2334"]  # 12 units, all offered in Sem 2
+    s = scenario(current_semester=8, completed=[c for c in REQUIRED if c not in left] + ["CS3263", "CS4248"])
+    assert solve({**s, "max_units": 8}) == {"status": "impossible"}
+    assert planned(solve({**s, "max_units": 12})) >= set(left)
+
+
+def test_min_units_above_max_units_is_impossible():
+    assert solve(scenario(min_units=20, max_units=16)) == {"status": "impossible"}
