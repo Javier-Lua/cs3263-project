@@ -6,6 +6,7 @@ from planner.data import catalog_for, load_catalogs, load_requirements, term
 from planner.solver import build_model, solve
 
 REQUIRED = load_requirements("2025-2026")["required"]
+DONE = REQUIRED + ["CS3263", "CS4248"]  # also meets the AI focus area, so nothing is forced
 
 
 def scenario(**overrides):
@@ -24,7 +25,7 @@ def max_courses(s):
 
 
 def test_variables_exist_only_for_offered_courses():
-    s = scenario()
+    s = scenario(completed=DONE)
     x, _ = max_courses(s)
     catalogs = load_catalogs()
     for code, k in x:
@@ -46,7 +47,7 @@ def test_each_course_is_taken_at_most_once():
 
 
 def test_solve_returns_a_semester_for_every_open_term():
-    plan = solve(scenario(current_semester=7))
+    plan = solve(scenario(current_semester=7, completed=DONE))
     assert plan["status"] == "plan"
     assert set(plan["semesters"]) == {"7", "8"}
 
@@ -69,8 +70,7 @@ def test_required_courses_are_planned_unless_completed():
 
 
 def test_nothing_needs_planning_when_the_rules_are_already_met():
-    done = REQUIRED + ["CS3263", "CS4248"]  # CS2109S + CS3263 + CS4248: 3 AI primaries, one at level 4000
-    assert solve(scenario(completed=done))["status"] == "plan"
+    assert solve(scenario(completed=DONE))["status"] == "plan"
 
 
 def test_must_take_course_is_planned():
@@ -136,3 +136,56 @@ def test_unit_limits_can_make_the_required_courses_impossible():
 
 def test_min_units_above_max_units_is_impossible():
     assert solve(scenario(min_units=20, max_units=16)) == {"status": "impossible"}
+
+
+def semester_of(plan, code):
+    return next(int(k) for k, courses in plan["semesters"].items() if code in courses)
+
+
+def prereq_met(tree, taken):
+    """Independent check of a catalog prereq tree against the set of courses taken earlier."""
+    if tree is None or tree is True:
+        return True
+    if tree is False:
+        return False
+    if isinstance(tree, str):
+        return tree in taken
+    ((op, args),) = tree.items()
+    if op == "nOf":
+        n, args = args
+        return sum(prereq_met(a, taken) for a in args) >= n
+    return (all if op == "and" else any)(prereq_met(a, taken) for a in args)
+
+
+def test_every_planned_course_has_its_prerequisites_taken_earlier():
+    catalogs = load_catalogs()
+    for s in [scenario(current_semester=3, completed=["CS1101S", "CS1231S", "MA1521", "MA1522"], must_take=["CS3263"]),
+              scenario(current_semester=1, must_take=["CS3243", "CS4234"])]:
+        plan = solve(s)
+        assert plan["status"] == "plan"
+        taken = set(s["completed"])
+        for k in range(s["current_semester"], 9):
+            courses = catalog_for(catalogs, term(s["matric_ay"], k)[0])[0]["courses"]
+            for c in plan["semesters"][str(k)]:
+                if c != "ELECTIVE":
+                    assert prereq_met(courses[c]["prereq"], taken), (c, k)
+            taken |= set(plan["semesters"][str(k)])
+
+
+def test_prerequisite_comes_in_an_earlier_semester():
+    # CS4234 (Sem 1 only) needs MA1522 and CS3230. CS3230 is not completed, so it must be planned first.
+    s = scenario(current_semester=5, completed=[c for c in DONE if c != "CS3230"], must_take=["CS4234"])
+    plan = solve(s)
+    assert semester_of(plan, "CS3230") < semester_of(plan, "CS4234")
+
+
+def test_a_prerequisite_in_the_same_semester_does_not_count():
+    # Only semester 7 is a Sem 1 in the horizon, so CS3230 would have to share it with CS4234.
+    s = scenario(current_semester=7, completed=[c for c in DONE if c != "CS3230"], must_take=["CS4234"])
+    assert solve(s) == {"status": "impossible"}
+
+
+def test_a_course_with_an_unmeetable_prerequisite_is_never_planned():
+    # CS3242 needs physics, which the catalog cannot express, so its prereq is false.
+    assert solve(scenario(completed=DONE, must_take=["CS3242"])) == {"status": "impossible"}
+    assert solve(scenario(completed=DONE + ["CS3242"]))["status"] == "plan"  # but it can already be completed

@@ -28,7 +28,7 @@ def build_model(scenario):
     completed = set(scenario["completed"])
 
     model = cp_model.CpModel()
-    x, units = {}, {}
+    x, units, prereq = {}, {}, {}
     for k in range(k0, 9):
         ay, sem = term(scenario["matric_ay"], k)
         catalog, _ = catalog_for(catalogs, ay)
@@ -36,6 +36,7 @@ def build_model(scenario):
             if code not in completed and str(sem) in course["semesters"]:
                 x[code, k] = model.NewBoolVar(f"x_{code}_{k}")
                 units[code, k] = course["units"]
+                prereq[code, k] = course["prereq"]
 
     planned = {}  # course -> its variables, one per semester it can be taken in
     for (code, _), v in x.items():
@@ -46,6 +47,42 @@ def build_model(scenario):
 
     for vs in planned.values():  # rule 2 `repeat`: a course is planned at most once
         model.Add(sum(vs) <= 1)
+
+    def met(tree, k):
+        """True, False, or a variable that may be 1 only if the prereq tree holds for a course taken in semester k.
+        Only courses completed or planned in an earlier semester count."""
+        if tree is None or tree is True:
+            return True
+        if tree is False:
+            return False
+        if isinstance(tree, str):
+            if tree in completed:
+                return True
+            before = [x[tree, j] for j in range(k0, k) if (tree, j) in x]
+            if not before:
+                return False
+            y = model.NewBoolVar(f"met_{tree}_{k}")
+            model.Add(sum(before) >= 1).OnlyEnforceIf(y)
+            return y
+        ((op, args),) = tree.items()
+        need, args = args if op == "nOf" else (len(args) if op == "and" else 1, args)
+        kids = [met(a, k) for a in args]
+        need -= sum(kid is True for kid in kids)
+        vs = [kid for kid in kids if not isinstance(kid, bool)]
+        if need <= 0:
+            return True
+        if len(vs) < need:
+            return False
+        y = model.NewBoolVar(f"met_{op}_{k}")
+        model.Add(sum(vs) >= need).OnlyEnforceIf(y)
+        return y
+
+    for (code, k), v in x.items():  # rule 5 `prereq`
+        ok = met(prereq[code, k], k)
+        if ok is False:
+            model.Add(v == 0)
+        elif ok is not True:
+            model.AddImplication(v, ok)
 
     requirements = load_requirements(scenario["matric_ay"])
     for code in (set(requirements["required"]) | set(scenario["must_take"])) - completed:  # rules 11 and 13
