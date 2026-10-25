@@ -2,8 +2,10 @@
 import pytest
 from ortools.sat.python import cp_model
 
-from planner.data import catalog_for, load_catalogs, term
+from planner.data import catalog_for, load_catalogs, load_requirements, term
 from planner.solver import build_model, solve
+
+REQUIRED = load_requirements("2025-2026")["required"]
 
 
 def scenario(**overrides):
@@ -53,3 +55,48 @@ def test_solve_returns_a_semester_for_every_open_term():
 def test_current_semester_must_be_1_to_8(k):
     with pytest.raises(ValueError):
         solve(scenario(current_semester=k))
+
+
+def planned(plan):
+    return {c for courses in plan["semesters"].values() for c in courses}
+
+
+def test_required_courses_are_planned_unless_completed():
+    done = ["CS1101S", "CS1231S", "MA1521", "MA1522"]
+    plan = solve(scenario(current_semester=3, completed=done))
+    assert plan["status"] == "plan"
+    assert set(REQUIRED) <= set(done) | planned(plan)
+
+
+def test_nothing_needs_planning_when_the_rules_are_already_met():
+    done = REQUIRED + ["CS3263", "CS4248"]  # CS2109S + CS3263 + CS4248: 3 AI primaries, one at level 4000
+    assert solve(scenario(completed=done))["status"] == "plan"
+
+
+def test_must_take_course_is_planned():
+    plan = solve(scenario(completed=REQUIRED, must_take=["CS4234"]))
+    assert "CS4234" in planned(plan)
+
+
+def test_must_take_course_that_is_not_offered_in_the_remaining_semesters_is_impossible():
+    s = scenario(current_semester=8, completed=REQUIRED, must_take=["CS4234"])  # CS4234 runs in Sem 1 only
+    assert solve(s) == {"status": "impossible"}
+
+
+def test_must_take_course_outside_the_catalog_is_impossible():
+    assert solve(scenario(completed=REQUIRED, must_take=["CS9999"])) == {"status": "impossible"}
+
+
+def test_focus_area_needs_three_primaries():
+    # In Sem 2 only CS2108 and CS4248 of Multimedia IR can be planned.
+    s = scenario(current_semester=8, completed=REQUIRED, focus_area="Multimedia Information Retrieval")
+    assert solve(s) == {"status": "impossible"}
+    plan = solve({**s, "completed": REQUIRED + ["CS3245"]})  # a completed primary still counts
+    assert {"CS2108", "CS4248"} <= planned(plan)
+
+
+def test_focus_area_needs_a_level_4000_primary():
+    # Three completed HCI primaries, none at level 4000: CS4249 is the only one offered in Sem 2.
+    s = scenario(current_semester=8, completed=REQUIRED + ["CS2111", "CS3240", "CS3249"],
+                 focus_area="Human-Computer Interaction")
+    assert "CS4249" in planned(solve(s))
