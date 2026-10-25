@@ -38,5 +38,60 @@
   },
   "expected": "impossible",
   "why": "CS4234 only runs in Semester 1, but only semester 8 (a Semester 2) remains."
+ },
+ {
+  "id": "S003",
+  "text": "I'm a CS student who matriculated in AY2025/26, and I'm about to start Year 3 Semester 1. I've completed CS1101S, CS1231S, CS2030S, CS2040S, CS2100, CS2101, CS2103T, CS2109S, MA1521, MA1522 and ST2334. I'm doing the Artificial Intelligence focus area, and I definitely want to take CS3243 since it sounds like a good intro to AI, and CS3264 for machine learning. I'd like between 16 and 20 units each semester. Please plan the rest of my degree.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 5,
+   "completed": ["CS1101S", "CS1231S", "CS2030S", "CS2040S", "CS2100", "CS2101", "CS2103T", "CS2109S", "MA1521", "MA1522", "ST2334"],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 16,
+   "max_units": 20,
+   "must_take": ["CS3243", "CS3264"]
+  },
+  "expected": "impossible",
+  "why": "CS2109S, which the student has already completed, precludes CS3243, so CS3243 cannot be taken."
+ },
+ {
+  "id": "S004",
+  "text": "Hello! I matriculated in AY2025/26 as a Computer Science student and I'm about to start Year 2 Semester 1. So far I've completed CS1101S, CS1231S, CS2030S, CS2040S, MA1521 and MA1522. I want to do the Algorithms & Theory focus area, and I definitely want to take CS4234 and CS3231. I'd like between 12 and 16 units each semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 3,
+   "completed": ["CS1101S", "CS1231S", "CS2030S", "CS2040S", "MA1521", "MA1522"],
+   "focus_area": "Algorithms & Theory",
+   "min_units": 12,
+   "max_units": 16,
+   "must_take": ["CS4234", "CS3231"]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "3": ["CS2101", "CS2103T", "CS3230", "ELECTIVE"],
+    "4": ["CS2100", "CS2109S", "ST2334", "ELECTIVE"],
+    "5": ["CS2106", "CS4234", "ELECTIVE", "ELECTIVE"],
+    "6": ["ELECTIVE", "ELECTIVE", "ELECTIVE"],
+    "7": ["CS3231", "ELECTIVE", "ELECTIVE", "ELECTIVE"],
+    "8": ["ELECTIVE", "ELECTIVE", "ELECTIVE"]
+   }
+  }
+ },
+ {
+  "id": "S005",
+  "text": "Hi, I'm a CS student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 1. I've completed CS1101S, CS1231S, CS2030S, CS2040S, CS2100, CS2101, CS2103T, CS2105, CS2106, CS2109S, CS3230, MA1521, MA1522 and ST2334. My focus area is Networking and Distributed Systems, and I definitely want to take both CS4226 and CS2104 before I graduate. I'd like between 20 and 23 units each semester. Can you plan my remaining semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": ["CS1101S", "CS1231S", "CS2030S", "CS2040S", "CS2100", "CS2101", "CS2103T", "CS2106", "CS2109S", "CS3230", "MA1521", "MA1522", "ST2334", "CS2105"],
+   "focus_area": "Networking and Distributed Systems",
+   "min_units": 20,
+   "max_units": 23,
+   "must_take": ["CS4226", "CS2104"]
+  },
+  "expected": "impossible",
+  "why": "CS2104 and CS4226 only run in Semester 1 and their exams overlap, and only one Semester 1 (semester 7) is left, so both cannot be taken."
  }
 ]
