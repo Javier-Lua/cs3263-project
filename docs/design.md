@@ -8,7 +8,8 @@ A student describes their situation in plain English. Each approach answers with
 
 - **Direct.** The LLM reads the message and the course data, then writes the plan itself.
 - **Tool-assisted.** The LLM only turns the message into a structured scenario (JSON), and a constraint solver finds the plan. This is the LLM+P pattern (proposal reference [4]). **(new: the LLM's only job here is translation.)** Every wrong answer then has one of two causes: the LLM misread the student, or our model or solver is wrong. §8.2 separates the two.
-- **Hybrid** (stretch goal). The direct approach, plus a few rounds where the validator's complaints are fed back to the LLM.
+  - **Decision (team, 21 Oct): translation stays.** The project guidelines require the model to translate the problem into a specification that a tool solves, so we do not feed gold JSON to the solver in the main comparison. Translation errors are reported separately (§8.2), which addresses the worry that they add noise.
+- **Hybrid** (stretch goal, **definition undecided**, see §6.3 and §11). Not built until the Direct and Tool-assisted approaches run.
 
 Any plan that breaks none of the rules in §4 counts as correct. We don't look for a best plan (tutor Q1). Optimising plan quality is a stretch goal.
 
@@ -28,12 +29,13 @@ Any plan that breaks none of the rules in §4 counts as correct. We don't look f
   - the 12-unit level-4000 breadth & depth rule and industry experience
   - CFCs counting as primaries
   - grades and S/U
-- **ELECTIVE slot (new).** Every course outside the catalog is a generic `ELECTIVE`: 4 units, always offered, with no prereqs, lectures or exam, and it can repeat. It counts towards units only, never towards required, focus-area or must-take courses. Without it, the minimum workload would force random CS courses into every semester.
+  - blocked semesters (internship, exchange). Dropped by team decision to keep the implementation simple.
+  - other routes into a prerequisite, such as UTC2851 instead of CS1101S
+- **ELECTIVE slot (new).** `ELECTIVE` is a 4-unit requirement placeholder, not a course a student can register for. Every course outside the catalog is treated as a generic `ELECTIVE`: 4 units, always offered, with no prereqs, lectures or exam, and it can repeat. It counts towards units only, never towards required, focus-area or must-take courses. Without it, the minimum workload would force random CS courses into every semester.
 - **Timetable detail.** We use lectures and exams only, with no tutorials or labs. Each course keeps one fixed lecture group: the lowest class number.
 - **Prerequisites.** Minimum grades are ignored. Every student is assumed to have A-level H2 Maths, so MA1301/MA1301X prereqs count as met **(new)**.
-- **Workload** is counted in units.
-  - The student gives a min and a max, which apply to every semester they haven't blocked.
-  - Blocked semesters (internship, exchange) have no courses and don't need to meet the minimum.
+- **CS1101S.** We assume the standard CS1101S route into CS1010-type prerequisites. Approved alternatives such as UTC2851 are out of scope.
+- **Workload** is counted in units. The student gives a min and a max, which apply to every semester from `current_semester` to 8.
 
 Where the two proposals differed:
 
@@ -91,7 +93,8 @@ Example entry, AY2026/27:
 - **Listed but not offered in Sem 1 or 2:**
   - AY2025/26: CS4224, CS4242, CS4244.
   - AY2026/27: CS3217, CS3245, CS4242, CS4244, CS4310, CS4347.
-  - So once AY2026/27 stands in for later years, **Multimedia Information Retrieval can't be completed**: only CS2108 and CS4248 can be planned.
+  - So once AY2026/27 stands in for later years, only CS2108 and CS4248 can be planned for **Multimedia Information Retrieval**. This focus area is not impossible for everyone: a student who has already completed another qualifying primary can still meet the "at least 3 primaries" rule.
+- **Wildcard and CS1101S check (checked against the NUSMods API on 25 Oct).** No modelled course has a `%` wildcard in its prereq tree in AY2025/26 or AY2026/27, so the wildcard branch in `build_catalog.py` never runs. CS2030S, CS2040S, CS2100, CS2107 and (in AY2026/27) CS2111 list explicit codes including CS1101S, and the catalog keeps CS1101S as their prereq, so CS1101S is recognised. If a `%` wildcard ever appears, it expands to catalog codes only, so a `CS1010%` pattern would become `false`. Check this before relying on it.
 - **CS2109S blocks three AI primaries.** Every CS student must take CS2109S, and it precludes CS3243, CS3244 and CS4263. So those three can't count towards the AI focus area. Expect the direct LLM to trip on this.
 - **Prereqs we can't model:** CS3242 needs physics, CS3282 needs CS3281 and CS4330 needs biology. These courses are never plannable, but they still count if the student has completed them.
 - **No-clash course:** CS2101 has no lectures or exam in the data, so it never clashes.
@@ -117,13 +120,12 @@ A plan is valid if it breaks none of these rules.
 | 7 | `preclusion` | No planned course is precluded by another taken course. Two courses preclude each other if either lists the other in any year's catalog. |
 | 8 | `lecture_clash` | No two courses in the same semester have lectures on the same day with overlapping times. One ending exactly when the other starts is fine. |
 | 9 | `exam_clash` | No two courses in the same semester have overlapping exams, each running from `start` to `start + minutes`. |
-| 10 | `workload` | Every unblocked semester from `current_semester` to 8 has `min_units` ≤ units ≤ `max_units`. Units come from that year's catalog, and `ELECTIVE` = 4. |
-| 11 | `blocked` | Blocked semesters have no courses. |
-| 12 | `required` | Every required course is taken. |
-| 13 | `focus_area` | At least 3 primaries of the chosen focus area are taken, and at least one of them is level 4000+. |
-| 14 | `must_take` | Every `must_take` course is taken. |
+| 10 | `workload` | Every semester from `current_semester` to 8 has `min_units` ≤ units ≤ `max_units`. Units come from that year's catalog, and `ELECTIVE` = 4. |
+| 11 | `required` | Every required course is taken. |
+| 12 | `focus_area` | At least 3 primaries of the chosen focus area are taken, and at least one of them is level 4000+. |
+| 13 | `must_take` | Every `must_take` course is taken. |
 
-The validator (`planner/validate.py`) shares no code with the solver, so a solver bug can't be copied into the checker. `tests/test_examples.py` already holds the validator's acceptance tests: the S001 witness must pass, and 13 broken versions of it must fail with the right ids. Every broken case is a real clash, preclusion and so on from the AY2026/27 data, checked by hand.
+The validator (`planner/validate.py`) shares no code with the solver, so a solver bug can't be copied into the checker. `tests/test_examples.py` already holds the validator's acceptance tests: the S001 witness must pass, and 12 broken versions of it must fail with the right ids. Every broken case is a real clash, preclusion and so on from the AY2026/27 data, checked by hand.
 
 ## 5. Formats
 
@@ -137,8 +139,7 @@ This is the format of the gold scenarios, and also what `translate()` must outpu
 | `current_semester` | First semester to plan, 1–8. Every earlier semester is finished. |
 | `completed` | Course codes already passed. Catalog codes only; anything else the student mentions is left out. |
 | `focus_area` | Exactly one key of `focus_areas` in the requirements file |
-| `min_units`, `max_units` | Limits for every unblocked semester |
-| `blocked_semesters` | Semester numbers with no classes |
+| `min_units`, `max_units` | Limits for every semester from `current_semester` to 8 |
 | `must_take` | Catalog courses the student insists on |
 
 `translate()` checks its output against this table: every field present with the right type, every code known, `focus_area` a real key, semesters within 1–8, and `min_units` ≤ `max_units`. Output that fails becomes `None` and is scored `no_answer`; it never reaches the solver **(proposed)**.
@@ -193,13 +194,16 @@ A suggested encoding for OR-Tools CP-SAT (Weng Mun's call):
 - **Clashes.** Precompute the clashing pairs per semester, then add `x[a,k] + x[b,k]` ≤ 1.
 - **Preclusions.** Σₖ `x[a,k]` + Σₖ `x[b,k]` ≤ 1. If the other course is completed, the sum must be 0.
 - **Same semester.** `x[CS2101,k]` = `x[CS2103T,k]` for every *k*.
-- **Workload.** min ≤ Σ units·x + 4·`e[k]` ≤ max in open semesters, and nothing in blocked ones.
+- **Workload.** min ≤ Σ units·x + 4·`e[k]` ≤ max in every semester from `current_semester` to 8.
 - **Focus area.** At least 3 primaries taken, at least 1 of them level 4000+.
 - **Objective.** Feasibility only. The stretch goal adds an objective, such as balance.
 
-### 6.3 Hybrid (stretch, Javier)
+### 6.3 Hybrid (stretch, Javier; definition undecided)
 
-Run the direct approach. Then, for up to 3 rounds, send the validator's violations back and ask for a revised plan. The report must say that this approach uses the evaluator as a tool.
+Two candidate definitions, to settle after Direct and Tool-assisted run (§11):
+
+- **Validator feedback (this doc's earlier draft).** Run the direct approach. Then, for up to 3 rounds, send the validator's violations back and ask for a revised plan. The report must say that this approach uses the evaluator as a tool. It gives no feedback on "impossible" answers, and costs up to 4 calls per scenario.
+- **Structured steps (the proposal).** One call whose prompt tells the LLM to follow course methods itself, such as checking rules one at a time or assigning semesters with backtracking, with no solver and no validator.
 
 ### 6.4 LLM settings (all approaches)
 
@@ -219,13 +223,13 @@ Run the direct approach. Then, for up to 3 rounds, send the validator's violatio
   - The solver must agree with every label (`tests/test_examples.py`). When it doesn't, find the bug (solver, validator or scenario) before changing a label.
 - **What to cover:**
   - students early and late in the degree
-  - blocked semesters and tight unit limits
+  - tight unit limits
   - must-take courses with long prereq chains
   - the CS2101/CS2103T pair
   - single-semester courses
   - real clashes: the CS2107 and CS4248 exams clash in AY2026/27 Sem 1, and CS2108 and CS2109S lectures clash in Sem 2
   - the AI preclusions
-  - Multimedia IR being impossible
+  - Multimedia IR: only CS2108 and CS4248 can be planned, so it is feasible only for students who already completed another primary
 - **Stretch.** Several phrasings of the same scenario, to test robustness to wording.
 
 ## 8. Evaluation
@@ -255,7 +259,7 @@ Every answer gets exactly one outcome, computed by `planner/run.py: outcome()`, 
 - **Violations per rule id (§4):** which rules each approach breaks most often.
 - **Cost:** time, tokens and API cost per scenario.
 - **Plan quality (tutor Q2).** Descriptive only, measured on valid plans:
-  - the spread of units, and of hours per week, across open semesters (an ELECTIVE counts as 10 h/week, using NUS's 2.5 hours per unit)
+  - the spread of units, and of hours per week, across the planned semesters (an ELECTIVE counts as 10 h/week, using NUS's 2.5 hours per unit)
   - the last semester that still holds a required course
 
   None of these affect accuracy.
@@ -269,15 +273,15 @@ data/requirements/<AY>.json  degree rules, hand-typed                           
 scenarios/*.json           test students                                            Zechary
 planner/data.py            loaders and the semester-to-year mapping (done)          shared
 planner/validate.py        checks a plan against section 4                          Zechary (proposed)
-planner/solver.py          finds a plan or proves none exists                       Weng Mun
+planner/solver.py          finds a plan or proves none exists (written)             Weng Mun
 planner/translate.py       LLM: message -> scenario JSON                            Weng Mun
 planner/llm.py             the one place that calls the LLM API                     Javier
 planner/direct.py          LLM writes the plan itself                               Javier
 planner/run.py             runs an approach over the scenarios and scores it        Javier
-tests/                     data checks (pass) and acceptance tests (skip until the code exists)
+tests/                     data checks and solver tests (pass); acceptance tests (skip until validate() exists)
 ```
 
-The stubs already define each function's inputs and outputs. Run `pytest` before pushing.
+The stubs define the inputs and outputs of the functions that aren't written yet. Run `pytest` before pushing.
 
 ## 10. Work plan
 
@@ -306,4 +310,6 @@ The proposal's FP2 milestone (multi-semester planning by Fri 23 Oct) becomes the
    - *Re-planning as an MDP* when a course turns out not to be offered.
 3. **Repo visibility.** The GitHub repo is public. `.gitignore` keeps the proposal (which has matric numbers and emails) and the guidelines out of it. Consider making the repo private.
 4. **Older cohorts.** A student who matriculated before AY2025/26 (e.g. a real Year 4 student today) needs their own requirements file.
-5. **Responsible AI section (Zechary).** Possible points: the risk of trusting an LLM-made plan, stand-in years, and the validator as a safeguard.
+5. **Hybrid definition.** The proposal and §6.3 differ; pick one or drop it. The structured-steps version is simpler to build.
+6. **Optimisation** stays a stretch goal and is not decided.
+7. **Responsible AI section.** Possible points: the risk of trusting an LLM-made plan, stand-in years, and the validator as a safeguard.

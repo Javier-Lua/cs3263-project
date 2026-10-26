@@ -4,8 +4,7 @@ import pytest
 
 from planner.data import ROOT, catalog_for, load_catalogs, load_requirements, load_scenarios, term
 
-SCENARIO_FIELDS = {"matric_ay", "current_semester", "completed", "focus_area", "min_units", "max_units",
-                   "blocked_semesters", "must_take"}
+SCENARIO_FIELDS = {"matric_ay", "current_semester", "completed", "focus_area", "min_units", "max_units", "must_take"}
 
 
 def codes(tree):
