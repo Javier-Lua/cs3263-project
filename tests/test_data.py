@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from planner.data import ROOT, catalog_for, load_catalogs, load_requirements, load_scenarios, term
+from planner.data import MAX_UNITS, MIN_UNITS, ROOT, catalog_for, load_catalogs, load_requirements, load_scenarios, term
 
 SCENARIO_FIELDS = {"matric_ay", "current_semester", "completed", "focus_area", "min_units", "max_units", "must_take"}
 
@@ -60,6 +60,6 @@ def test_example_scenarios_are_well_formed():
         assert set(s) == SCENARIO_FIELDS, e["id"]
         assert s["focus_area"] in load_requirements(s["matric_ay"])["focus_areas"], e["id"]
         assert set(s["completed"]) | set(s["must_take"]) <= known, e["id"]
-        assert 1 <= s["current_semester"] <= 8 and s["min_units"] <= s["max_units"], e["id"]
+        assert 1 <= s["current_semester"] <= 8 and (s["min_units"], s["max_units"]) == (MIN_UNITS, MAX_UNITS), e["id"]
         assert e["expected"] in ("feasible", "impossible"), e["id"]
         assert ("witness" in e) == (e["expected"] == "feasible") == ("why" not in e), e["id"]

@@ -35,13 +35,13 @@ Any plan that breaks none of the rules in §4 counts as correct. We don't look f
 - **Timetable detail.** We use lectures and exams only, with no tutorials or labs. Each course keeps one fixed lecture group: the lowest class number.
 - **Prerequisites.** Minimum grades are ignored. Every student is assumed to have A-level H2 Maths, so MA1301/MA1301X prereqs count as met **(new)**.
 - **CS1101S.** We assume the standard CS1101S route into CS1010-type prerequisites. Approved alternatives such as UTC2851 are out of scope.
-- **Workload** is counted in units. The student gives a min and a max, which apply to every semester from `current_semester` to 8.
+- **Workload** is counted in units: 18 to 23 in every semester from `current_semester` to 8, in every scenario **(team decision)**. Scenarios keep `min_units` and `max_units`, always 18 and 23 (`tests/test_data.py` checks this), so the solver needed no change.
 
 Where the two proposals differed:
 
 | Question | Decision |
 |---|---|
-| Workload limit: units or hours/week? | Units, set by the student. Hours/week is only a balance statistic. |
+| Workload limit: units or hours/week? | Units, 18 to 23 a semester. Hours/week is only a balance statistic. |
 | Preclusions: keep or skip? | Keep. They are cheap, and the AI ones are a real trap (§3.3). |
 | Planning period | From `current_semester` to semester 8 |
 | Preferred ("fun") courses | `must_take`, a hard constraint |
@@ -139,7 +139,7 @@ This is the format of the gold scenarios, and also what `translate()` must outpu
 | `current_semester` | First semester to plan, 1–8. Every earlier semester is finished. |
 | `completed` | Course codes already passed. Catalog codes only; anything else the student mentions is left out. |
 | `focus_area` | Exactly one key of `focus_areas` in the requirements file |
-| `min_units`, `max_units` | Limits for every semester from `current_semester` to 8 |
+| `min_units`, `max_units` | Limits for every semester from `current_semester` to 8: always 18 and 23 (`MIN_UNITS`, `MAX_UNITS` in `planner/data.py`) |
 | `must_take` | Catalog courses the student insists on |
 
 `translate()` checks its output against this table: every field present with the right type, every code known, `focus_area` a real key, semesters within 1–8, and `min_units` ≤ `max_units`. Output that fails becomes `None` and is scored `no_answer`; it never reaches the solver **(proposed)**.
@@ -207,11 +207,14 @@ Two candidate definitions, to settle after Direct and Tool-assisted run (§11):
 
 ### 6.4 LLM settings (all approaches)
 
-- Every approach uses the same model and settings: temperature 0 where the API allows it, and every prompt and reply logged.
+- Every approach calls the LLM through `planner/llm.py: ask()`, so all of them use the same model and settings: Claude Sonnet 5.5 (`claude-sonnet-5-5`) with adaptive thinking at effort `high`. Sonnet 5.5 doesn't accept a temperature setting, so the 3 runs below are what measure how much answers vary.
+- A refused or cut-off reply can't be parsed, so it is scored `no_answer`. There is no fallback to another model, which would mix models in the results.
 - Each (scenario, approach) pair runs 3 times. Accuracy is computed per run, and we report the mean and the min–max over the 3 runs **(proposed)**. `solve()` is deterministic, so the ablation on gold scenarios runs once.
-- The runner writes `results/<date>-<approach>.jsonl`, one line per answer. Commit the runs the report uses, so its numbers can be reproduced **(proposed)**.
+- The runner (`python -m planner.run direct|tool|gold <scenario file> [runs]`) writes `results/<date>-<time>-<approach>.jsonl`, one line per answer, with every LLM reply and its tokens, seconds and cost. Prompts aren't logged; they are rebuilt from the code and data at that commit. Commit the runs the report uses, so its numbers can be reproduced **(proposed)**.
 - Before the full run, a 5-scenario pilot measures tokens and cost against the $100 claim.
-- Use prompt caching for the shared data part of the prompt.
+  - **Pilot, 27 Oct** (direct, the 5 examples, 1 run, `results/2026-10-27-2038-direct.jsonl`): $0.12 in all, 2.4 cents per answer, 3–14 s each. Caching worked: one write of the 18,400-token prompt, then reads. At this rate the full direct run (about 60 scenarios × 3) costs about $5, so the budget isn't the limit.
+  - It called S002, S003 and S005 impossible for the right reasons. Its S001 and S004 plans stay unscored until `validate()` exists, but the solver's model accepts both. Harder scenarios are needed to separate the approaches.
+- `ask()` caches the system prompt, so the shared data belongs there. The direct prompt is about 18,400 tokens, and a cached read of it costs under half a cent.
 
 ## 7. Scenarios and ground truth
 
@@ -223,7 +226,7 @@ Two candidate definitions, to settle after Direct and Tool-assisted run (§11):
   - The solver must agree with every label (`tests/test_examples.py`). When it doesn't, find the bug (solver, validator or scenario) before changing a label.
 - **What to cover:**
   - students early and late in the degree
-  - tight unit limits
+  - too many courses left to fit under 23 units a semester
   - must-take courses with long prereq chains
   - the CS2101/CS2103T pair
   - single-semester courses
@@ -254,6 +257,8 @@ Every answer gets exactly one outcome, computed by `planner/run.py: outcome()`, 
 - **Translation accuracy.** Compare `translate(text)` with the gold scenario field by field, comparing lists as sets. Report the share of scenarios translated perfectly, and the error rate for each field.
 - **Perfect-translation ablation.** Run `solve()` on the gold scenarios. This should score 100%, and if it does, every tool-assisted error is a translation error.
 
+`python -m planner.run tool` reports translation accuracy, and `python -m planner.run gold` runs the ablation.
+
 ### 8.3 Secondary metrics
 
 - **Violations per rule id (§4):** which rules each approach breaks most often.
@@ -275,9 +280,9 @@ planner/data.py            loaders and the semester-to-year mapping (done)      
 planner/validate.py        checks a plan against section 4                          Zechary (proposed)
 planner/solver.py          finds a plan or proves none exists (written)             Weng Mun
 planner/translate.py       LLM: message -> scenario JSON                            Weng Mun
-planner/llm.py             the one place that calls the LLM API                     Javier
-planner/direct.py          LLM writes the plan itself                               Javier
-planner/run.py             runs an approach over the scenarios and scores it        Javier
+planner/llm.py             the one place that calls the LLM API (written)           Javier
+planner/direct.py          LLM writes the plan itself (written)                     Javier
+planner/run.py             runs an approach on the scenarios, scores it (written)   Javier
 tests/                     data checks and solver tests (pass); acceptance tests (skip until validate() exists)
 ```
 
@@ -304,7 +309,7 @@ The proposal's FP2 milestone (multi-semester planning by Fri 23 Oct) becomes the
 
 ## 11. Open items
 
-1. **LLM provider and model.** We have no API key yet. Up to $100 can be claimed, and SoC-hosted open-weight models are free and could serve as a second model. Decide on Thu 22 Oct.
+1. **LLM provider and model. Decided:** Anthropic's Claude Sonnet 5.5 (§6.4). Put the API key in `.env` as `ANTHROPIC_KEY="..."`; `.env` is git-ignored. Up to $100 can be claimed. SoC-hosted open-weight models are free and could still serve as a second model.
 2. **Topics covered since the proposal.** Two candidates fit the project. Pick at most one, after the core runs.
    - *Probabilistic offerings:* estimate how likely a course is to be offered in a future semester from past years, instead of assuming AY2026/27 repeats. NUSMods has AY2018/19 onwards, and `build_catalog.py` can fetch any year.
    - *Re-planning as an MDP* when a course turns out not to be offered.

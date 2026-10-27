@@ -1,3 +1,4 @@
 requests
 pytest
 ortools
+anthropic
