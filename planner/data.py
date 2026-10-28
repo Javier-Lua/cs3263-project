@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ELECTIVE = "ELECTIVE"  # any course outside the catalog: always offered, no prereqs, lectures or exam; may repeat
 ELECTIVE_UNITS = 4
+MIN_UNITS, MAX_UNITS = 18, 23  # every scenario's min_units and max_units (team decision, design.md section 2)
 
 
 def load_catalogs():
