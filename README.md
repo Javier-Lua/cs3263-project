@@ -16,7 +16,7 @@ pytest
 
 Tests for code that isn't written yet are skipped, not failed. Tests never call the LLM.
 
-To call the LLM, copy `.env.local` to `.env` (git-ignored) and put the Claude API key in it. Then run an approach over a scenario file, for example `python -m planner.run direct examples 1`; the usage is in [planner/run.py](planner/run.py).
+To call the LLM, copy `.env.example` to `.env` (git-ignored) and put the Claude API key in it. Then run an approach over a scenario file, for example `python -m planner.run direct examples 1`; the usage is in [planner/run.py](planner/run.py).
 
 ## Layout
 

@@ -48,3 +48,12 @@ def test_wrong_fields_compares_lists_as_sets():
     assert run.wrong_fields(gold, {**gold, "completed": gold["completed"][::-1]}) == []
     assert run.wrong_fields(gold, {**gold, "current_semester": 4, "must_take": []}) == ["current_semester", "must_take"]
     assert run.wrong_fields(gold, None) == sorted(gold)
+
+
+def test_a_translation_that_crashes_the_solver_is_no_answer(monkeypatch):
+    entry = EXAMPLES[0]
+    monkeypatch.setattr(run, "translate", lambda text: {**entry["scenario"], "current_semester": 9})
+    plan, extra = run.answer("tool", entry)  # the real solver raises on semester 9; the run must go on
+    assert plan is None and "current_semester" in extra["solver_error"]
+    assert extra["wrong_fields"] == ["current_semester"]
+    assert run.score(entry, plan) == ([], "no_answer")

@@ -60,8 +60,12 @@ def answer(approach, entry):
     if approach == "gold":
         return solve(entry["scenario"]), {}
     translated = translate(entry["text"])
-    plan = None if translated is None else solve(translated)
-    return plan, {"translation": translated, "wrong_fields": wrong_fields(entry["scenario"], translated)}
+    extra = {"translation": translated, "wrong_fields": wrong_fields(entry["scenario"], translated)}
+    try:
+        plan = None if translated is None else solve(translated)
+    except Exception as error:  # a bad value got past translate()'s check; keep the error so a solver bug can't hide
+        plan, extra["solver_error"] = None, repr(error)
+    return plan, extra
 
 
 def main(argv=None):

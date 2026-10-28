@@ -142,7 +142,7 @@ This is the format of the gold scenarios, and also what `translate()` must outpu
 | `min_units`, `max_units` | Limits for every semester from `current_semester` to 8: always 18 and 23 (`MIN_UNITS`, `MAX_UNITS` in `planner/data.py`) |
 | `must_take` | Catalog courses the student insists on |
 
-`translate()` checks its output against this table: every field present with the right type, every code known, `focus_area` a real key, semesters within 1–8, and `min_units` ≤ `max_units`. Output that fails becomes `None` and is scored `no_answer`; it never reaches the solver **(proposed)**.
+`translate()` checks its output against this table: every field present with the right type, every code known, `focus_area` a real key, semesters within 1–8, and `min_units` ≤ `max_units`. Output that fails becomes `None` and is scored `no_answer`; it never reaches the solver **(proposed)**. If a bad value still gets past the check and the solver raises an error, the runner scores that answer `no_answer` as well and saves the error in the results line as `solver_error`, so that a solver bug can't pass for a bad translation.
 
 A scenario file (`scenarios/*.json`) is a list of entries with these fields:
 
