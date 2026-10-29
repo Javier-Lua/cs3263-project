@@ -22,6 +22,8 @@ Year 1 Semester 2 is 2, Year 2 Semester 1 is 3, and so on up to Year 4 Semester 
 NOTES = """Notes:
 - Use only course codes from the list of course codes. Leave out any course the student mentions that is not in it.
 - Write each code exactly as in the list, in capital letters, e.g. "CS2030S".
+- Do not guess. If the message does not say what a field needs, or says something outside what the field allows (for \
+example "Year 5", or no focus area), write null for that field.
 - Do not add any other field."""
 
 REPLY_FORMAT = """Reply with only the JSON object and no other text, for example

@@ -43,6 +43,8 @@ def test_check_accepts_every_gold_scenario(scenario):
     None,
     without("must_take"),
     {**SCENARIO, "blocked_semesters": [4]},  # a field the design no longer has
+    changed(current_semester=None),  # the message didn't say, and the prompt tells the model to write null
+    changed(focus_area=None),
     changed(current_semester="3"),  # not an integer
     changed(current_semester=True),  # a bool is not an integer
     changed(current_semester=0),
