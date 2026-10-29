@@ -2,9 +2,12 @@
 CS3263_Project_Proposal_Final.pdf
 CS3263-Project-Guidelines-2627.docx
 
+# Any .env file may hold a real API key, so only the template is tracked
+.env*
+!.env.example
+
 __pycache__/
 *.pyc
 .venv/
 .pytest_cache/
-.env
 .DS_Store
