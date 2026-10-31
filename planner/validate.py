@@ -1,4 +1,4 @@
-"""Check a plan against the rules in docs/design.md section 4. Owner: Zechary (proposed).
+"""Check a plan against the rules in docs/design.md section 4. Owner: Zechary.
 
 Share no code with planner/solver.py, so a solver bug can't hide in the checker too. Read data only through planner.data.
 """
