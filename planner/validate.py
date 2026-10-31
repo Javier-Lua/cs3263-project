@@ -117,7 +117,7 @@ def validate(scenario, plan):
     # 3. Preserve every entry under a bad semester key so it cannot disappear
     # silently during the remaining checks.
     for semester, courses in by_semester.items():
-        if not isinstance(semester, int) or not k0 <= semester <= 8:
+        if courses and (not isinstance(semester, int) or not k0 <= semester <= 8):  # an empty list plans nothing
             violations.append(_violation("horizon", courses, f"semester must be between {k0} and 8", semester))
 
     term_catalogs = {}

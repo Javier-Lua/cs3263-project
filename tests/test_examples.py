@@ -62,3 +62,8 @@ def test_solver_agrees_with_label(e):
     assert plan["status"] == ("plan" if e["expected"] == "feasible" else "impossible")
     if plan["status"] == "plan":
         assert needs(validate, e["scenario"], plan) == []
+
+
+def test_empty_semesters_before_the_current_one_are_fine():
+    plan = edited([("1", None, None), ("2", None, None)])  # adds "1": [] and "2": []; S001 starts at semester 3
+    assert needs(validate, S001["scenario"], plan) == []
