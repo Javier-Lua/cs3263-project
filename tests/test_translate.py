@@ -75,6 +75,12 @@ def test_prompt_lists_every_focus_area_and_course_code():
     assert all(code in prompt for code in translate.course_codes())
 
 
+def test_reply_format_has_placeholders_and_no_example_values():
+    prompt = translate.system_prompt()
+    assert "<YYYY-YYYY>" in prompt and "<1 to 8>" in prompt
+    assert "2025-2026" not in prompt  # the year of most gold scenarios, which the model could copy
+
+
 def test_translate_sends_the_message_and_returns_the_scenario(monkeypatch):
     seen = {}
 

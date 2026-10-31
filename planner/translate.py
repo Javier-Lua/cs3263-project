@@ -10,7 +10,7 @@ TASK = """You read a message from an NUS Computer Science student (BComp Compute
 down what it says as a scenario: a JSON object with exactly the seven fields below. Do not plan anything yourself."""
 
 FIELDS = f"""Fields:
-- "matric_ay": the academic year the student matriculated in, as a string "YYYY-YYYY". "AY2025/26" is "2025-2026".
+- "matric_ay": the academic year the student matriculated in, as a string "YYYY-YYYY". "AY2023/24" is "2023-2024".
 - "current_semester": the semester the student is about to start, as an integer from 1 to 8. Year 1 Semester 1 is 1, \
 Year 1 Semester 2 is 2, Year 2 Semester 1 is 3, and so on up to Year 4 Semester 2, which is 8.
 - "completed": the courses the student has already completed, as a list of course codes.
@@ -26,9 +26,10 @@ NOTES = """Notes:
 example "Year 5", or no focus area), write null for that field.
 - Do not add any other field."""
 
-REPLY_FORMAT = """Reply with only the JSON object and no other text, for example
-{"matric_ay": "2025-2026", "current_semester": 3, "completed": ["CS1231S"], "focus_area": "<a focus area>", \
-"min_units": 18, "max_units": 23, "must_take": ["CS2030S"]}"""
+# The form uses placeholders and no real values, so a message that leaves a field out can't be answered by copying one.
+REPLY_FORMAT = f"""Reply with only the JSON object and no other text, in this form:
+{{"matric_ay": "<YYYY-YYYY>", "current_semester": <1 to 8>, "completed": ["<course code>", ...], \
+"focus_area": "<a focus area>", "min_units": {MIN_UNITS}, "max_units": {MAX_UNITS}, "must_take": ["<course code>", ...]}}"""
 
 FIELD_TYPES = {"matric_ay": str, "current_semester": int, "completed": list, "focus_area": str,
                "min_units": int, "max_units": int, "must_take": list}
