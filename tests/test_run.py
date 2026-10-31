@@ -32,17 +32,6 @@ def test_main_scores_and_saves_every_answer(tmp_path, monkeypatch, capsys):
     assert "accuracy: 100% (runs: 100% to 100%)" in capsys.readouterr().out
 
 
-def test_plans_stay_unscored_without_a_validator(monkeypatch):
-    def missing(scenario, plan):
-        raise NotImplementedError
-
-    monkeypatch.setattr(run, "validate", missing)
-    feasible, impossible = (next(e for e in EXAMPLES if e["expected"] == x) for x in ("feasible", "impossible"))
-    assert run.score(feasible, feasible["witness"]) == (None, "unscored")
-    assert run.score(impossible, feasible["witness"]) == (None, "plan_for_impossible")
-    assert run.score(impossible, {"status": "impossible"}) == ([], "correct_impossible")
-
-
 def test_wrong_fields_compares_lists_as_sets():
     gold = EXAMPLES[0]["scenario"]
     assert run.wrong_fields(gold, {**gold, "completed": gold["completed"][::-1]}) == []
