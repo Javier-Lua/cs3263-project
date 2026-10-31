@@ -39,10 +39,7 @@ def score(entry, plan):
     """(violations, outcome) for one answer. A plan is checked against the gold scenario, never the approach's reading."""
     if plan is None or plan["status"] != "plan":
         return [], outcome(entry["expected"], plan, [])
-    try:
-        violations = validate(entry["scenario"], plan)
-    except NotImplementedError:  # shortcut: no validator yet, so plans for feasible scenarios stay unscored; re-run then
-        return None, "unscored" if entry["expected"] == "feasible" else outcome(entry["expected"], plan, [])
+    violations = validate(entry["scenario"], plan)
     return violations, outcome(entry["expected"], plan, violations)
 
 
@@ -103,14 +100,11 @@ def main(argv=None):
 def report(rows):
     """Print the outcome table (design.md section 8.1), accuracy over the runs, translation accuracy and cost."""
     counts = Counter(row["outcome"] for row in rows)
-    for name in OUTCOMES + (["unscored"] if counts["unscored"] else []):
+    for name in OUTCOMES:
         print(f"  {name:20} {counts[name]}")
-    if counts["unscored"]:
-        print("accuracy: not until validate() exists")
-    else:
-        per_run = [mean(row["outcome"] in CORRECT for row in rows if row["run"] == run)
-                   for run in sorted({row["run"] for row in rows})]
-        print(f"accuracy: {mean(per_run):.0%} (runs: {min(per_run):.0%} to {max(per_run):.0%})")
+    per_run = [mean(row["outcome"] in CORRECT for row in rows if row["run"] == run)
+               for run in sorted({row["run"] for row in rows})]
+    print(f"accuracy: {mean(per_run):.0%} (runs: {min(per_run):.0%} to {max(per_run):.0%})")
     translations = [row["wrong_fields"] for row in rows if "wrong_fields" in row]
     if translations:
         print(f"translated perfectly: {mean(not wrong for wrong in translations):.0%}; "
