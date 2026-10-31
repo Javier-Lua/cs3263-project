@@ -1,14 +1,14 @@
-"""Acceptance tests for the validator and the solver on scenarios/examples.json. They skip until that code exists."""
+"""Acceptance tests for the validator and the solver on every scenario file. They skip until that code exists."""
 import copy
 
 import pytest
 
-from planner.data import load_scenarios
+from planner.data import ROOT, load_scenarios
 from planner.solver import solve
 from planner.validate import validate
 
-EXAMPLES = {e["id"]: e for e in load_scenarios()}
-S001 = EXAMPLES["S001"]
+EVERY = [e for path in sorted((ROOT / "scenarios").glob("*.json")) for e in load_scenarios(path.stem)]
+S001 = next(e for e in EVERY if e["id"] == "S001")
 
 # Edits to the S001 witness as (semester, course out, course in), and the rule ids the validator must report.
 # It may report more (e.g. a workload break alongside). Each case was checked against the AY2026/27 data.
@@ -46,7 +46,7 @@ def edited(edits):
     return plan
 
 
-@pytest.mark.parametrize("e", [e for e in EXAMPLES.values() if e["expected"] == "feasible"], ids=lambda e: e["id"])
+@pytest.mark.parametrize("e", [e for e in EVERY if e["expected"] == "feasible"], ids=lambda e: e["id"])
 def test_witness_is_valid(e):
     assert needs(validate, e["scenario"], e["witness"]) == []
 
@@ -75,9 +75,14 @@ def test_duplicate_course_does_not_clash_with_itself():
     assert "exam_clash" not in rules
 
 
-@pytest.mark.parametrize("e", EXAMPLES.values(), ids=lambda e: e["id"])
+@pytest.mark.parametrize("e", EVERY, ids=lambda e: e["id"])
 def test_solver_agrees_with_label(e):
     plan = needs(solve, e["scenario"])
     assert plan["status"] == ("plan" if e["expected"] == "feasible" else "impossible")
     if plan["status"] == "plan":
         assert needs(validate, e["scenario"], plan) == []
+
+
+def test_empty_semesters_before_the_current_one_are_fine():
+    plan = edited([("1", None, None), ("2", None, None)])  # adds "1": [] and "2": []; S001 starts at semester 3
+    assert needs(validate, S001["scenario"], plan) == []
