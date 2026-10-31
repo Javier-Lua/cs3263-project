@@ -59,10 +59,11 @@ def system_prompt():
 
 
 def parse(reply):
-    """The JSON object in a model reply, or None if the reply doesn't hold one."""
+    """The first JSON object in a model reply, or None if the reply doesn't hold one. Text before or after it, such as a
+    note with braces in it, is ignored."""
     try:
-        scenario = json.loads(reply[reply.index("{"):reply.rindex("}") + 1])
-    except ValueError:  # no braces in the reply, or the JSON is cut off or malformed
+        scenario, _ = json.JSONDecoder().raw_decode(reply, reply.index("{"))
+    except ValueError:  # no brace in the reply, or the JSON is cut off or malformed
         return None
     return scenario if isinstance(scenario, dict) else None
 

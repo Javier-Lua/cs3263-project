@@ -24,6 +24,12 @@ def test_parse_reads_plain_and_fenced_json():
     assert translate.parse(f"```json\n{json.dumps(SCENARIO)}\n```") == SCENARIO
 
 
+def test_parse_reads_only_the_first_object():
+    scenario_json = json.dumps(SCENARIO)
+    assert translate.parse(f"Here you go: {scenario_json}\nNote: a {{brace}} in a note.") == SCENARIO
+    assert translate.parse(f"{scenario_json} {scenario_json}") == SCENARIO
+
+
 @pytest.mark.parametrize("reply", [
     "Sorry, I can't do that.",
     '{"matric_ay": "2025-2026", "current_semester": ',  # cut off
