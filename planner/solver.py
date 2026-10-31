@@ -34,7 +34,7 @@ def exams_clash(exam_a, exam_b):
     return start_a < end_b and start_b < end_a
 
 
-def add_course_variables(model, scenario, completed):
+def add_course_variables(model, scenario, completed, catalogs):
     """Create one 0/1 variable for every course the student could take in each remaining semester.
 
     A variable exists only for a course that is offered in that semester (in the catalog of that semester's academic
@@ -44,7 +44,6 @@ def add_course_variables(model, scenario, completed):
     Returns (planned_in, details). planned_in[(course, semester)] is the variable, 1 when the course is taken in that
     semester. details[(course, semester)] holds that offering's "units", "prereq", "lectures" and "exam".
     """
-    catalogs = load_catalogs()
     planned_in, details = {}, {}
     for semester in range(scenario["current_semester"], 9):
         academic_year, term_number = term(scenario["matric_ay"], semester)
@@ -139,11 +138,11 @@ def add_clash_rules(model, planned_in, details, first_semester):
                 model.Add(planned_in[code_a, semester] + planned_in[code_b, semester] <= 1)
 
 
-def add_preclusion_rules(model, by_course, completed):
+def add_preclusion_rules(model, by_course, completed, catalogs):
     """Rule 7 `preclusion`: two courses that preclude each other (either lists the other, in any year's catalog) are not
     both taken."""
     precluding_pairs = {frozenset((code, precluded))
-                        for catalog in load_catalogs().values()
+                        for catalog in catalogs.values()
                         for code, course in catalog["courses"].items()
                         for precluded in course["preclusions"]}
     for pair in precluding_pairs:
@@ -212,16 +211,17 @@ def build_model(scenario):
     if not 1 <= first_semester <= 8:
         raise ValueError(f"current_semester must be 1-8, got {first_semester}")
     completed = set(scenario["completed"])
+    catalogs = load_catalogs()
 
     model = cp_model.CpModel()
-    planned_in, details = add_course_variables(model, scenario, completed)
+    planned_in, details = add_course_variables(model, scenario, completed, catalogs)
     by_course = variables_by_course(planned_in)
     requirements = load_requirements(scenario["matric_ay"])
 
     add_each_course_at_most_once(model, by_course)
     add_prereq_rules(model, planned_in, details, completed, first_semester)
     add_clash_rules(model, planned_in, details, first_semester)
-    add_preclusion_rules(model, by_course, completed)
+    add_preclusion_rules(model, by_course, completed, catalogs)
     add_same_semester_rules(model, planned_in, requirements, first_semester)
     add_required_and_must_take_rules(model, scenario, requirements, by_course, completed)
     add_focus_area_rule(model, scenario, requirements, by_course, completed)
