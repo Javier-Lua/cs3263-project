@@ -83,16 +83,20 @@ def has_valid_types(scenario):
 
 
 def has_valid_values(scenario):
-    """True if every value of a scenario with the right types is allowed: a real academic year, semester 1-8, the fixed
-    unit limits, a real focus area and only known course codes."""
+    """True if every value of a scenario with the right types is allowed: an academic year we have degree rules for,
+    semester 1-8, the fixed unit limits, a focus area of that cohort and only known course codes."""
     years = re.fullmatch(r"([0-9]{4})-([0-9]{4})", scenario["matric_ay"])
     if years is None or int(years[2]) != int(years[1]) + 1:
+        return False
+    try:
+        requirements = load_requirements(scenario["matric_ay"])  # the file solve() reads
+    except KeyError:  # no degree rules for this cohort, so solve() could not plan for it
         return False
     if not 1 <= scenario["current_semester"] <= 8:
         return False
     if (scenario["min_units"], scenario["max_units"]) != (MIN_UNITS, MAX_UNITS):
         return False
-    if scenario["focus_area"] not in focus_area_names():
+    if scenario["focus_area"] not in requirements["focus_areas"]:
         return False
     known_codes = course_codes()
     return all(code in known_codes for code in scenario["completed"] + scenario["must_take"])

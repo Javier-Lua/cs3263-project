@@ -57,6 +57,7 @@ def test_check_accepts_every_gold_scenario(scenario):
     changed(current_semester=9),
     changed(matric_ay="AY2025/26"),
     changed(matric_ay="2025-2027"),
+    changed(matric_ay="2024-2025"),  # a well-formed year, but we have no degree rules for that cohort
     changed(focus_area="Quantum Cooking"),
     changed(min_units=16, max_units=20),  # the unit limits are fixed
     changed(completed="CS1231S"),  # not a list
