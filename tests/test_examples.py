@@ -56,6 +56,25 @@ def test_validator_catches(edits, rules):
     assert rules <= {v["rule"] for v in needs(validate, S001["scenario"], edited(edits))}
 
 
+def test_empty_semesters_outside_the_horizon_are_ignored():
+    plan = copy.deepcopy(S001["witness"])
+    plan["semesters"].update({"1": [], "2": []})
+    assert needs(validate, S001["scenario"], plan) == []
+
+
+def test_unknown_course_is_not_also_reported_as_unoffered():
+    rules = {v["rule"] for v in needs(validate, S001["scenario"], edited([("8", "ELECTIVE", "CS9999")]))}
+    assert "known" in rules
+    assert "offered" not in rules
+
+
+def test_duplicate_course_does_not_clash_with_itself():
+    rules = {v["rule"] for v in needs(validate, S001["scenario"], edited([("3", "ELECTIVE", "CS2030S")]))}
+    assert "repeat" in rules
+    assert "lecture_clash" not in rules
+    assert "exam_clash" not in rules
+
+
 @pytest.mark.parametrize("e", EVERY, ids=lambda e: e["id"])
 def test_solver_agrees_with_label(e):
     plan = needs(solve, e["scenario"])

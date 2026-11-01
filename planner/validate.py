@@ -135,10 +135,12 @@ def validate(scenario, plan):
         for code in courses:
             if code == ELECTIVE:
                 continue
+            if code not in known:
+                continue
             course = catalog["courses"].get(code)
             if course is None or term_number not in course["semesters"]:
                 violations.append(_violation("offered", [code], "course is not offered in this semester", semester))
-            else:
+            elif code not in offered_courses:
                 offered_courses.append(code)
 
         # 8 and 9: only courses that have a timetable entry for this term can clash.
