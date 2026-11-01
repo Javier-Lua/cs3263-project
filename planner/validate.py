@@ -117,7 +117,7 @@ def validate(scenario, plan):
     # 3. Preserve every entry under a bad semester key so it cannot disappear
     # silently during the remaining checks.
     for semester, courses in by_semester.items():
-        if not isinstance(semester, int) or not k0 <= semester <= 8:
+        if courses and (not isinstance(semester, int) or not k0 <= semester <= 8):  # an empty list plans nothing
             violations.append(_violation("horizon", courses, f"semester must be between {k0} and 8", semester))
 
     term_catalogs = {}
@@ -135,10 +135,12 @@ def validate(scenario, plan):
         for code in courses:
             if code == ELECTIVE:
                 continue
+            if code not in known:
+                continue
             course = catalog["courses"].get(code)
             if course is None or term_number not in course["semesters"]:
                 violations.append(_violation("offered", [code], "course is not offered in this semester", semester))
-            else:
+            elif code not in offered_courses:
                 offered_courses.append(code)
 
         # 8 and 9: only courses that have a timetable entry for this term can clash.

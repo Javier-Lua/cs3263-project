@@ -1,0 +1,2896 @@
+[
+ {
+  "id": "M01",
+  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 1 Semester 2. I've completed CS1101S, CS1231S and MA1521 so far. Besides those, I took GEA1000. I want to do the Software Engineering focus area. There's no other course I specifically need to take. I want to take 18 to 23 units every semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 2,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "MA1522",
+     "CS2100",
+     "ELECTIVE"
+    ],
+    "3": [
+     "CS2101",
+     "CS2103T",
+     "ST2334",
+     "CS2106",
+     "CS2109S"
+    ],
+    "4": [
+     "CS3230",
+     "CS3219",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "CS4211",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M02",
+  "text": "Hello, I matriculated in AY2026/27 as a Computer Science student, and I'm about to start Year 1 Semester 1. I'm a brand-new student. I haven't completed any courses yet. I'm going for the Algorithms & Theory focus area. I must take CS4234. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2026-2027",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Algorithms & Theory",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4234"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "1": [
+     "CS1101S",
+     "CS1231S",
+     "MA1521",
+     "MA1522",
+     "ELECTIVE"
+    ],
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "ST2334",
+     "ELECTIVE"
+    ],
+    "3": [
+     "CS2101",
+     "CS2103T",
+     "CS2106",
+     "CS2109S",
+     "CS3230"
+    ],
+    "4": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "CS4234",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS3231",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M03",
+  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my final semester. I took a leave of absence, so I'm behind on core courses. I've completed CS1101S, CS1231S, MA1521, CS2030S, CS2040S, CS2100, CS3230, CS2102, CS3223 and CS4225 so far. I'm going for the Database Systems focus area. There's no other course I specifically need to take. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "CS3230",
+    "CS2102",
+    "CS3223",
+    "CS4225"
+   ],
+   "focus_area": "Database Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "Six required courses (CS2101, CS2103T, CS2106, CS2109S, MA1522 and ST2334) are left for the final semester: 24 units, over the 23-unit limit. Units are the only problem: with a 24-unit limit they would fit."
+ },
+ {
+  "id": "M04",
+  "text": "Hello, I started my Computer Science degree in AY2025/26, and I'm about to start Year 3 Semester 1. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334 and CS2109S so far. I want to do the Artificial Intelligence focus area. I really want to take CS3263 before I graduate. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 5,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3263"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "5": [
+     "CS2101",
+     "CS2103T",
+     "CS2106",
+     "CS3230",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS3263",
+     "CS4248",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M05",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 2 Semester 1. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S and CS2040S. I want to do the Artificial Intelligence focus area. I must take CS4263. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 3,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4263"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS4263 (new in AY2026/27) precludes CS2109S, which the degree requires, so the student can't take both."
+ },
+ {
+  "id": "M06",
+  "text": "I started my Computer Science degree in AY2025/26, and I'm about to start Year 2 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S and CS3245. I want to do the Multimedia Information Retrieval focus area. I don't have any particular course I must take. I want to take 18 to 23 units every semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 3,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS3245"
+   ],
+   "focus_area": "Multimedia Information Retrieval",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "3": [
+     "CS2100",
+     "CS2109S",
+     "ST2334",
+     "CS2101",
+     "CS2103T"
+    ],
+    "4": [
+     "CS2106",
+     "CS2108",
+     "CS4248",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "CS3230",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M07",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 2 Semester 1. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S and CS2040S. My focus area is Multimedia Information Retrieval. There's no other course I specifically need to take. I want to take 18 to 23 units every semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 3,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S"
+   ],
+   "focus_area": "Multimedia Information Retrieval",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "From AY2026/27 on (the newest data, which stands in for later years), the only Multimedia IR primaries offered are CS2108 and CS4248, and the student has completed none, so 3 primaries can't be reached."
+ },
+ {
+  "id": "M08",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 3 Semester 2. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS3263. My focus area is Artificial Intelligence. I really want to take CS2107 and CS4248 before I graduate. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 6,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3263"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS2107",
+    "CS4248"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "6": [
+     "CS2107",
+     "CS4248",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M09",
+  "text": "Hey, I started my Computer Science degree in AY2025/26, and I'm about to start Year 4 Semester 1. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230, CS3263 and CS4248. I'm going for the Artificial Intelligence focus area. I definitely want to take CS4350. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3263",
+    "CS4248"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4350"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS4350 (Semester 1) needs CS3247 (Semester 2), which needs CS3241 (Semester 1), and none is done; only semesters 7 and 8 are left."
+ },
+ {
+  "id": "M10",
+  "text": "Hey, I started my Computer Science degree in AY2025/26, and I'm about to start Year 4 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2101, CS2103T, CS2106, CS3230, CS3219 and CS4211. My focus area is Software Engineering. I definitely want to take CS2108. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3219",
+    "CS4211"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS2108"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS2109S",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2108",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M11",
+  "text": "I'm a Computer Science student who matriculated in AY2026/27, and I'm about to start Year 1 Semester 2. I've passed CS1101S, CS1231S, MA1521 and MA1522. I want to do the Human-Computer Interaction focus area. I must take CS4249. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2026-2027",
+   "current_semester": 2,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522"
+   ],
+   "focus_area": "Human-Computer Interaction",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4249"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "2": [
+     "CS2111",
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "ST2334"
+    ],
+    "3": [
+     "CS3240",
+     "CS2101",
+     "CS2103T",
+     "CS2106",
+     "ELECTIVE"
+    ],
+    "4": [
+     "CS4249",
+     "CS3230",
+     "CS2109S",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M12",
+  "text": "Hi! I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 2 Semester 1. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S and CS2040S so far. I want to do the Computer Graphics and Games focus area. There's no other course I specifically need to take. Each semester I want at least 18 and at most 23 units. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 3,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S"
+   ],
+   "focus_area": "Computer Graphics and Games",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "3": [
+     "CS3241",
+     "CS2100",
+     "CS2109S",
+     "ST2334",
+     "ELECTIVE"
+    ],
+    "4": [
+     "CS3247",
+     "CS4247",
+     "CS2106",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "CS2101",
+     "CS2103T",
+     "CS3230",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M13",
+  "text": "I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 2 Semester 2. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334 and CS2109S. I want to do the Computer Security focus area. I must take CS4239. I'd like between 18 and 23 units each semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 4,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S"
+   ],
+   "focus_area": "Computer Security",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4239"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "4": [
+     "CS2105",
+     "CS2106",
+     "CS2107",
+     "CS2101",
+     "CS2103T"
+    ],
+    "5": [
+     "CS3235",
+     "CS3230",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS4239",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M14",
+  "text": "I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 3 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T and CS2106. I'm going for the Database Systems focus area. I must take CS4221. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 5,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106"
+   ],
+   "focus_area": "Database Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4221"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "5": [
+     "CS2102",
+     "CS3230",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS3223",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS4221",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M15",
+  "text": "I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 3 Semester 2. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS2105. Besides those, I took GEA1000 and ES2660. My focus area is Networking and Distributed Systems. There's no other course I specifically need to take. I want to take 18 to 23 units every semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 6,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS2105"
+   ],
+   "focus_area": "Networking and Distributed Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "6": [
+     "CS4222",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS3103",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M16",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 4 Semester 1. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS3210 so far. My focus area is Parallel Computing. I don't have any particular course I must take. I want to take 18 to 23 units every semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3210"
+   ],
+   "focus_area": "Parallel Computing",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS4223",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS3211",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M17",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 2, my final semester. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS3219 and CS4211. I'm going for the Software Engineering focus area. There's no other course I specifically need to take. Each semester I want at least 18 and at most 23 units. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS3219",
+    "CS4211"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "CS2106 and CS3230 (both required) are left for semester 8, a Semester 2, and in Semester 2 both have their lecture on Wednesday 10:00-12:00."
+ },
+ {
+  "id": "M18",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2026/27, and I'm about to start Year 1 Semester 1. I'm just starting university. I haven't completed any courses yet. My focus area is Programming Languages. I definitely want to take CS4212. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2026-2027",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Programming Languages",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4212"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "1": [
+     "CS1101S",
+     "CS1231S",
+     "MA1521",
+     "MA1522",
+     "ELECTIVE"
+    ],
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "ST2334",
+     "ELECTIVE"
+    ],
+    "3": [
+     "CS2104",
+     "CS2101",
+     "CS2103T",
+     "CS2109S",
+     "CS2106"
+    ],
+    "4": [
+     "CS4212",
+     "CS3230",
+     "CS4215",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M19",
+  "text": "Hey, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 1. I transferred into Computer Science late, so I still have several core courses left. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100 and ST2334. My focus area is Artificial Intelligence. I really want to take CS3231, CS2107 and CS4243 before I graduate. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3231",
+    "CS2107",
+    "CS4243"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS2109S",
+     "CS3231",
+     "CS2101",
+     "CS2103T",
+     "CS2106"
+    ],
+    "8": [
+     "CS4248",
+     "CS3230",
+     "CS2107",
+     "CS4243",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M20",
+  "text": "I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 3 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106 and CS3230. I want to do the Computer Graphics and Games focus area. I must take CS4350. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 5,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230"
+   ],
+   "focus_area": "Computer Graphics and Games",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4350"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "5": [
+     "CS3241",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS2111",
+     "CS3247",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS4350",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M21",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 3 Semester 2. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106 and CS3230 so far. I'm going for the Computer Graphics and Games focus area. I must take CS4350. I want to take 18 to 23 units every semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 6,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230"
+   ],
+   "focus_area": "Computer Graphics and Games",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4350"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS4350 (Semester 1) needs CS3247 (Semester 2), which needs CS3241 (Semester 1). Starting in semester 6, a Semester 2, CS3241 can come no earlier than semester 7, so CS4350 would need a ninth semester."
+ },
+ {
+  "id": "M22",
+  "text": "I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 2 Semester 2. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100 and ST2334. My focus area is Artificial Intelligence. I really want to take CS2108 before I graduate. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 4,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS2108"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "4": [
+     "CS2101",
+     "CS2103T",
+     "CS4243",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "CS2106",
+     "CS2109S",
+     "CS3241",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS3230",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS3268",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2108",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M23",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 4 Semester 2, my final semester. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2101, CS2103T, CS2106, CS3230, CS3219 and CS4211. I want to do the Software Engineering focus area. I really want to take CS2108 before I graduate. Each semester I want at least 18 and at most 23 units. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3219",
+    "CS4211"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS2108"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS2109S (required) and CS2108 (must-take, Semester 2 only) both have to go in semester 8, and their lectures clash."
+ },
+ {
+  "id": "M24",
+  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 1. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS2105. I'm going for the Algorithms & Theory focus area. I definitely want to take CS2107, CS4248 and CS4234. I'd like between 18 and 23 units each semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS2105"
+   ],
+   "focus_area": "Algorithms & Theory",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS2107",
+    "CS4248",
+    "CS4234"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS3241",
+     "CS3263",
+     "CS4234",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2107",
+     "CS2108",
+     "CS3236",
+     "CS4231",
+     "CS4248"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M25",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 1. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T and CS2105. I want to do the Computer Security focus area. I must take CS4248, CS4231, CS3236 and CS4222. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2105"
+   ],
+   "focus_area": "Computer Security",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4248",
+    "CS4231",
+    "CS3236",
+    "CS4222"
+   ]
+  },
+  "expected": "impossible",
+  "why": "Semester 8 must hold CS3235 and CS4230 (they need CS2106, CS2107 and CS3230 from semester 7) and CS4231, CS3236 and CS4222 (Semester 2 only), so CS4248 has to go in semester 7 with CS2107, and their exams clash."
+ },
+ {
+  "id": "M26",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 4 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS3263. My focus area is Artificial Intelligence. There's no other course I specifically need to take. I want to take 18 to 23 units every semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3263"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS3241",
+     "CS3264",
+     "CS3268",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS4262",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M27",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 2 Semester 1. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S and CS2040S. My focus area is Artificial Intelligence. I must take CS3244. Each semester I want at least 18 and at most 23 units. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 3,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3244"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS3244 is precluded by CS2109S, which the degree requires."
+ },
+ {
+  "id": "M28",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 3 Semester 1. I took CS3243 early, before I'd heard of CS2109S. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS3243, CS2101, CS2103T and CS2106. I want to do the Artificial Intelligence focus area. I don't have any particular course I must take. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 5,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS3243",
+    "CS2101",
+    "CS2103T",
+    "CS2106"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "The student completed CS3243, which precludes CS2109S, a required course."
+ },
+ {
+  "id": "M29",
+  "text": "Hello, I started my Computer Science degree in AY2025/26, and I'm about to start Year 3 Semester 1. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T and CS2106 so far. I want to do the Artificial Intelligence focus area. I really want to take CS4244 before I graduate. Each semester I want at least 18 and at most 23 units. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 5,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4244"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS4244 is in the catalog but isn't offered in AY2025/26 or AY2026/27, and AY2026/27 stands in for later years, so it can never be planned."
+ },
+ {
+  "id": "M30",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 3 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T and CS2106. I want to do the Software Engineering focus area. I must take CS3282. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 5,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3282"
+   ]
+  },
+  "expected": "impossible",
+  "why": "No catalog course can meet CS3282's prerequisites (its prereq is false), so it can never be planned."
+ },
+ {
+  "id": "M31",
+  "text": "Hey, I started my Computer Science degree in AY2025/26, and I'm about to start Year 2 Semester 1. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S and CS2040S so far. I'm going for the Artificial Intelligence focus area. I must take CS4347. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 3,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4347"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS4347 ran only in AY2025/26 Semester 1, which is past, and AY2026/27, which stands in for later years, doesn't offer it."
+ },
+ {
+  "id": "M32",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 2 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S and CS2040S. I want to do the Software Engineering focus area. I really want to take CS3227 before I graduate. I'd like between 18 and 23 units each semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 3,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3227"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "3": [
+     "CS2100",
+     "CS2101",
+     "CS2103T",
+     "CS2105",
+     "CS2107"
+    ],
+    "4": [
+     "CS2106",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "CS3227",
+     "CS3235",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS4239",
+     "ST2334",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2109S",
+     "CS3230",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M33",
+  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T and CS3219. I'm going for the Software Engineering focus area. I really want to take CS4218 before I graduate. I want to take 18 to 23 units every semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS3219"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4218"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS3230",
+     "CS3264",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2106",
+     "CS3213",
+     "CS4218",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M34",
+  "text": "I matriculated in AY2026/27 as a Computer Science student, and I'm about to start Year 1 Semester 1. I haven't taken any courses yet. My focus area is Artificial Intelligence. I definitely want to take CS3263 and CS4246. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2026-2027",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3263",
+    "CS4246"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "1": [
+     "CS1101S",
+     "CS1231S",
+     "MA1521",
+     "MA1522",
+     "ELECTIVE"
+    ],
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "ST2334",
+     "ELECTIVE"
+    ],
+    "3": [
+     "CS2101",
+     "CS2103T",
+     "CS2106",
+     "CS3230",
+     "ELECTIVE"
+    ],
+    "4": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS2109S",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS3263",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS4246",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M35",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 3 Semester 2. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS3230, CS2102, CS3223 and CS4225 so far. I'm going for the Database Systems focus area. I don't have any particular course I must take. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 6,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS3230",
+    "CS2102",
+    "CS3223",
+    "CS4225"
+   ],
+   "focus_area": "Database Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "6": [
+     "CS2105",
+     "CS2107",
+     "CS2111",
+     "CS3213",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS2106",
+     "CS3241",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M36",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 2 Semester 2. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334 and CS2109S. Besides those, I took GEA1000, GESS1025, ES2660, IS1108 and CFG1002. I want to do the Networking and Distributed Systems focus area. I don't have any particular course I must take. I want to take 18 to 23 units every semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 4,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S"
+   ],
+   "focus_area": "Networking and Distributed Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "4": [
+     "CS2105",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "CS2106",
+     "CS3210",
+     "CS3230",
+     "CS3241",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS2101",
+     "CS2103T",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS3103",
+     "CS4226",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M37",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my final semester. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2106, CS3230, CS2102, CS3223 and CS4225 so far. I'm going for the Database Systems focus area. There's no other course I specifically need to take. Each semester I want at least 18 and at most 23 units. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2106",
+    "CS3230",
+    "CS2102",
+    "CS3223",
+    "CS4225"
+   ],
+   "focus_area": "Database Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "8": [
+     "CS2101",
+     "CS2103T",
+     "CS2108",
+     "CS3236",
+     "CS4215"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M38",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 2, my final semester. I failed CS2030S once and still need to pass it. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2040S, CS2100, ST2334, CS2109S, CS2106, CS3230, CS2102, CS3223 and CS4225. I want to do the Database Systems focus area. I don't have any particular course I must take. Each semester I want at least 18 and at most 23 units. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2106",
+    "CS3230",
+    "CS2102",
+    "CS3223",
+    "CS4225"
+   ],
+   "focus_area": "Database Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "CS2103T (required) needs CS2030S in an earlier semester, but both are left for the final semester."
+ },
+ {
+  "id": "M39",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 3 Semester 2. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S and ST2334 so far. I want to do the Artificial Intelligence focus area. I definitely want to take CS3264, CS4262 and CS3231. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 6,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "ST2334"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3264",
+    "CS4262",
+    "CS3231"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "6": [
+     "CS2100",
+     "CS2102",
+     "CS2109S",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS2106",
+     "CS3231",
+     "CS3264",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2101",
+     "CS2103T",
+     "CS3230",
+     "CS4262",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M40",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 1. So far I've completed CS1101S, CS1231S, MA1521, CS2030S, CS2040S, CS2102, CS3223 and CS4225. I'm going for the Database Systems focus area. I must take CS2107, CS2105 and CS3219. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "CS2030S",
+    "CS2040S",
+    "CS2102",
+    "CS3223",
+    "CS4225"
+   ],
+   "focus_area": "Database Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS2107",
+    "CS2105",
+    "CS3219"
+   ]
+  },
+  "expected": "impossible",
+  "why": "11 courses are left (8 required, 3 must-take), but two semesters hold at most 10, since 5 x 4 units is the most under the 23-unit limit. It would be impossible even without the limit: CS2106 needs CS2100 first, so CS2100 goes in semester 7 and CS2106 in semester 8, and CS3230's lecture clashes with CS2100's in Semester 1 (Friday 14:00-16:00) and with CS2106's in Semester 2 (Wednesday 10:00-12:00), so CS3230 fits in neither."
+ },
+ {
+  "id": "M41",
+  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my final semester. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2101, CS2103T, CS2106, CS3230, CS3219 and CS4211. I'm going for the Software Engineering focus area. I definitely want to take CS3263. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3219",
+    "CS4211"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3263"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS3263 needs CS2109S in an earlier semester, but CS2109S isn't done and only semester 8 is left."
+ },
+ {
+  "id": "M42",
+  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2101, CS2103T, CS2106, CS3230, CS3219 and CS4211. I want to do the Software Engineering focus area. I really want to take CS3263 before I graduate. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3219",
+    "CS4211"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3263"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS2102",
+     "CS2105",
+     "CS2107",
+     "CS2109S",
+     "CS3241"
+    ],
+    "8": [
+     "CS2108",
+     "CS3263",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M43",
+  "text": "Hello, I started my Computer Science degree in AY2025/26, and I'm about to start Year 4 Semester 1. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106 and CS3230. I'm going for the Computer Graphics and Games focus area. There's no other course I specifically need to take. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230"
+   ],
+   "focus_area": "Computer Graphics and Games",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS2105",
+     "CS3241",
+     "CS3264",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2108",
+     "CS3247",
+     "CS4247",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M44",
+  "text": "I started my Computer Science degree in AY2025/26, and I'm about to start Year 4 Semester 2, my final semester. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106 and CS3230. I want to do the Computer Graphics and Games focus area. I don't have any particular course I must take. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230"
+   ],
+   "focus_area": "Computer Graphics and Games",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "No Computer Graphics and Games primary is done. CS3241 runs only in Semester 1 and the other plannable primaries need it, so semester 8 can't give 3."
+ },
+ {
+  "id": "M45",
+  "text": "Hey, I started my Computer Science degree in AY2025/26, and I'm about to start Year 3 Semester 2. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106 and CS3230 so far. My focus area is Human-Computer Interaction. There's no other course I specifically need to take. Each semester I want at least 18 and at most 23 units. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 6,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230"
+   ],
+   "focus_area": "Human-Computer Interaction",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "6": [
+     "CS2102",
+     "CS2105",
+     "CS2107",
+     "CS2111",
+     "CS3213"
+    ],
+    "7": [
+     "CS3240",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS3211",
+     "CS4249",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M46",
+  "text": "I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 1. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106 and CS3230 so far. I'm going for the Human-Computer Interaction focus area. There's no other course I specifically need to take. I'd like between 18 and 23 units each semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230"
+   ],
+   "focus_area": "Human-Computer Interaction",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "CS2111 runs only in Semester 2, so semester 8 is its earliest, and every other HCI primary needs it first."
+ },
+ {
+  "id": "M47",
+  "text": "I started my Computer Science degree in AY2025/26, and I'm about to start Year 4 Semester 1. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS2105. I'm going for the Computer Security focus area. There's no other course I specifically need to take. I want to take 18 to 23 units every semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS2105"
+   ],
+   "focus_area": "Computer Security",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "7": [
+     "CS2107",
+     "CS3241",
+     "CS3264",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2108",
+     "CS3235",
+     "CS4230",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M48",
+  "text": "I started my Computer Science degree in AY2026/27, and I'm about to start Year 1 Semester 2. I've passed CS1101S, CS1231S, MA1521 and MA1522. I'm going for the Database Systems focus area. I must take CS4224. I want to take 18 to 23 units every semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2026-2027",
+   "current_semester": 2,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522"
+   ],
+   "focus_area": "Database Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4224"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "ST2334",
+     "ELECTIVE"
+    ],
+    "3": [
+     "CS2102",
+     "CS2106",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "4": [
+     "CS3223",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS2101",
+     "CS2103T",
+     "CS2109S",
+     "CS3230",
+     "CS4224"
+    ],
+    "8": [
+     "CS4221",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M49",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 2, my final semester. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106 and CS3230. I'm going for the Algorithms & Theory focus area. There's no other course I specifically need to take. I'd like between 18 and 23 units each semester. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230"
+   ],
+   "focus_area": "Algorithms & Theory",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "8": [
+     "CS2102",
+     "CS2108",
+     "CS3227",
+     "CS3236",
+     "CS4231"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M50",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 2, my final semester. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS3219 so far. I'm going for the Software Engineering focus area. I definitely want to take CS4211. I want to take 18 to 23 units every semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3219"
+   ],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4211"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS4211 runs only in Semester 1 in AY2026/27, the newest data, which stands in for later years, and only semester 8, a Semester 2, is left. (It also ran in Semester 2 in AY2025/26.)"
+ },
+ {
+  "id": "M51",
+  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my final semester. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS3263. I'm going for the Artificial Intelligence focus area. I definitely want to take CS4262. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 8,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS3263"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4262"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS4262 needs CS3244 or CS3264 in an earlier semester; neither is done (CS3244 is precluded by CS2109S anyway), and only semester 8 is left."
+ },
+ {
+  "id": "M52",
+  "text": "I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 3 Semester 2. So far I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106 and CS3230. My focus area is Artificial Intelligence. I definitely want to take CS4262. Each semester I want at least 18 and at most 23 units. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 6,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4262"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "6": [
+     "CS2102",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS3264",
+     "CS3268",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS4262",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M53",
+  "text": "Hi! I matriculated in AY2026/27 as a Computer Science student, and I'm about to start Year 1 Semester 2. I've completed CS1101S, CS1231S, MA1521 and MA1522 so far. I'm going for the Parallel Computing focus area. I must take CS4223. I want to take 18 to 23 units every semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2026-2027",
+   "current_semester": 2,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522"
+   ],
+   "focus_area": "Parallel Computing",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4223"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "ST2334",
+     "ELECTIVE"
+    ],
+    "3": [
+     "CS2106",
+     "CS3210",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "4": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS2101",
+     "CS2103T",
+     "CS2109S",
+     "CS3230",
+     "CS4223"
+    ],
+    "8": [
+     "CS3211",
+     "CS4231",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M54",
+  "text": "Hello, I started my Computer Science degree in AY2025/26, and I'm about to start Year 3 Semester 2. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, ST2334, CS2109S, CS2101, CS2103T, CS2106, CS3230 and CS2104. My focus area is Programming Languages. I must take CS4212. Each semester I want at least 18 and at most 23 units. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 6,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2030S",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2101",
+    "CS2103T",
+    "CS2106",
+    "CS3230",
+    "CS2104"
+   ],
+   "focus_area": "Programming Languages",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4212"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "6": [
+     "CS2102",
+     "CS2105",
+     "CS2107",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS3211",
+     "CS4212",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M55",
+  "text": "Hello, I matriculated in AY2025/26 as a Computer Science student, and I'm about to start Year 4 Semester 1. I failed CS2030S and still need to pass it. I've passed CS1101S, CS1231S, MA1521, MA1522, CS2040S, CS2100, ST2334, CS2109S, CS2106, CS3230, CS2102, CS3223 and CS4225. I'm going for the Database Systems focus area. I definitely want to take CS3219. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 7,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522",
+    "CS2040S",
+    "CS2100",
+    "ST2334",
+    "CS2109S",
+    "CS2106",
+    "CS3230",
+    "CS2102",
+    "CS3223",
+    "CS4225"
+   ],
+   "focus_area": "Database Systems",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3219"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS3219 needs CS2103T, which needs CS2030S; with CS2030S not done, that chain needs three semesters and only two are left."
+ },
+ {
+  "id": "M56",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 1 Semester 1. I'm a brand-new student. I haven't completed any courses yet. I want to do the Software Engineering focus area. There's no other course I specifically need to take. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "1": [
+     "CS1101S",
+     "CS1231S",
+     "MA1521",
+     "MA1522",
+     "ELECTIVE"
+    ],
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "CS2107",
+     "ST2334"
+    ],
+    "3": [
+     "CS2101",
+     "CS2103T",
+     "CS2105",
+     "CS2106",
+     "CS3230"
+    ],
+    "4": [
+     "CS3213",
+     "CS3219",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS4211",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2109S",
+     "CS3227",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M57",
+  "text": "I started my Computer Science degree in AY2025/26, and I'm about to start Year 1 Semester 1. I'm just starting university. I haven't completed any courses yet. I want to do the Artificial Intelligence focus area. I definitely want to take CS3264 and CS4262. I want to take 18 to 23 units every semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3264",
+    "CS4262"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "1": [
+     "CS1101S",
+     "CS1231S",
+     "MA1521",
+     "MA1522",
+     "ELECTIVE"
+    ],
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "ST2334",
+     "ELECTIVE"
+    ],
+    "3": [
+     "CS2101",
+     "CS2103T",
+     "CS2106",
+     "CS3230",
+     "ELECTIVE"
+    ],
+    "4": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS2109S",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS3264",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS4262",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M58",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 1 Semester 2. I've passed CS1101S, CS1231S and MA1521. I'm going for the Computer Security focus area. I really want to take CS4239 and CS4248 before I graduate. I'd like between 18 and 23 units each semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 2,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521"
+   ],
+   "focus_area": "Computer Security",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4239",
+    "CS4248"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "CS2107",
+     "ST2334"
+    ],
+    "3": [
+     "CS2105",
+     "CS2106",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "4": [
+     "CS3235",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS2101",
+     "CS2103T",
+     "CS2109S",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS4239",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS3230",
+     "CS4248",
+     "MA1522",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M59",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 1 Semester 1. I'm a brand-new student. I haven't completed any courses yet. My focus area is Multimedia Information Retrieval. There's no other course I specifically need to take. Each semester I want at least 18 and at most 23 units. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Multimedia Information Retrieval",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "From AY2026/27 on (the newest data, which stands in for later years), the only Multimedia IR primaries offered are CS2108 and CS4248, so 3 primaries can't be reached, however many semesters are left."
+ },
+ {
+  "id": "M60",
+  "text": "Hello, I matriculated in AY2026/27 as a Computer Science student, and I'm about to start Year 1 Semester 2. I've completed CS1101S, CS1231S, MA1521 and MA1522 so far. I'm going for the Artificial Intelligence focus area. I definitely want to take CS3243. I want to take 18 to 23 units every semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2026-2027",
+   "current_semester": 2,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3243"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS3243 precludes CS2109S, which the degree requires, so the student can't take both."
+ }
+]

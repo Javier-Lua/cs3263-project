@@ -53,9 +53,11 @@ def test_required_courses_are_offered_every_year():
             assert catalog["courses"][code]["semesters"], (ay, code)
 
 
-def test_example_scenarios_are_well_formed():
+def test_scenarios_are_well_formed():
     known = set().union(*(c["courses"] for c in load_catalogs().values()))
-    for e in load_scenarios():
+    every = [e for path in sorted((ROOT / "scenarios").glob("*.json")) for e in load_scenarios(path.stem)]
+    assert len({e["id"] for e in every}) == len(every)
+    for e in every:
         s = e["scenario"]
         assert set(s) == SCENARIO_FIELDS, e["id"]
         assert s["focus_area"] in load_requirements(s["matric_ay"])["focus_areas"], e["id"]
