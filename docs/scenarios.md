@@ -1,30 +1,30 @@
 # Scenarios
 
-`scenarios/main.json` holds the 55 test students used for the full runs. `scenarios/examples.json` holds the 5 examples (S001-S005) used while building and piloting the approaches, so they are kept out of the main set.
+`scenarios/main.json` holds the 60 test students used for the full runs. `scenarios/examples.json` holds the 5 examples (S001-S005) used while building and piloting the approaches, so they are kept out of the main set.
 
 Each scenario was written as JSON first, and its message was written from the JSON, so the message states every field: the matriculation year, the semester the student is about to start, the completed courses, the focus area, the must-take courses and both unit limits. Every label was checked against the solver (`tests/test_examples.py`). Every feasible scenario has a witness plan that the validator accepts: M01-M19 have witnesses written without the solver, and the rest use the solver's plan.
 
-34 scenarios are feasible and 21 are impossible. "Y2S1" means Year 2 Semester 1, which is semester 3 in the scenario format. Unless noted, the student matriculated in AY2025/26.
+37 scenarios are feasible and 23 are impossible. "Y2S1" means Year 2 Semester 1, which is semester 3 in the scenario format. Unless noted, the student matriculated in AY2025/26.
 
 ## What they cover
 
 | What | Scenarios |
 |---|---|
-| Each point in the degree | Y1S1: M02, M18, M34; Y1S2: M01, M11, M48, M53; Y2S1: M05, M06, M07, M12, M27, M31, M32; Y2S2: M13, M22, M36; Y3S1: M04, M14, M20, M28, M29, M30; Y3S2: M08, M15, M21, M35, M39, M45, M52, M54; Y4S1: M09, M10, M16, M19, M24, M25, M26, M33, M40, M42, M43, M46, M47, M55; Y4S2: M03, M17, M23, M37, M38, M41, M44, M49, M50, M51 |
-| Every focus area | Algorithms & Theory: M02, M24, M49; Artificial Intelligence: M04, M05, M08, M09, M19, M22, M26, M27, M28, M29, M31, M34, M39, M51, M52; Computer Graphics and Games: M12, M20, M21, M43, M44; Computer Security: M13, M25, M47; Database Systems: M03, M14, M35, M37, M38, M40, M48, M55; Human-Computer Interaction: M11, M45, M46; Multimedia Information Retrieval: M06, M07; Networking and Distributed Systems: M15, M36; Parallel Computing: M16, M53; Programming Languages: M18, M54; Software Engineering: M01, M10, M17, M23, M30, M32, M33, M41, M42, M50 |
+| Each point in the degree | Y1S1: M02, M18, M34, M56, M57, M59; Y1S2: M01, M11, M48, M53, M58, M60; Y2S1: M05, M06, M07, M12, M27, M31, M32; Y2S2: M13, M22, M36; Y3S1: M04, M14, M20, M28, M29, M30; Y3S2: M08, M15, M21, M35, M39, M45, M52, M54; Y4S1: M09, M10, M16, M19, M24, M25, M26, M33, M40, M42, M43, M46, M47, M55; Y4S2: M03, M17, M23, M37, M38, M41, M44, M49, M50, M51 |
+| Every focus area | Algorithms & Theory: M02, M24, M49; Artificial Intelligence: M04, M05, M08, M09, M19, M22, M26, M27, M28, M29, M31, M34, M39, M51, M52, M57, M60; Computer Graphics and Games: M12, M20, M21, M43, M44; Computer Security: M13, M25, M47, M58; Database Systems: M03, M14, M35, M37, M38, M40, M48, M55; Human-Computer Interaction: M11, M45, M46; Multimedia Information Retrieval: M06, M07, M59; Networking and Distributed Systems: M15, M36; Parallel Computing: M16, M53; Programming Languages: M18, M54; Software Engineering: M01, M10, M17, M23, M30, M32, M33, M41, M42, M50, M56 |
 | More courses left than fit under 23 units a semester | M03, M19, M39, M40 |
-| Must-take or focus courses with long prerequisite chains | M02, M09, M11, M13, M14, M18, M20, M21, M25, M33, M34, M38, M39, M41, M42, M43, M45, M46, M47, M48, M51, M52, M53, M55 |
+| Must-take or focus courses with long prerequisite chains | M02, M09, M11, M13, M14, M18, M20, M21, M25, M33, M34, M38, M39, M41, M42, M43, M45, M46, M47, M48, M51, M52, M53, M55, M57, M58 |
 | The CS2101/CS2103T same-semester pair | M04, M19, M37, M38 |
-| Courses offered in one semester only | M02, M10, M11, M12, M13, M14, M16, M19, M20, M21, M24, M25, M39, M43, M44, M45, M46, M48, M49, M50, M52, M53, M54 |
-| Real lecture clashes in Sem 2: CS2108 with CS2109S, and CS2106 with CS3230 | M10, M17, M22, M23 |
-| Real exam clash: CS2107 and CS4248 in Sem 1 | M08, M24, M25 |
-| The AI preclusions (CS2109S, CS3243, CS3244, CS4263) | M05, M26, M27, M28, M51 |
-| Multimedia IR: only CS2108 and CS4248 can still be planned | M06, M07 |
+| Courses offered in one semester only | M02, M10, M11, M12, M13, M14, M16, M19, M20, M21, M24, M25, M39, M43, M44, M45, M46, M48, M49, M50, M52, M53, M54, M58 |
+| Real lecture clashes: CS2108 with CS2109S and CS2106 with CS3230 in Sem 2, CS2100 with CS3230 in Sem 1 | M10, M17, M22, M23, M40 |
+| Real exam clash: CS2107 and CS4248 in Sem 1 | M08, M24, M25, M58 |
+| The AI preclusions (CS2109S, CS3243, CS3244, CS4263) | M05, M26, M27, M28, M51, M57, M60 |
+| Multimedia IR: only CS2108 and CS4248 can still be planned | M06, M07, M59 |
 | Must-take courses that can never be planned | M29, M30, M31 |
 | Courses that changed between AY2025/26 and AY2026/27 | M31, M32, M48, M50, M54 |
 | Few courses left, but every semester needs at least 18 units | M35 |
 | Courses mentioned that aren't in the catalog (the translation must leave them out) | M01, M15, M36 |
-| Students who matriculated in AY2026/27 | M02, M11, M18, M34, M48, M53 |
+| Students who matriculated in AY2026/27 | M02, M11, M18, M34, M48, M53, M60 |
 
 ## The scenarios
 
@@ -69,7 +69,7 @@ Each scenario was written as JSON first, and its message was written from the JS
 | M37 | Final semester, CS2101 and CS2103T both left | The pair goes together in the last semester | feasible |
 | M38 | Final semester, CS2030S, CS2101 and CS2103T left | CS2103T needs CS2030S first, with one semester left | impossible |
 | M39 | About to start Y3S2, 6 required courses left, must take CS3264, CS4262 and CS3231 | Two chains (CS2100 -> CS2106 -> CS4262 and CS2109S -> CS3264) and a Sem-1-only course in 3 semesters | feasible |
-| M40 | About to start Y4S1, 8 required courses and 3 must-takes left | 11 courses, room for 10 | impossible |
+| M40 | About to start Y4S1, 8 required courses and 3 must-takes left | 11 courses, room for 10, and CS3230 clashes with CS2100 and CS2106 | impossible |
 | M41 | Final semester, CS2109S not done, must take CS3263 | The must-take needs a course that isn't done yet | impossible |
 | M42 | About to start Y4S1, CS2109S not done, must take CS3263 | Same as M41 but one semester earlier: CS2109S in Y4S1, CS3263 in Y4S2 | feasible |
 | M43 | About to start Y4S1, Computer Graphics and Games, no primary done | CS3241 in Y4S1, then CS3247 and CS4247 in Y4S2: the only way | feasible |
@@ -85,10 +85,15 @@ Each scenario was written as JSON first, and its message was written from the JS
 | M53 | AY2026/27 student about to start Y1S2, Parallel Computing, must take CS4223 | CS2100 -> CS2106 and CS3210 -> CS4223 (Sem 1 only) | feasible |
 | M54 | About to start Y3S2, Programming Languages, must take CS4212 | CS4212 moved from Sem 1 (AY2025/26) to Sem 2 (AY2026/27); the newest data decides | feasible |
 | M55 | About to start Y4S1, CS2030S not done, must take CS3219 | A three-step chain with two semesters left | impossible |
+| M56 | New AY2025/26 student, nothing done, Software Engineering | The whole degree to plan, with nothing else asked: the long-horizon baseline | feasible |
+| M57 | New AY2025/26 student, AI, must take CS3264 and CS4262 | CS2109S -> CS3264 -> CS4262 over the whole degree; CS3244, the other way into CS4262, is precluded | feasible |
+| M58 | About to start Y1S2, Computer Security, must take CS4239 and CS4248 | CS4239 needs CS3235, which needs CS2105, CS2106 and CS2107; CS4248 can't share a Sem 1 with CS2107 | feasible |
+| M59 | New AY2025/26 student, Multimedia IR | Eight semesters left, but only 2 primaries are ever offered | impossible |
+| M60 | AY2026/27 student about to start Y1S2, AI, must take CS3243 | Plenty of time left, but CS3243 and the required CS2109S preclude each other | impossible |
 
 ## Why each impossible scenario is impossible
 
-- **M03:** Six required courses (CS2101, CS2103T, CS2106, CS2109S, CS3230 and ST2334) are left for the final semester: 24 units, over the 23-unit limit.
+- **M03:** Six required courses (CS2101, CS2103T, CS2106, CS2109S, MA1522 and ST2334) are left for the final semester: 24 units, over the 23-unit limit. Units are the only problem: with a 24-unit limit they would fit.
 - **M05:** CS4263 (new in AY2026/27) precludes CS2109S, which the degree requires, so the student can't take both.
 - **M07:** From AY2026/27 on (the newest data, which stands in for later years), the only Multimedia IR primaries offered are CS2108 and CS4248, and the student has completed none, so 3 primaries can't be reached.
 - **M09:** CS4350 (Semester 1) needs CS3247 (Semester 2), which needs CS3241 (Semester 1), and none is done; only semesters 7 and 8 are left.
@@ -102,10 +107,12 @@ Each scenario was written as JSON first, and its message was written from the JS
 - **M30:** No catalog course can meet CS3282's prerequisites (its prereq is false), so it can never be planned.
 - **M31:** CS4347 ran only in AY2025/26 Semester 1, which is past, and AY2026/27, which stands in for later years, doesn't offer it.
 - **M38:** CS2103T (required) needs CS2030S in an earlier semester, but both are left for the final semester.
-- **M40:** 11 courses are left (8 required, 3 must-take), but two semesters hold at most 10, since 5 x 4 units is the most under the 23-unit limit.
+- **M40:** 11 courses are left (8 required, 3 must-take), but two semesters hold at most 10, since 5 x 4 units is the most under the 23-unit limit. It would be impossible even without the limit: CS2106 needs CS2100 first, so CS2100 goes in semester 7 and CS2106 in semester 8, and CS3230's lecture clashes with CS2100's in Semester 1 (Friday 14:00-16:00) and with CS2106's in Semester 2 (Wednesday 10:00-12:00), so CS3230 fits in neither.
 - **M41:** CS3263 needs CS2109S in an earlier semester, but CS2109S isn't done and only semester 8 is left.
 - **M44:** No Computer Graphics and Games primary is done. CS3241 runs only in Semester 1 and the other plannable primaries need it, so semester 8 can't give 3.
 - **M46:** CS2111 runs only in Semester 2, so semester 8 is its earliest, and every other HCI primary needs it first.
 - **M50:** CS4211 runs only in Semester 1 in AY2026/27, the newest data, which stands in for later years, and only semester 8, a Semester 2, is left. (It also ran in Semester 2 in AY2025/26.)
 - **M51:** CS4262 needs CS3244 or CS3264 in an earlier semester; neither is done (CS3244 is precluded by CS2109S anyway), and only semester 8 is left.
 - **M55:** CS3219 needs CS2103T, which needs CS2030S; with CS2030S not done, that chain needs three semesters and only two are left.
+- **M59:** From AY2026/27 on (the newest data, which stands in for later years), the only Multimedia IR primaries offered are CS2108 and CS4248, so 3 primaries can't be reached, however many semesters are left.
+- **M60:** CS3243 precludes CS2109S, which the degree requires, so the student can't take both.

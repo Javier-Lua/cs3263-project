@@ -150,7 +150,7 @@
  },
  {
   "id": "M03",
-  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my final semester. I took a leave of absence, so I'm behind on core courses. I've completed CS1101S, CS1231S, MA1521, MA1522, CS2030S, CS2040S, CS2100, CS2102, CS3223 and CS4225 so far. I'm going for the Database Systems focus area. There's no other course I specifically need to take. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
+  "text": "Hey, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 4 Semester 2, my final semester. I took a leave of absence, so I'm behind on core courses. I've completed CS1101S, CS1231S, MA1521, CS2030S, CS2040S, CS2100, CS3230, CS2102, CS3223 and CS4225 so far. I'm going for the Database Systems focus area. There's no other course I specifically need to take. I'd like between 18 and 23 units each semester. Can you plan the rest of my degree?",
   "scenario": {
    "matric_ay": "2025-2026",
    "current_semester": 8,
@@ -158,10 +158,10 @@
     "CS1101S",
     "CS1231S",
     "MA1521",
-    "MA1522",
     "CS2030S",
     "CS2040S",
     "CS2100",
+    "CS3230",
     "CS2102",
     "CS3223",
     "CS4225"
@@ -172,7 +172,7 @@
    "must_take": []
   },
   "expected": "impossible",
-  "why": "Six required courses (CS2101, CS2103T, CS2106, CS2109S, CS3230 and ST2334) are left for the final semester: 24 units, over the 23-unit limit."
+  "why": "Six required courses (CS2101, CS2103T, CS2106, CS2109S, MA1522 and ST2334) are left for the final semester: 24 units, over the 23-unit limit. Units are the only problem: with a 24-unit limit they would fit."
  },
  {
   "id": "M04",
@@ -1939,7 +1939,7 @@
    ]
   },
   "expected": "impossible",
-  "why": "11 courses are left (8 required, 3 must-take), but two semesters hold at most 10, since 5 x 4 units is the most under the 23-unit limit."
+  "why": "11 courses are left (8 required, 3 must-take), but two semesters hold at most 10, since 5 x 4 units is the most under the 23-unit limit. It would be impossible even without the limit: CS2106 needs CS2100 first, so CS2100 goes in semester 7 and CS2106 in semester 8, and CS3230's lecture clashes with CS2100's in Semester 1 (Friday 14:00-16:00) and with CS2106's in Semester 2 (Wednesday 10:00-12:00), so CS3230 fits in neither."
  },
  {
   "id": "M41",
@@ -2627,5 +2627,270 @@
   },
   "expected": "impossible",
   "why": "CS3219 needs CS2103T, which needs CS2030S; with CS2030S not done, that chain needs three semesters and only two are left."
+ },
+ {
+  "id": "M56",
+  "text": "Hi! I started my Computer Science degree in AY2025/26, and I'm about to start Year 1 Semester 1. I'm a brand-new student. I haven't completed any courses yet. I want to do the Software Engineering focus area. There's no other course I specifically need to take. Each semester I want at least 18 and at most 23 units. Please plan my remaining semesters.",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Software Engineering",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "1": [
+     "CS1101S",
+     "CS1231S",
+     "MA1521",
+     "MA1522",
+     "ELECTIVE"
+    ],
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "CS2107",
+     "ST2334"
+    ],
+    "3": [
+     "CS2101",
+     "CS2103T",
+     "CS2105",
+     "CS2106",
+     "CS3230"
+    ],
+    "4": [
+     "CS3213",
+     "CS3219",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS4211",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS2109S",
+     "CS3227",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M57",
+  "text": "I started my Computer Science degree in AY2025/26, and I'm about to start Year 1 Semester 1. I'm just starting university. I haven't completed any courses yet. I want to do the Artificial Intelligence focus area. I definitely want to take CS3264 and CS4262. I want to take 18 to 23 units every semester. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3264",
+    "CS4262"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "1": [
+     "CS1101S",
+     "CS1231S",
+     "MA1521",
+     "MA1522",
+     "ELECTIVE"
+    ],
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "ST2334",
+     "ELECTIVE"
+    ],
+    "3": [
+     "CS2101",
+     "CS2103T",
+     "CS2106",
+     "CS3230",
+     "ELECTIVE"
+    ],
+    "4": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS2109S",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS3264",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS4262",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M58",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 1 Semester 2. I've passed CS1101S, CS1231S and MA1521. I'm going for the Computer Security focus area. I really want to take CS4239 and CS4248 before I graduate. I'd like between 18 and 23 units each semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 2,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521"
+   ],
+   "focus_area": "Computer Security",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS4239",
+    "CS4248"
+   ]
+  },
+  "expected": "feasible",
+  "witness": {
+   "status": "plan",
+   "semesters": {
+    "2": [
+     "CS2030S",
+     "CS2040S",
+     "CS2100",
+     "CS2107",
+     "ST2334"
+    ],
+    "3": [
+     "CS2105",
+     "CS2106",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "4": [
+     "CS3235",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "5": [
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "6": [
+     "CS2101",
+     "CS2103T",
+     "CS2109S",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "7": [
+     "CS4239",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE",
+     "ELECTIVE"
+    ],
+    "8": [
+     "CS3230",
+     "CS4248",
+     "MA1522",
+     "ELECTIVE",
+     "ELECTIVE"
+    ]
+   }
+  }
+ },
+ {
+  "id": "M59",
+  "text": "Hello, I'm a Computer Science student who matriculated in AY2025/26, and I'm about to start Year 1 Semester 1. I'm a brand-new student. I haven't completed any courses yet. My focus area is Multimedia Information Retrieval. There's no other course I specifically need to take. Each semester I want at least 18 and at most 23 units. Can you plan the rest of my degree?",
+  "scenario": {
+   "matric_ay": "2025-2026",
+   "current_semester": 1,
+   "completed": [],
+   "focus_area": "Multimedia Information Retrieval",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": []
+  },
+  "expected": "impossible",
+  "why": "From AY2026/27 on (the newest data, which stands in for later years), the only Multimedia IR primaries offered are CS2108 and CS4248, so 3 primaries can't be reached, however many semesters are left."
+ },
+ {
+  "id": "M60",
+  "text": "Hello, I matriculated in AY2026/27 as a Computer Science student, and I'm about to start Year 1 Semester 2. I've completed CS1101S, CS1231S, MA1521 and MA1522 so far. I'm going for the Artificial Intelligence focus area. I definitely want to take CS3243. I want to take 18 to 23 units every semester. Could you plan the rest of my semesters?",
+  "scenario": {
+   "matric_ay": "2026-2027",
+   "current_semester": 2,
+   "completed": [
+    "CS1101S",
+    "CS1231S",
+    "MA1521",
+    "MA1522"
+   ],
+   "focus_area": "Artificial Intelligence",
+   "min_units": 18,
+   "max_units": 23,
+   "must_take": [
+    "CS3243"
+   ]
+  },
+  "expected": "impossible",
+  "why": "CS3243 precludes CS2109S, which the degree requires, so the student can't take both."
  }
 ]

@@ -1,4 +1,4 @@
-"""Acceptance tests for the validator and the solver on every scenario file. They skip until that code exists."""
+"""Acceptance tests for the validator and the solver on every scenario file."""
 import copy
 
 import pytest
@@ -28,13 +28,6 @@ BROKEN = [
 ]
 
 
-def needs(fn, *args):
-    try:
-        return fn(*args)
-    except NotImplementedError:
-        pytest.skip(f"{fn.__module__}.{fn.__name__} is not written yet")
-
-
 def edited(edits):
     plan = copy.deepcopy(S001["witness"])
     for k, out, into in edits:
@@ -48,28 +41,28 @@ def edited(edits):
 
 @pytest.mark.parametrize("e", [e for e in EVERY if e["expected"] == "feasible"], ids=lambda e: e["id"])
 def test_witness_is_valid(e):
-    assert needs(validate, e["scenario"], e["witness"]) == []
+    assert validate(e["scenario"], e["witness"]) == []
 
 
 @pytest.mark.parametrize("edits, rules", BROKEN, ids=[" ".join(sorted(r)) for _, r in BROKEN])
 def test_validator_catches(edits, rules):
-    assert rules <= {v["rule"] for v in needs(validate, S001["scenario"], edited(edits))}
+    assert rules <= {v["rule"] for v in validate(S001["scenario"], edited(edits))}
 
 
 def test_empty_semesters_outside_the_horizon_are_ignored():
     plan = copy.deepcopy(S001["witness"])
     plan["semesters"].update({"1": [], "2": []})
-    assert needs(validate, S001["scenario"], plan) == []
+    assert validate(S001["scenario"], plan) == []
 
 
 def test_unknown_course_is_not_also_reported_as_unoffered():
-    rules = {v["rule"] for v in needs(validate, S001["scenario"], edited([("8", "ELECTIVE", "CS9999")]))}
+    rules = {v["rule"] for v in validate(S001["scenario"], edited([("8", "ELECTIVE", "CS9999")]))}
     assert "known" in rules
     assert "offered" not in rules
 
 
 def test_duplicate_course_does_not_clash_with_itself():
-    rules = {v["rule"] for v in needs(validate, S001["scenario"], edited([("3", "ELECTIVE", "CS2030S")]))}
+    rules = {v["rule"] for v in validate(S001["scenario"], edited([("3", "ELECTIVE", "CS2030S")]))}
     assert "repeat" in rules
     assert "lecture_clash" not in rules
     assert "exam_clash" not in rules
@@ -77,12 +70,7 @@ def test_duplicate_course_does_not_clash_with_itself():
 
 @pytest.mark.parametrize("e", EVERY, ids=lambda e: e["id"])
 def test_solver_agrees_with_label(e):
-    plan = needs(solve, e["scenario"])
+    plan = solve(e["scenario"])
     assert plan["status"] == ("plan" if e["expected"] == "feasible" else "impossible")
     if plan["status"] == "plan":
-        assert needs(validate, e["scenario"], plan) == []
-
-
-def test_empty_semesters_before_the_current_one_are_fine():
-    plan = edited([("1", None, None), ("2", None, None)])  # adds "1": [] and "2": []; S001 starts at semester 3
-    assert needs(validate, S001["scenario"], plan) == []
+        assert validate(e["scenario"], plan) == []
