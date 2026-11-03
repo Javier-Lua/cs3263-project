@@ -71,9 +71,8 @@ def plan_direct(text):
 
 def parse(reply):
     """The plan in a model reply, or None if the reply doesn't hold one in the design.md section 5.2 format."""
-    try:
-        plan = json.loads(reply[reply.index("{"):reply.rindex("}") + 1])
-    except ValueError:  # no JSON object in the reply
+    plan = find_json(reply)
+    if plan is None:
         return None
     if plan.get("status") == "impossible":
         return {"status": "impossible", "reason": plan.get("reason", "")}
@@ -82,3 +81,16 @@ def parse(reply):
             k.isdigit() and isinstance(v, list) and all(isinstance(c, str) for c in v) for k, v in semesters.items()):
         return None
     return {"status": "plan", "semesters": semesters}
+
+
+def find_json(reply):
+    """The first JSON object in the reply that has a "status", or None. Braces in the text around it don't matter."""
+    for start, char in enumerate(reply):
+        if char == "{":
+            try:
+                found, _ = json.JSONDecoder().raw_decode(reply, start)
+            except ValueError:  # this brace doesn't start a JSON object, or the object is cut off
+                continue
+            if "status" in found:
+                return found
+    return None

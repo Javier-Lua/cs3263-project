@@ -13,6 +13,8 @@ from planner.data import load_catalogs
     ('{"status": "plan", "semesters": {"8": "CS3263"}}', None),  # not a list
     ('{"status": "plan", "semesters": {"Y4S2": ["CS3263"]}}', None),  # not a semester number
     ('{"status": "maybe"}', None),
+    ('{"status": "impossible", "reason": "x"}\nWrite {} for an empty semester.', {"status": "impossible", "reason": "x"}),
+    ('Format {status, ...}: {"status": "impossible", "reason": "x"}', {"status": "impossible", "reason": "x"}),
 ])
 def test_parse(reply, plan):
     assert direct.parse(reply) == plan

@@ -1,14 +1,14 @@
-"""Acceptance tests for the validator and the solver on scenarios/examples.json. They skip until that code exists."""
+"""Acceptance tests for the validator and the solver on every scenario file."""
 import copy
 
 import pytest
 
-from planner.data import load_scenarios
+from planner.data import ROOT, load_scenarios
 from planner.solver import solve
 from planner.validate import validate
 
-EXAMPLES = {e["id"]: e for e in load_scenarios()}
-S001 = EXAMPLES["S001"]
+EVERY = [e for path in sorted((ROOT / "scenarios").glob("*.json")) for e in load_scenarios(path.stem)]
+S001 = next(e for e in EVERY if e["id"] == "S001")
 
 # Edits to the S001 witness as (semester, course out, course in), and the rule ids the validator must report.
 # It may report more (e.g. a workload break alongside). Each case was checked against the AY2026/27 data.
@@ -28,13 +28,6 @@ BROKEN = [
 ]
 
 
-def needs(fn, *args):
-    try:
-        return fn(*args)
-    except NotImplementedError:
-        pytest.skip(f"{fn.__module__}.{fn.__name__} is not written yet")
-
-
 def edited(edits):
     plan = copy.deepcopy(S001["witness"])
     for k, out, into in edits:
@@ -46,19 +39,38 @@ def edited(edits):
     return plan
 
 
-@pytest.mark.parametrize("e", [e for e in EXAMPLES.values() if e["expected"] == "feasible"], ids=lambda e: e["id"])
+@pytest.mark.parametrize("e", [e for e in EVERY if e["expected"] == "feasible"], ids=lambda e: e["id"])
 def test_witness_is_valid(e):
-    assert needs(validate, e["scenario"], e["witness"]) == []
+    assert validate(e["scenario"], e["witness"]) == []
 
 
 @pytest.mark.parametrize("edits, rules", BROKEN, ids=[" ".join(sorted(r)) for _, r in BROKEN])
 def test_validator_catches(edits, rules):
-    assert rules <= {v["rule"] for v in needs(validate, S001["scenario"], edited(edits))}
+    assert rules <= {v["rule"] for v in validate(S001["scenario"], edited(edits))}
 
 
-@pytest.mark.parametrize("e", EXAMPLES.values(), ids=lambda e: e["id"])
+def test_empty_semesters_outside_the_horizon_are_ignored():
+    plan = copy.deepcopy(S001["witness"])
+    plan["semesters"].update({"1": [], "2": []})
+    assert validate(S001["scenario"], plan) == []
+
+
+def test_unknown_course_is_not_also_reported_as_unoffered():
+    rules = {v["rule"] for v in validate(S001["scenario"], edited([("8", "ELECTIVE", "CS9999")]))}
+    assert "known" in rules
+    assert "offered" not in rules
+
+
+def test_duplicate_course_does_not_clash_with_itself():
+    rules = {v["rule"] for v in validate(S001["scenario"], edited([("3", "ELECTIVE", "CS2030S")]))}
+    assert "repeat" in rules
+    assert "lecture_clash" not in rules
+    assert "exam_clash" not in rules
+
+
+@pytest.mark.parametrize("e", EVERY, ids=lambda e: e["id"])
 def test_solver_agrees_with_label(e):
-    plan = needs(solve, e["scenario"])
+    plan = solve(e["scenario"])
     assert plan["status"] == ("plan" if e["expected"] == "feasible" else "impossible")
     if plan["status"] == "plan":
-        assert needs(validate, e["scenario"], plan) == []
+        assert validate(e["scenario"], plan) == []

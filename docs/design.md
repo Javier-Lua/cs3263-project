@@ -219,6 +219,7 @@ Two candidate definitions, to settle after Direct and Tool-assisted run (§11):
 ## 7. Scenarios and ground truth
 
 - **Count.** About 60 scenarios: 15 by Mon 26 Oct and the rest by Thu 29 Oct. Roughly two-thirds should be feasible.
+  - **Done:** `scenarios/main.json` holds 60 test students (37 feasible, 23 impossible), listed with what each one tests in [scenarios.md](scenarios.md). The 5 examples in `scenarios/examples.json` were used to build and pilot the approaches, so they stay out of the main set. The full runs use `main`.
 - **Write the scenario JSON first, then the English text from it (new).** The text states every field explicitly, so there are no defaults to guess: the matriculation year as "AY2025/26", semesters as "Year 2 Semester 1", and both unit limits.
 - **Ground truth.**
   - Each feasible scenario carries a witness plan that the validator accepts. Write the first 15 witnesses by hand. After that, a plan from the solver is fine, because the validator checks it independently **(proposed)**.
