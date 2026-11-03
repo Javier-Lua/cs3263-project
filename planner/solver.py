@@ -233,6 +233,8 @@ def solve(scenario):
     """Return {"status": "plan", "semesters": {...}} or {"status": "impossible"} (design.md section 5)."""
     model, planned_in, elective_slots = build_model(scenario)
     solver = cp_model.CpSolver()
+    solver.parameters.num_workers = 1  # parallel workers race, so the plan could differ between runs
+    solver.parameters.random_seed = 0  # with one worker and a fixed seed, the same scenario gives the same plan
     if solver.Solve(model) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         return {"status": "impossible"}
     semesters = {}
