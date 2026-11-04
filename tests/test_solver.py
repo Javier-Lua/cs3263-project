@@ -303,6 +303,20 @@ def test_every_example_scenario_gets_a_plan_that_passes_the_independent_prereq_c
                 taken |= set(plan["semesters"][str(k)])
 
 
+def test_required_courses_are_taken_as_early_as_possible():
+    plan = solve(scenario(current_semester=1, min_units=18, max_units=23))
+    last_required = max(int(k) for k, courses in plan["semesters"].items() if set(REQUIRED) & set(courses))
+    assert last_required == 3  # 13 required courses, at most five a semester, so three semesters is the best possible
+
+
+@pytest.mark.parametrize("scenario_id", ["M08", "M10", "M35"])  # without the objective these got 3 to 5 extra courses
+def test_plan_names_no_course_the_student_did_not_need(scenario_id):
+    from planner.data import load_scenarios
+    s = next(e["scenario"] for e in load_scenarios("main") if e["id"] == scenario_id)
+    wanted = (set(load_requirements(s["matric_ay"])["required"]) | set(s["must_take"])) - set(s["completed"])
+    assert planned(solve(s)) - {"ELECTIVE"} == wanted  # these students need nothing else, so the units are ELECTIVE
+
+
 @pytest.mark.parametrize("scenario_id", ["M01", "M04", "M12", "M32"])  # these gave different plans before the fix
 def test_the_same_scenario_always_gets_the_same_plan(scenario_id):
     from planner.data import load_scenarios

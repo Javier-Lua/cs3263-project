@@ -10,6 +10,9 @@ from ortools.sat.python import cp_model
 
 from planner.data import ELECTIVE, ELECTIVE_UNITS, catalog_for, load_catalogs, load_requirements, term
 
+EARLINESS_WEIGHT = 100  # taking required courses early counts for more than the number of courses (at most about 40)
+SOLVE_SECONDS_AT_MOST = 30
+
 
 def level(code):
     """Course level from the code: the first digit times 1000, e.g. CS4248 -> 4000."""
@@ -204,6 +207,19 @@ def add_workload_rules(model, scenario, planned_in, details):
     return elective_slots
 
 
+def add_objective(model, scenario, requirements, planned_in, completed):
+    """Choose the best plan among the valid ones. The rules above are untouched, so this never changes whether a plan
+    exists. Minimise, in this order:
+    1. the semester numbers of the required and must-take courses still to take, so they are taken as early as possible;
+    2. the number of courses planned, so the gap to min_units is filled with ELECTIVE slots and not with courses the
+       student didn't ask for.
+    """
+    wanted = (set(requirements["required"]) | set(scenario["must_take"])) - completed
+    semester_sum = sum(semester * variable for (code, semester), variable in planned_in.items() if code in wanted)
+    courses_planned = sum(planned_in.values())
+    model.Minimize(EARLINESS_WEIGHT * semester_sum + courses_planned)
+
+
 def build_model(scenario):
     """Return (model, planned_in, elective_slots): planned_in[(course, semester)] is 1 when the course is taken in that
     semester, and elective_slots[semester] is the number of ELECTIVE slots in that semester."""
@@ -226,6 +242,7 @@ def build_model(scenario):
     add_required_and_must_take_rules(model, scenario, requirements, by_course, completed)
     add_focus_area_rule(model, scenario, requirements, by_course, completed)
     elective_slots = add_workload_rules(model, scenario, planned_in, details)
+    add_objective(model, scenario, requirements, planned_in, completed)
     return model, planned_in, elective_slots
 
 
@@ -235,6 +252,7 @@ def solve(scenario):
     solver = cp_model.CpSolver()
     solver.parameters.num_workers = 1  # parallel workers race, so the plan could differ between runs
     solver.parameters.random_seed = 0  # with one worker and a fixed seed, the same scenario gives the same plan
+    solver.parameters.max_time_in_seconds = SOLVE_SECONDS_AT_MOST  # a safety net: every scenario so far takes under 0.1 s
     if solver.Solve(model) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         return {"status": "impossible"}
     semesters = {}
