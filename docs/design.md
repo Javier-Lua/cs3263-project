@@ -235,8 +235,11 @@ Two candidate definitions, to settle after Direct and Tool-assisted run (§11):
   - the AI preclusions
   - Multimedia IR: only CS2108 and CS4248 can be planned, so it is feasible only for students who already completed another primary
 - **Stretch.** Several phrasings of the same scenario, to test robustness to wording.
+  - **Done:** `scenarios/reworded.json` (R01-R60) has the 60 main scenarios with loosely worded messages; [scenarios.md](scenarios.md) lists the phrasings.
 
 ## 8. Evaluation
+
+The results so far, with the tables and figures, are in [analysis.md](analysis.md). `python -m planner.analyze <results files>` reprints the tables.
 
 ### 8.1 Outcomes and accuracy (tutor Q4)
 
@@ -284,6 +287,7 @@ planner/translate.py       LLM: message -> scenario JSON                        
 planner/llm.py             the one place that calls the LLM API (written)           Javier
 planner/direct.py          LLM writes the plan itself (written)                     Javier
 planner/run.py             runs an approach on the scenarios, scores it (written)   Javier
+planner/analyze.py         the section 8 tables and figures from results files      Javier
 tests/                     data checks and solver tests (pass); acceptance tests (skip until validate() exists)
 ```
 
