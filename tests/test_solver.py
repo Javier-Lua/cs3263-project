@@ -301,3 +301,11 @@ def test_every_example_scenario_gets_a_plan_that_passes_the_independent_prereq_c
                 for c in plan["semesters"][str(k)]:
                     assert c == "ELECTIVE" or prereq_met(courses[c]["prereq"], taken), (e["id"], c, k)
                 taken |= set(plan["semesters"][str(k)])
+
+
+@pytest.mark.parametrize("scenario_id", ["M01", "M04", "M12", "M32"])  # these gave different plans before the fix
+def test_the_same_scenario_always_gets_the_same_plan(scenario_id):
+    from planner.data import load_scenarios
+    s = next(e["scenario"] for e in load_scenarios("main") if e["id"] == scenario_id)
+    plans = [solve(s) for _ in range(5)]
+    assert all(plan == plans[0] for plan in plans)
