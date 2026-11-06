@@ -247,14 +247,19 @@ def build_model(scenario):
 
 
 def solve(scenario):
-    """Return {"status": "plan", "semesters": {...}} or {"status": "impossible"} (design.md section 5)."""
+    """Return {"status": "plan", "semesters": {...}} or {"status": "impossible"} (design.md section 5). "impossible" means
+    the solver proved there is no plan. If it stops without an answer, for example when it runs out of time, this
+    raises RuntimeError and does not guess."""
     model, planned_in, elective_slots = build_model(scenario)
     solver = cp_model.CpSolver()
     solver.parameters.num_workers = 1  # parallel workers race, so the plan could differ between runs
     solver.parameters.random_seed = 0  # with one worker and a fixed seed, the same scenario gives the same plan
     solver.parameters.max_time_in_seconds = SOLVE_SECONDS_AT_MOST  # a safety net: every scenario so far takes under 0.1 s
-    if solver.Solve(model) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+    status = solver.Solve(model)
+    if status == cp_model.INFEASIBLE:
         return {"status": "impossible"}
+    if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        raise RuntimeError(f"solver stopped without an answer: {solver.StatusName(status)}")
     semesters = {}
     for semester, slots in elective_slots.items():
         courses = sorted(code for (code, planned_semester), variable in planned_in.items()

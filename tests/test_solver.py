@@ -1,4 +1,6 @@
 """Unit tests for the solver. Each scenario here is small and checked by hand."""
+from types import SimpleNamespace
+
 import pytest
 from ortools.sat.python import cp_model
 
@@ -323,3 +325,19 @@ def test_the_same_scenario_always_gets_the_same_plan(scenario_id):
     s = next(e["scenario"] for e in load_scenarios("main") if e["id"] == scenario_id)
     plans = [solve(s) for _ in range(5)]
     assert all(plan == plans[0] for plan in plans)
+
+
+def test_solve_raises_when_the_solver_stops_without_an_answer(monkeypatch):
+    class StoppedSolver:
+        def __init__(self):
+            self.parameters = SimpleNamespace()
+
+        def Solve(self, model):
+            return cp_model.UNKNOWN
+
+        def StatusName(self, status):
+            return "UNKNOWN"
+
+    monkeypatch.setattr("planner.solver.cp_model.CpSolver", StoppedSolver)
+    with pytest.raises(RuntimeError, match="UNKNOWN"):
+        solve(scenario(current_semester=1))
