@@ -116,3 +116,26 @@ Each scenario was written as JSON first, and its message was written from the JS
 - **M55:** CS3219 needs CS2103T, which needs CS2030S; with CS2030S not done, that chain needs three semesters and only two are left.
 - **M59:** From AY2026/27 on (the newest data, which stands in for later years), the only Multimedia IR primaries offered are CS2108 and CS4248, so 3 primaries can't be reached, however many semesters are left.
 - **M60:** CS3243 precludes CS2109S, which the degree requires, so the student can't take both.
+
+## Reworded set
+
+`scenarios/reworded.json` (R01-R60) holds the same 60 students with loosely worded messages. It tests whether the approaches still cope when a message doesn't spell out every field (design.md section 7, stretch). Each entry copies the gold scenario, the label and the witness or `why` of its main-set twin (`source`), so only the message changes. `wording` records which phrasing each field got, so errors can be traced to it.
+
+Each message was generated from the gold scenario by picking among the phrasings below with a fixed random seed. Every loose phrase has exactly one reading, given the message and the semester numbering that both prompts explain.
+
+| Field | Phrasings | Messages |
+|---|---|---|
+| Matriculation year | "I started at NUS in August 2025", "I'm in the AY25/26 cohort", "I matriculated in the 2025/26 academic year", "I'm from the 2025 intake" | 18, 13, 16, 13 |
+| Semester about to start | "I just finished Y2S1", "I've finished three semesters so far", "I've just finished Year 2", "next semester will be my fourth", "I have five semesters left, counting the coming one", "my very first semester is coming up", "I haven't started classes yet" | 16, 10, 8, 10, 10, 5, 1 |
+| Completed courses | Codes typed loosely ("cs2040s", "CS 2040S") | 54 |
+| | "Plus a couple of GE mods" (no codes to pick up) | 19 |
+| | A required course the student failed or dropped: "I took CS2100 too but failed it, so I still need it" | 13 |
+| Focus area | A short name such as "AI", "SWE", "SE", "HCI", "PL", "security", "databases", "multimedia IR" (the rest use the exact name) | 35 |
+| Must-take courses | "X is a must for me", "I need to fit X in before I graduate, no matter what", "Please make sure X is in the plan" | 38 |
+| | A decoy that is not a must-take: "Y also looks interesting, but it's fine if it doesn't fit" | 25 |
+| Unit limits | "18 to 23 MCs a semester", "Minimum 18, maximum 23 units per sem", and similar | 60 |
+
+The sentences come in a random order. A quarter of the messages put the request first, and some add a line with no planning content ("I'm staying in hall this year.").
+
+- **Decoys** are never required courses. For a feasible scenario, taking the decoy stays possible, so reading it as a must-take shows up as a translation error rather than as a new impossibility.
+- **Left out on purpose:** course titles ("Programming Methodology") and phrases like "the usual first-year mods". Neither prompt lists course titles or a recommended schedule, so these would test the model's background knowledge rather than its reading of the message.
