@@ -196,7 +196,7 @@ A suggested encoding for OR-Tools CP-SAT (Weng Mun's call):
 - **Same semester.** `x[CS2101,k]` = `x[CS2103T,k]` for every *k*.
 - **Workload.** min ≤ Σ units·x + 4·`e[k]` ≤ max in every semester from `current_semester` to 8.
 - **Focus area.** At least 3 primaries taken, at least 1 of them level 4000+.
-- **Objective.** Feasibility only. The stretch goal adds an objective, such as balance.
+- **Objective.** It picks the best valid plan and never changes whether a plan exists. Minimise, in this order: the semester numbers of the required and must-take courses still to take (so they come early), then the number of courses planned (so spare units are ELECTIVE and not courses the student didn't ask for). We added it after the first full run showed that Direct's plans put required courses earlier and named fewer extra courses than a feasibility-only solver, so it is an example of what an objective can do, not a neutral comparison.
 
 ### 6.3 Hybrid (stretch, Javier; definition undecided)
 
