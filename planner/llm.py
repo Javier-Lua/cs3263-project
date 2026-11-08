@@ -7,11 +7,16 @@ import anthropic
 
 from planner.data import ROOT
 
-MODEL = "claude-sonnet-5-5"
+MODEL = "claude-sonnet-5-5"  # run.py --model changes it for one run
 EFFORT = "high"  # Sonnet 5.5's default, set explicitly so a change of default can't change the experiment
-# US$ per million tokens for MODEL, keyed by usage field. A cache write costs 1.25x input (5-minute cache).
-PRICES = {"input_tokens": 2.00, "cache_creation_input_tokens": 2.50, "cache_read_input_tokens": 0.20,
-          "output_tokens": 10.00}
+THINKING = True  # run.py --no-thinking turns it off
+THINKING_OFF = {"claude-sonnet-5-5": "between_tools"}  # Sonnet 5.5 rejects "disabled"; with no tools this means none
+# US$ per million tokens for each model, keyed by usage field. A cache write costs 1.25x input (5-minute cache).
+# Haiku's are its prices for prompts of at most 100K tokens, which every prompt here is.
+PRICES = {"claude-sonnet-5-5": {"input_tokens": 2.00, "cache_creation_input_tokens": 2.50,
+                                "cache_read_input_tokens": 0.20, "output_tokens": 10.00},
+          "claude-haiku-5-5": {"input_tokens": 0.10, "cache_creation_input_tokens": 0.125,
+                               "cache_read_input_tokens": 0.01, "output_tokens": 0.50}}
 CALLS = []  # every ask() appends {"reply", "usage", "stop_reason"}; run.py reads it to log any approach's calls
 
 
@@ -41,17 +46,17 @@ def ask(system, user):
         max_tokens=64000,
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user}],
-        thinking={"type": "adaptive"},
+        thinking={"type": "adaptive" if THINKING else THINKING_OFF.get(MODEL, "disabled")},
         output_config={"effort": EFFORT},
     ) as stream:
         message = stream.get_final_message()
     reply = "".join(block.text for block in message.content if block.type == "text")
-    usage = {name: getattr(message.usage, name) or 0 for name in PRICES}
+    usage = {name: getattr(message.usage, name) or 0 for name in PRICES[MODEL]}
     usage["seconds"] = round(time.monotonic() - start, 1)
     CALLS.append({"reply": reply, "usage": usage, "stop_reason": message.stop_reason})
     return reply, usage
 
 
 def cost(usage):
-    """US$ for one call's usage."""
-    return sum(usage[name] * price for name, price in PRICES.items()) / 1e6
+    """US$ for one call's usage with the current model."""
+    return sum(usage[name] * price for name, price in PRICES[MODEL].items()) / 1e6
