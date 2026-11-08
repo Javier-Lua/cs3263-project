@@ -4,7 +4,7 @@ The numbers behind the report (design.md section 8), and what they suggest. Ever
 
 ```sh
 python -m planner.analyze results/2026-11-03-1932-direct.jsonl results/2026-11-03-1932-tool.jsonl \
-  results/2026-11-04-1112-gold.jsonl results/2026-11-04-1117-direct.jsonl results/2026-11-04-1119-tool.jsonl \
+  results/2026-11-07-1314-gold.jsonl results/2026-11-04-1117-direct.jsonl results/2026-11-04-1119-tool.jsonl \
   --figures docs/figures
 ```
 
@@ -18,13 +18,14 @@ All LLM calls used Claude Sonnet 5.5 with adaptive thinking at effort `high` (de
 |---|---|---|
 | `results/2026-11-03-1932-direct.jsonl` | Direct, explicit set, 3 runs | $2.83 |
 | `results/2026-11-03-1932-tool.jsonl` | Tool, explicit set, 3 runs | $0.51 |
-| `results/2026-11-04-1112-gold.jsonl` | Gold ablation, re-run with the deterministic solver | free |
+| `results/2026-11-07-1314-gold.jsonl` | Gold ablation, re-run with the solver objective (design.md 6.2) | free |
 | `results/2026-11-04-1117-direct.jsonl` | Direct, reworded set, 3 runs | $3.04 |
 | `results/2026-11-04-1119-tool.jsonl` | Tool, reworded set, 3 runs | $0.66 |
+| `results/2026-11-04-1112-gold.jsonl` | Gold, solver without the objective (only in section 5's last row) | free |
 | `results/2026-11-03-1931-tool.jsonl` | Tool pilot on the 5 examples, 1 run (not in the tables) | $0.02 |
 | `results/2026-11-04-1114-tool.jsonl` | Tool pilot on the reworded set, 1 run, used only to check the messages (not in the tables) | $0.23 |
 
-These files cost $7.29 in all. The 27 Oct direct pilot adds $0.12. The tool plans in the 2026-11-03 file came from the solver before it was made deterministic. `planner/analyze.py` re-solves every saved translation with the current solver, and no outcome changed.
+These files cost $7.29 in all. The 27 Oct direct pilot adds $0.12. The tool plans saved in both tool files came from earlier versions of the solver. `planner/analyze.py` re-solves every saved translation with the current solver, which has the objective, and no outcome changed.
 
 ## Summary
 
@@ -43,11 +44,11 @@ These files cost $7.29 in all. The 27 Oct direct pilot adds $0.12. The tool plan
 4. **The approaches differ in cost, speed, consistency and how effort scales, not in accuracy.**
    - Direct costs 4.6-5.6 times as much per answer and takes 3.0-3.4 times as long.
    - On 25 of the 37 feasible scenarios, direct gives a different plan each run. Tool always gives the same plan.
-   - Direct's effort grows with the number of semesters to plan. The solver's doesn't (2-36 ms).
-5. **Plan quality favours direct, because the solver has no objective.**
-   - Direct puts the required courses early, like a normal study plan: the mean last semester holding a required course is 5.0, against 7.1 for tool.
-   - Direct finishes them earlier in 118 of 149 paired answers, and never later.
-   - Tool plans also add more catalog courses the student didn't ask for (9.0 a plan against 7.0-7.1) where direct uses `ELECTIVE`.
+   - Direct's effort grows with the number of semesters to plan. The solver's doesn't (milliseconds, section 7).
+5. **Plan quality: with an objective, the solver matches direct.**
+   - Without an objective, the solver left required courses late. The mean last semester holding a required course was 7.1, against direct's 5.0, and direct finished them earlier in 118 of 149 paired answers. Tool plans also named more catalog courses the student didn't ask for (9.0 a plan against 7.0-7.1).
+   - Weng Mun's objective (design.md 6.2) closes both gaps. The mean is now 4.96 for tool against 4.97-5.03 for direct. The two finish in the same semester in 145 of 149 pairs, and tool is earlier in the other 4. Tool names 6.95 catalog courses a plan.
+   - We chose the objective after seeing direct's plans, so this shows what an objective can do, not a fair contest.
 
 ## 1. Accuracy (design.md 8.1)
 
@@ -119,19 +120,21 @@ The trend isn't smooth, because the scenarios at each horizon differ in difficul
 
 ## 5. Plan quality
 
-Measured on valid plans only. None of this affects accuracy.
+Measured on valid plans only. None of this affects accuracy. Tool and gold use the solver with its objective (design.md 6.2): required and must-take courses as early as possible, then as few courses planned as possible. The last row is the solver before the objective, as the first version of this analysis measured it.
 
 | Approach | Set | Valid plans | Units sd | Hours/week sd | Catalog courses per plan | Last semester with a required course |
 |---|---|---|---|---|---|---|
 | Direct | explicit | 111 | 0.00 | 0.42 | 7.00 | 4.97 |
 | Direct | reworded | 110 | 0.00 | 0.42 | 7.14 | 5.03 |
-| Tool | explicit | 111 | 0.00 | 0.52 | 8.97 | 7.12 |
-| Tool | reworded | 111 | 0.00 | 0.52 | 8.97 | 7.12 |
-| Gold | explicit | 37 | 0.00 | 0.52 | 8.97 | 7.12 |
+| Tool | explicit | 111 | 0.00 | 0.40 | 6.95 | 4.96 |
+| Tool | reworded | 111 | 0.00 | 0.40 | 6.95 | 4.96 |
+| Gold | explicit | 37 | 0.00 | 0.40 | 6.95 | 4.96 |
+| Tool, no objective | both | 111 | 0.00 | 0.52 | 8.97 | 7.12 |
 
 - **Units can't separate the approaches.** All catalog courses but one are 4 units, so 18-23 units forces five courses (20 units) every semester. All 1924 planned semesters in valid plans have exactly 20 units. Hours per week are similarly balanced in both: the mean standard deviation is under 0.6 h, and the largest is 2 h.
-- **Required courses: direct front-loads them, and the solver doesn't.** Pairing direct and tool on the same scenario and run, direct's last required course comes earlier in 118 of 149 pairs, the same semester in 31, and later in none. The gap grows with the horizon (figure). For a new student, direct finishes the required courses by about semester 3, and the solver's plan still has one in semester 6. The solver only looks for a feasible plan (design.md 6.2), so it has no reason to schedule early. A student would see that as a worse plan, even though both are valid.
-- **The solver adds arbitrary catalog courses.** Tool plans name about 9 catalog courses where direct names 7. Where the student needs only units, direct writes `ELECTIVE`, and the solver often picks some catalog course instead.
+- **Required courses: the objective closes the gap.** Without it, the solver only looked for a feasible plan, so it had no reason to schedule early. Pairing direct and tool on the same scenario and run, direct's last required course came earlier in 118 of 149 pairs and later in none. For a new student, the solver's plan still had a required course in semester 6. With the objective, the two land in the same semester in 145 of 149 pairs, and tool is one semester earlier in the other 4 (M57, R22, R53, R56). Both finish a new student's required courses by about semester 3 (figure).
+- **Catalog courses: the objective removes the extras.** Without it, the solver filled spare units with arbitrary catalog courses, about 9 a plan where direct names 7. The objective's second part plans as few courses as possible, so tool now names 6.95 and writes `ELECTIVE` for the rest, as direct does.
+- **What the objective leaves out:** it doesn't schedule the 3 focus-area courses early. In M56, two of them land in semesters 7 and 8.
 - **Tool and gold are identical** because every translation that mattered was right.
 
 ![Last semester with a required course](figures/last-required.png)
@@ -155,26 +158,24 @@ Per scenario of the main set, from the solver's model:
 | Course-semester choices `x[c,k]` | 36 | 108 | 388 |
 | CP-SAT variables | 38 | 168 | 1155 |
 | CP-SAT constraints | 97 | 284 | 1769 |
-| Solve time (ms) | 2 | 6 | 36 |
+| Solve time (ms) | 2 | 7 | 39 |
 
-A brute-force search over the course-semester choices alone has up to 2^388 assignments. CP-SAT solves every scenario, including proving the 23 impossible ones, in under 40 ms. A direct answer takes a mean of 5-14 s, depending on the horizon.
+A brute-force search over the course-semester choices alone has up to 2^388 assignments. CP-SAT solves every scenario in under 40 ms in this run, including proving the 23 impossible ones and proving each plan is the best for the objective. Timings vary between runs, and the slowest single solve we saw took about 0.3 s. A direct answer takes a mean of 5-14 s, depending on the horizon.
 
 ## 8. Decisions for the team
 
 1. **The ceiling effect.** We ran the reworded set, and accuracy still doesn't separate the approaches.
-   - Suggestion: report it as a finding, and compare the approaches on what does differ: cost, speed, consistency, scaling with the horizon, plan quality, and guarantees.
+   - Suggestion: report it as a finding, and compare the approaches on what does differ: cost, speed, consistency, scaling with the horizon, and guarantees. Plan quality differed only until the solver had an objective (section 5).
    - On guarantees: a tool plan is valid whenever the translation is right. A direct plan has to be checked, and the validator catches both of direct's mistakes.
    - Messier input (typos, wrong codes, contradictions, missing fields) could break the tie. But the expected answer then becomes debatable, so it fits better as discussion than as a new experiment this close to the deadline.
 2. **Hybrid (open item 5).** Suggestion: drop it, and say why in the report.
    - With 2 wrong answers in 360, there's nothing for it to fix that we could measure.
    - A validator-feedback loop would probably catch both, and it's natural future work.
-3. **Optimisation (open item 6).** Section 5 gives a clear motivation. One objective in `solver.py` (for example, minimise the last semester holding a required course, or penalise catalog courses the student didn't ask for) would close the plan-quality gap.
-   - It costs no API money to evaluate: re-run gold and re-solve the saved translations, as `planner/analyze.py` already does.
-   - It's optional, if Weng Mun has time before the draft.
+3. **Optimisation (open item 6). Done.** Weng Mun added the objective to `solver.py` (design.md 6.2), and section 5 shows it closes the plan-quality gap. Evaluating it cost no API money: gold was re-run, and `planner/analyze.py` re-solved the saved translations. The report should say we chose the objective after seeing direct's plans.
 
 ## 9. Caveats
 
 - **Both sets were generated from templates** from the gold JSON, so the wording is varied but not as messy as real students' messages. The reworded set deliberately leaves out course titles and phrases like "the usual first-year mods", because neither prompt lists course titles or a recommended schedule.
 - **Sample size:** one model, 60 scenarios, 3 runs per approach and set. The 2-against-0 error count is not significant.
 - **Stand-in years:** later years use the AY2026/27 data (design.md 2).
-- **Plan quality** reflects a solver without an objective, not a limit of the tool approach as such.
+- **Plan quality:** we chose the solver's objective after seeing direct's plans, so matching them is what it was built to do. We didn't try other objectives, such as balancing hours.

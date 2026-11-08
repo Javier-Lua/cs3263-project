@@ -11,7 +11,7 @@ A student describes their situation in plain English. Each approach answers with
   - **Decision (team, 21 Oct): translation stays.** The project guidelines require the model to translate the problem into a specification that a tool solves, so we do not feed gold JSON to the solver in the main comparison. Translation errors are reported separately (§8.2), which addresses the worry that they add noise.
 - **Hybrid** (stretch goal, **definition undecided**, see §6.3 and §11). Not built until the Direct and Tool-assisted approaches run.
 
-Any plan that breaks none of the rules in §4 counts as correct. We don't look for a best plan (tutor Q1). Optimising plan quality is a stretch goal.
+Any plan that breaks none of the rules in §4 counts as correct, so plan quality never affects accuracy (tutor Q1). The tool solver does pick the best plan for one objective (§6.2), and plan quality is reported as a secondary metric (§8.3).
 
 ## 2. Scope and assumptions
 
@@ -321,5 +321,5 @@ The proposal's FP2 milestone (multi-semester planning by Fri 23 Oct) becomes the
 3. **Repo visibility.** The GitHub repo is public. `.gitignore` keeps the proposal (which has matric numbers and emails) and the guidelines out of it. Consider making the repo private.
 4. **Older cohorts.** A student who matriculated before AY2025/26 (e.g. a real Year 4 student today) needs their own requirements file.
 5. **Hybrid definition.** The proposal and §6.3 differ; pick one or drop it. The structured-steps version is simpler to build.
-6. **Optimisation** stays a stretch goal and is not decided.
+6. **Optimisation. Done:** the tool solver plans required and must-take courses as early as possible, then as few courses as possible (§6.2). Results are in `docs/analysis.md` section 5.
 7. **Responsible AI section.** Possible points: the risk of trusting an LLM-made plan, stand-in years, and the validator as a safeguard.
