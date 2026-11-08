@@ -1,6 +1,8 @@
 # Course documents stay out of the public repo (the proposal lists matric numbers and emails)
 CS3263_Project_Proposal_Final.pdf
 CS3263-Project-Guidelines-2627.docx
+Project.pdf
+ResponsibleAI.pptx
 
 # Any .env file may hold a real API key, so only the template is tracked
 .env*
