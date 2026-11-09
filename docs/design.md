@@ -9,7 +9,7 @@ A student describes their situation in plain English. Each approach answers with
 - **Direct.** The LLM reads the message and the course data, then writes the plan itself.
 - **Tool-assisted.** The LLM only turns the message into a structured scenario (JSON), and a constraint solver finds the plan. This is the LLM+P pattern (proposal reference [4]). **(new: the LLM's only job here is translation.)** Every wrong answer then has one of two causes: the LLM misread the student, or our model or solver is wrong. §8.2 separates the two.
   - **Decision (team, 21 Oct): translation stays.** The project guidelines require the model to translate the problem into a specification that a tool solves, so we do not feed gold JSON to the solver in the main comparison. Translation errors are reported separately (§8.2), which addresses the worry that they add noise.
-- **Hybrid** (stretch goal). **Dropped** after the full runs (§6.3, §11).
+- **Hybrid** (stretch goal). Dropped after the Sonnet runs, then built as validator feedback once Haiku gave it errors to fix (§6.3).
 
 Any plan that breaks none of the rules in §4 counts as correct, so plan quality never affects accuracy (tutor Q1). The tool solver does pick the best plan for one objective (§6.2), and plan quality is reported as a secondary metric (§8.3).
 
@@ -27,7 +27,6 @@ Any plan that breaks none of the rules in §4 counts as correct, so plan quality
 - **What is not modelled:**
   - common curriculum, unrestricted electives and the 160-unit total
   - the 12-unit level-4000 breadth & depth rule and industry experience
-  - CFCs counting as primaries
   - grades and S/U
   - blocked semesters (internship, exchange). Dropped by team decision to keep the implementation simple.
   - other routes into a prerequisite, such as UTC2851 instead of CS1101S
@@ -198,12 +197,12 @@ A suggested encoding for OR-Tools CP-SAT (Weng Mun's call):
 - **Focus area.** At least 3 primaries taken, at least 1 of them level 4000+.
 - **Objective.** It picks the best valid plan and never changes whether a plan exists. Minimise, in this order: the semester numbers of the required and must-take courses still to take (so they come early), then the number of courses planned (so spare units are ELECTIVE and not courses the student didn't ask for). We added it after the first full run showed that Direct's plans put required courses earlier and named fewer extra courses than a feasibility-only solver, so it is an example of what an objective can do, not a neutral comparison.
 
-### 6.3 Hybrid (stretch, Javier; dropped)
+### 6.3 Hybrid (stretch, Javier): validator feedback
 
-**Dropped (8 Nov).** With 2 wrong direct answers in 360, there was nothing for a hybrid to fix that we could measure (`docs/analysis.md`, decision 2). The two candidate definitions were:
+**Dropped on 8 Nov, built on 9 Nov.** With 2 wrong direct answers in 360 on Sonnet there was nothing to fix that we could measure, but the Haiku runs gave 25 and 37 wrong plans. Two definitions were considered:
 
-- **Validator feedback (this doc's earlier draft).** Run the direct approach. Then, for up to 3 rounds, send the validator's violations back and ask for a revised plan. The report must say that this approach uses the evaluator as a tool. It gives no feedback on "impossible" answers, and costs up to 4 calls per scenario.
-- **Structured steps (the proposal).** One call whose prompt tells the LLM to follow course methods itself, such as checking rules one at a time or assigning semesters with backtracking, with no solver and no validator.
+- **Validator feedback (built, `planner/feedback.py`).** Take each direct answer whose plan breaks a rule (`invalid_plan` or `plan_for_impossible`). For up to 3 rounds, send the validator's violations back in the same conversation and ask for a revised plan, stopping at the first answer with no violations. The validator checks against the gold scenario, as if the student had confirmed their details, so this uses the evaluator as a tool, and the report says so. "Impossible" answers get no feedback, because the validator can't check them. It reuses the saved first answers, so only the extra rounds cost anything. Results: `docs/analysis.md` section 11.
+- **Structured steps (the proposal; not built).** One call whose prompt tells the LLM to follow course methods itself, such as checking rules one at a time or assigning semesters with backtracking, with no solver and no validator.
 
 ### 6.4 LLM settings (all approaches)
 
@@ -302,7 +301,9 @@ planner/direct.py          LLM writes the plan itself (written)                 
 planner/run.py             runs an approach on the scenarios, scores it (written)   Javier
 planner/analyze.py         the section 8 tables and figures from results files      Javier
 planner/explain.py         counterfactual explanations for impossible scenarios     Javier
-tests/                     data, validator, solver, approach, runner, analysis and explanation tests
+planner/feedback.py        the hybrid: validator feedback to direct (§6.3)          Javier
+planner/level4000.py       would the unmodelled level-4000 rule change a label?     Javier
+tests/                     data, validator, solver, approach, runner, analysis, explanation and feedback tests
 ```
 
 Run `pytest` before pushing.
@@ -334,6 +335,6 @@ The proposal's FP2 milestone (multi-semester planning by Fri 23 Oct) becomes the
    - *Re-planning as an MDP* when a course turns out not to be offered.
 3. **Repo visibility.** The GitHub repo is public. `.gitignore` keeps the proposal (which has matric numbers and emails) and the guidelines out of it. Consider making the repo private.
 4. **Older cohorts.** A student who matriculated before AY2025/26 (e.g. a real Year 4 student today) needs their own requirements file.
-5. **Hybrid. Dropped** (§6.3).
+5. **Hybrid. Done** as validator feedback (§6.3).
 6. **Optimisation. Done:** the tool solver plans required and must-take courses as early as possible, then as few courses as possible (§6.2). Results are in `docs/analysis.md` section 5.
 7. **Responsible AI section.** In the report. Points: the risk of trusting an LLM-made plan, stand-in years, the validator as a safeguard, the adversarial set (§8.6) and explanations for "impossible" (§8.5).

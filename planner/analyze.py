@@ -2,6 +2,7 @@
 
 Usage:  python -m planner.analyze <results file> ... [--figures <dir>]
         e.g. python -m planner.analyze results/2026-11-03-1932-direct.jsonl results/2026-11-03-1932-tool.jsonl
+A *-feedback.jsonl file (planner/feedback.py) adds direct's accuracy after validator feedback.
 
 Tool plans are re-solved from their saved translations with the current solver, so plan quality and consistency use
 the deterministic solver. The outcome can't change (whether a plan exists never depended on the solver's search), and
@@ -12,9 +13,11 @@ by model setting: Sonnet (Claude Sonnet 5.5, adaptive thinking), Haiku (Claude H
 """
 import json
 import math
+import random
 import sys
 import time
 from collections import Counter, defaultdict
+from itertools import product
 from statistics import mean, median, pstdev
 
 from planner.data import ROOT, catalog_for, load_catalogs, load_requirements, load_scenarios, term
@@ -53,11 +56,48 @@ def setting(row):
 
 
 def wilson(k, n, z=1.96):
-    """95% Wilson interval for k successes in n, treating every answer as independent (runs share scenarios, so this
-    is narrower than the truth)."""
+    """95% Wilson interval for k successes in n independent trials."""
     p, d = k / n, 1 + z * z / n
     centre, half = (p + z * z / (2 * n)) / d, z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
     return centre - half, centre + half
+
+
+def by_student(rows):
+    """{student: [1 or 0 per answer]}. M07 and R07 are the same student, so explicit and reworded answers pool; the
+    adversarial set (A01-A16) is always analysed on its own."""
+    by = defaultdict(list)
+    for row in rows:
+        by[row["id"][1:]].append(int(row["outcome"] in CORRECT))
+    return by
+
+
+def interval(rows, draws=10000):
+    """95% interval for accuracy that resamples students, not answers: a student's runs, and its explicit and
+    reworded messages, are not independent. When every answer is right, resampling gives no width, so this falls back
+    to a Wilson interval that counts each student once."""
+    students = [(sum(v), len(v)) for v in by_student(rows).values()]
+    if all(k == n for k, n in students):
+        return wilson(len(students), len(students))
+    rng = random.Random(0)
+    stats = sorted(sum(k for k, _ in s) / sum(n for _, n in s)
+                   for s in ([rng.choice(students) for _ in students] for _ in range(draws)))
+    return stats[int(0.025 * draws)], stats[int(0.975 * draws) - 1]
+
+
+def paired_p(rows_a, rows_b, draws=20000):
+    """Two-sided p-value for "a and b are equally accurate" from a paired permutation test over students: under that
+    hypothesis each student's accuracy difference is as likely to have either sign. Exact for up to 20 students
+    whose accuracy differs, else from random sign flips."""
+    a, b = by_student(rows_a), by_student(rows_b)
+    diffs = [mean(a[s]) - mean(b[s]) for s in a if mean(a[s]) != mean(b[s])]
+    observed = abs(sum(diffs)) - 1e-9
+    if not diffs:
+        return 1.0
+    if len(diffs) <= 20:
+        signs = product((1, -1), repeat=len(diffs))
+        return mean(abs(sum(s * d for s, d in zip(sign, diffs))) >= observed for sign in signs)
+    rng = random.Random(0)
+    return mean(abs(sum(d if rng.random() < 0.5 else -d for d in diffs)) >= observed for _ in range(draws))
 
 
 def left(row):
@@ -113,12 +153,28 @@ def outcomes(rows):
     table(["approach", "model", "set", "answers"] + OUTCOMES +
           ["accuracy (min-max over runs)", "95% CI", "feasible", "impossible"],
           [[a, m, s, len(rs)] + [Counter(r["outcome"] for r in rs)[o] for o in OUTCOMES] +
-           ["{} ({}-{})".format(*map(pct, accuracy(rs))),
-            "{}-{}".format(*map(pct, wilson(sum(r["outcome"] in CORRECT for r in rs), len(rs))))] +
+           ["{} ({}-{})".format(*map(pct, accuracy(rs))), "{}-{}".format(*map(pct, interval(rs)))] +
            [pct(mean(r["outcome"] in CORRECT for r in rs if GOLD[r["id"]]["expected"] == label))
             for label in ("feasible", "impossible")] for (a, m, s), rs in groups(rows).items()])
     print("Wrong answers:\n")
     wrong_answers(rows, ["approach", "model", "set", "id"], lambda r: [r["approach"], r["setting"], r["set"], r["id"]])
+    compare(rows)
+
+
+def compare(rows):
+    """Direct against tool per model setting, pooling explicit and reworded, with the paired test over students."""
+    lines = []
+    for m in MODELS[:-1]:
+        for label, sets in (("explicit and reworded", ("explicit", "reworded")), ("adversarial", ("adversarial",))):
+            d, t = ([r for r in rows if r["approach"] == a and r["setting"] == m and r["set"] in sets]
+                    for a in ("direct", "tool"))
+            if d and t:
+                lines.append([m, label, len(by_student(d)), pct(mean(r["outcome"] in CORRECT for r in d)),
+                              "{}-{}".format(*map(pct, interval(d))), pct(mean(r["outcome"] in CORRECT for r in t)),
+                              "{}-{}".format(*map(pct, interval(t))), f"{paired_p(d, t):.3f}"])
+    if lines:
+        print("Direct against tool. Intervals resample students; p is a paired permutation test over students:\n")
+        table(["model", "set", "students", "direct", "95% CI", "tool", "95% CI", "p"], lines)
 
 
 def wrong_answers(rows, head, key):
@@ -340,7 +396,7 @@ def figures(rows, out):
                 rs = [r for r in rows if r["approach"] == a and r["setting"] == m and r["set"] in sets]
                 if rs:
                     k = sum(r["outcome"] in CORRECT for r in rs)
-                    lo, hi = wilson(k, len(rs))
+                    lo, hi = interval(rs)
                     xs.append(j + (i - 0.5) * 0.25), ys.append(k / len(rs))
                     err[0].append(max(0, k / len(rs) - lo)), err[1].append(max(0, hi - k / len(rs)))  # no -1e-16 at 100%
                     lowest = min(lowest, lo)
@@ -358,12 +414,42 @@ def figures(rows, out):
     plt.close(fig)
 
 
+def feedback(rows, fed):
+    """Direct before and after validator feedback (planner/feedback.py), per model setting, against tool."""
+    final = {(f["id"], f["run"], setting(f)): f for f in fed}
+    by = defaultdict(list)
+    for f in fed:
+        by[setting(f), f["first_outcome"], f["outcome"]].append(f)
+    print("## Validator feedback (the hybrid)\n")
+    table(["model", "first outcome", "outcome after feedback", "answers", "rounds: 1", "2", "3", "extra cost"],
+          [[m, a, b, len(fs)] + [sum(len(f["rounds"]) == k for f in fs) for k in (1, 2, 3)] +
+           [f"${sum(f['cost'] for f in fs):.3f}"]
+           for (m, a, b), fs in sorted(by.items(), key=lambda kv: (MODELS.index(kv[0][0]), kv[0][1:]))])
+    lines = []
+    for m in MODELS[:-1]:
+        for label, sets in (("explicit and reworded", ("explicit", "reworded")), ("adversarial", ("adversarial",))):
+            d, t = ([r for r in rows if r["approach"] == a and r["setting"] == m and r["set"] in sets]
+                    for a in ("direct", "tool"))
+            after = [dict(r, outcome=final[r["id"], r["run"], m]["outcome"]) if (r["id"], r["run"], m) in final else r
+                     for r in d]
+            extra = sum(final[r["id"], r["run"], m]["cost"] for r in d if (r["id"], r["run"], m) in final)
+            if d and t:
+                lines.append([m, label, pct(mean(r["outcome"] in CORRECT for r in d)),
+                              pct(mean(r["outcome"] in CORRECT for r in after)), "{}-{}".format(*map(pct, interval(after))),
+                              pct(mean(r["outcome"] in CORRECT for r in t)), f"{paired_p(after, t):.3f}",
+                              f"${extra / len(d):.4f}"])
+    print("Direct before and after feedback, against tool. p compares direct after feedback with tool:\n")
+    table(["model", "set", "direct", "after feedback", "95% CI", "tool", "p", "extra cost per answer"], lines)
+
+
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     out = None
     if "--figures" in argv:
         i = argv.index("--figures")
         out, argv = ROOT / argv[i + 1], argv[:i] + argv[i + 2:]
+    fed = [p for p in argv if p.endswith("-feedback.jsonl")]
+    argv = [p for p in argv if p not in fed]
     if not argv:
         sys.exit(__doc__)
     rows, changed = load(argv)
@@ -378,6 +464,8 @@ def main(argv=None):
     consistency(rows)
     if any(r["set"] == "adversarial" for r in rows):
         adversarial(rows)
+    if fed:
+        feedback(rows, [json.loads(line) for path in fed for line in open(path)])
     problem_size()
     if out:
         figures(rows, out)

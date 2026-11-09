@@ -5,7 +5,7 @@ The numbers behind the report (design.md section 8), and what they suggest. Ever
 ```sh
 python -m planner.analyze results/2026-11-03-1932-direct.jsonl results/2026-11-03-1932-tool.jsonl \
   results/2026-11-07-1314-gold.jsonl results/2026-11-04-1117-direct.jsonl results/2026-11-04-1119-tool.jsonl \
-  results/2026-11-08-17[12]?-*.jsonl --figures docs/figures
+  results/2026-11-08-17[12]?-*.jsonl results/2026-11-09-1734-feedback.jsonl --figures docs/figures
 ```
 
 which prints the full tables, including some rows left out here. Section 10's table comes from `python -m planner.explain main`.
@@ -35,12 +35,13 @@ The main runs used Claude Sonnet 5.5 with adaptive thinking at effort `high` (de
 | `results/2026-11-08-1718-tool-haiku-nothink.jsonl` | Tool, Haiku with thinking disabled, explicit | $0.02 |
 | `results/2026-11-08-1719-tool-haiku-nothink.jsonl` | Tool, Haiku with thinking disabled, reworded | $0.02 |
 | `results/2026-11-08-1723-tool-haiku-nothink.jsonl` | Tool, Haiku with thinking disabled, adversarial | $0.01 |
+| `results/2026-11-09-1734-feedback.jsonl` | Validator feedback on every wrong direct plan above, all three model settings (section 11) | $0.32 |
 | `results/2026-11-04-1112-gold.jsonl` | Gold, solver without the objective (only in section 5's last row) | free |
 | `results/2026-11-03-1931-tool.jsonl` | Tool pilot on the 5 examples, 1 run (not in the tables) | $0.02 |
 | `results/2026-11-04-1114-tool.jsonl` | Tool pilot on the reworded set, 1 run, used only to check the messages (not in the tables) | $0.23 |
 | `results/2026-11-08-1658-*`, `1701-*`, `1703-*`, `1705-*` | Haiku pilots on the 5 examples, 1 run each (not in the tables) | $0.03 |
 
-These files cost $10.70 in all: $7.29 for the Sonnet runs on the explicit and reworded sets, and $3.41 for the 8 Nov runs and pilots. The 27 Oct direct pilot adds $0.12. The tool plans saved in the 3 and 4 Nov tool files came from earlier versions of the solver. `planner/analyze.py` re-solves every saved translation with the current solver, which has the objective, and no outcome changed.
+These files cost $11.02 in all: $7.29 for the Sonnet runs on the explicit and reworded sets, $3.41 for the 8 Nov runs and pilots, and $0.32 for the 9 Nov feedback run. The 27 Oct direct pilot adds $0.12. The tool plans saved in the 3 and 4 Nov tool files came from earlier versions of the solver. `planner/analyze.py` re-solves every saved translation with the current solver, which has the objective, and no outcome changed.
 
 ## Summary
 
@@ -48,7 +49,7 @@ These files cost $10.70 in all: $7.29 for the Sonnet runs on the explicit and re
    - Direct: 99.4% on both sets, 2 wrong answers out of 360.
    - Tool: 100%, none wrong out of 360.
    - Gold: 100%.
-   - 2 against 0 is not a significant difference (Fisher's exact test, p ≈ 0.5). Loose wording didn't lower either approach's accuracy.
+   - 2 against 0 is not a significant difference (paired test over students, p = 0.5). Loose wording didn't lower either approach's accuracy.
 2. **Sonnet's translation is nearly perfect.**
    - 98.9% of translations are perfect on the explicit set and 98.3% on the reworded set.
    - Every error is the same one: after "I failed CS2030S", the translator adds CS2030S to `must_take`. It's required anyway, so the answer stays right.
@@ -65,13 +66,17 @@ These files cost $10.70 in all: $7.29 for the Sonnet runs on the explicit and re
    - Weng Mun's objective (design.md 6.2) closes both gaps. The mean is now 4.96 for tool against 4.97-5.03 for direct. The two finish in the same semester in 145 of 149 pairs, and tool is earlier in the other 4. Tool names 6.95 catalog courses a plan.
    - We chose the objective after seeing direct's plans, so this shows what an objective can do, not a fair contest.
 6. **With the smaller Haiku 5.5, translation breaks first, and tool falls below direct** (section 8).
-   - Direct 93.9%, tool 88.6% (p = 0.017). With thinking disabled: direct 89.2%, tool 71.4% (p < 0.001).
+   - Direct 93.9%, tool 88.6% (p = 0.12: with 60 students, a gap this size could be chance). With thinking disabled: direct 89.2%, tool 71.4% (p < 0.001).
    - Every wrong tool answer, in every setting, came from a wrong translation. The solver never erred: it planned correctly for the wrong student.
    - "Thinking disabled" mainly took the reasoning out of translation. On the direct prompt Haiku still billed about 5,250 output tokens for a reply of about 100, against 5,900 with thinking.
 7. **Adversarial messages: with Sonnet, only the tool approach held at 100%** (section 9).
-   - Sonnet direct fell to 79.2% (97.9% on the same students without the added sentence, p = 0.001 against tool). It broke a rule twice, and 8 times it said "impossible" to a feasible student who had asked for something the rules forbid.
+   - Sonnet direct fell to 79.2% (97.9% on the same students without the added sentence). Its 10 wrong answers came from 4 of the 16 students, so against tool p = 0.125, the smallest possible with 4 students: a clear pattern, but not a significant one. It broke a rule twice, and 8 times it said "impossible" to a feasible student who had asked for something the rules forbid.
    - With Haiku the approaches aren't significantly different. Tool failed only on injected instructions, which made the translator drop a must-take course. The solver never broke a rule.
 8. **The solver can explain every "impossible"** with the smallest change to the student's own choices that makes a plan exist (section 10). It caught a wrong reason in our own scenario file (M25).
+9. **Validator feedback (the hybrid) fixes nearly every direct plan that breaks a rule** (section 11).
+   - Sending the validator's findings back fixed 63 of 66 such plans, 56 of them in one round. Haiku's direct accuracy rose from 93.9% to 100%, and with thinking disabled from 89.2% to 98.3%. Sonnet's went from 99.4% to 100%.
+   - It can't fix a wrong "impossible", which the validator can't check, so Sonnet on adversarial messages only rose from 79.2% to 83.3%.
+   - The validator checked each plan against the gold scenario, as if the student had confirmed their details. With the details confirmed, tool-assisted is gold, which scores 100% in one call.
 
 ## 1. Accuracy (design.md 8.1)
 
@@ -94,18 +99,18 @@ The wrong answers, all from direct:
 
 **Violations per rule:** direct broke `prereq` once (explicit), and `repeat` and `same_semester` once each (reworded). Tool and gold broke none.
 
-Every model setting, with Wilson 95% intervals. "Both" pools the explicit and reworded sets (360 answers); cost and time are per answer on those sets. The intervals treat the 3 runs of a scenario as independent, which they aren't, so they are somewhat too narrow.
+Every model setting, with 95% intervals. "Both" pools the explicit and reworded sets (360 answers); cost and time are per answer on those sets. A student's 3 runs, and its explicit and reworded messages, are not independent, so the intervals resample students, not answers (`planner/analyze.py: interval`). When every answer is right, resampling gives no width, so they fall back to a Wilson interval that counts each student once.
 
 | Model | Approach | Explicit | Reworded | Both [95% CI] | Adversarial (48) [95% CI] | Cost | Seconds |
 |---|---|---|---|---|---|---|---|
-| Sonnet | direct | 99.4% | 99.4% | 99.4% [98.0, 99.8] | 79.2% [65.7, 88.3] | $0.0163 | 8.5 |
-| Sonnet | tool | 100% | 100% | 100% [98.9, 100] | 100% [92.6, 100] | $0.0032 | 2.7 |
-| Haiku | direct | 91.7% | 96.1% | 93.9% [90.9, 95.9] | 91.7% [80.4, 96.7] | $0.0032 | 22.7 |
-| Haiku | tool | 87.2% | 90.0% | 88.6% [84.9, 91.5] | 95.8% [86.0, 98.8] | $0.0003 | 2.4 |
-| Haiku, thinking disabled | direct | 86.7% | 91.7% | 89.2% [85.5, 92.0] | 89.6% [77.8, 95.5] | $0.0028 | 20.1 |
-| Haiku, thinking disabled | tool | 75.6% | 67.2% | 71.4% [66.5, 75.8] | 91.7% [80.4, 96.7] | $0.0001 | 1.4 |
+| Sonnet | direct | 99.4% | 99.4% | 99.4% [98.6, 100] | 79.2% [60.4, 95.8] | $0.0163 | 8.5 |
+| Sonnet | tool | 100% | 100% | 100% [94.0, 100] | 100% [80.6, 100] | $0.0032 | 2.7 |
+| Haiku | direct | 91.7% | 96.1% | 93.9% [91.1, 96.4] | 91.7% [81.2, 100] | $0.0032 | 22.7 |
+| Haiku | tool | 87.2% | 90.0% | 88.6% [82.8, 93.6] | 95.8% [87.5, 100] | $0.0003 | 2.4 |
+| Haiku, thinking disabled | direct | 86.7% | 91.7% | 89.2% [85.3, 92.8] | 89.6% [75.0, 100] | $0.0028 | 20.1 |
+| Haiku, thinking disabled | tool | 75.6% | 67.2% | 71.4% [63.3, 79.2] | 91.7% [79.2, 100] | $0.0001 | 1.4 |
 
-Direct against tool, Fisher's exact test: on "both", p = 0.50 (Sonnet), 0.017 (Haiku), < 0.001 (thinking disabled); on the adversarial set, p = 0.001 (Sonnet), 0.68 (Haiku), 1.0 (thinking disabled).
+Direct against tool, paired permutation test over students (`planner/analyze.py: paired_p`): on "both", p = 0.50 (Sonnet), 0.12 (Haiku), < 0.001 (thinking disabled); on the adversarial set, p = 0.125 (Sonnet), 0.75 (Haiku), 1.0 (thinking disabled). An earlier version used Fisher's exact test on answers, which treats a student's runs as independent and gave p = 0.017 for Haiku and 0.001 for Sonnet on the adversarial set.
 
 ![Accuracy by model setting](figures/models.png)
 
@@ -270,21 +275,54 @@ Haiku's translations:
 - Where no change helps, the cause is something the student can't choose: too few semesters left, a course offered only in the other term, or (M28) a completed course that precludes a required one.
 - **It caught a wrong reason in our scenario file.** M25's `why` blamed an exam clash between CS4248 and CS2107, but the explainer said to drop CS4222, and dropping CS4248 doesn't help. The real conflict: CS4231, CS3236 and CS4222 (all Semester 2 only) must all go in semester 8, and CS4222's lecture clashes with CS4231's and its exam with CS3236's. The label was right and the reason wrong; `main.json` and `reworded.json` now give the right reason.
 
-## 11. Decisions for the team
+## 11. Validator feedback (the hybrid)
+
+`python -m planner.feedback <direct results files>` takes every direct answer that broke a rule (outcome `invalid_plan` or `plan_for_impossible`) and continues the same conversation: it shows the model the validator's findings ("a rule checker found that your plan breaks these rules: ...") and asks for a revised plan, or "impossible" if no plan can work. It stops at the first answer with no violations, after at most 3 rounds. The validator checks against the gold scenario, so this measures direct planning with a rule checker and the student's confirmed details. An "impossible" gets no feedback, because the validator can't check it. The run reused the saved first answers from every direct file above.
+
+| model | first outcome | after feedback | answers | rounds: 1 | 2 | 3 | extra cost |
+|---|---|---|---|---|---|---|---|
+| Sonnet | invalid_plan | valid_plan | 3 | 3 | 0 | 0 | $0.067 |
+| Sonnet | plan_for_impossible | correct_impossible | 1 | 1 | 0 | 0 | $0.049 |
+| Haiku | invalid_plan | valid_plan | 20 | 19 | 1 | 0 | $0.091 |
+| Haiku | plan_for_impossible | correct_impossible | 5 | 3 | 2 | 0 | $0.009 |
+| Haiku, thinking disabled | invalid_plan | valid_plan | 27 | 24 | 3 | 0 | $0.093 |
+| Haiku, thinking disabled | invalid_plan | false_impossible | 3 | 3 | 0 | 0 | $0.002 |
+| Haiku, thinking disabled | plan_for_impossible | correct_impossible | 7 | 6 | 1 | 0 | $0.008 |
+
+| model | set | direct | after feedback | 95% CI | tool | gold | extra cost per answer |
+|---|---|---|---|---|---|---|---|
+| Sonnet | explicit and reworded | 99.4% | 100% | 94.0-100% | 100% | 100% | $0.0002 |
+| Sonnet | adversarial | 79.2% | 83.3% | 64.6-100% | 100% | 100% | $0.0008 |
+| Haiku | explicit and reworded | 93.9% | 100% | 94.0-100% | 88.6% | 100% | $0.0003 |
+| Haiku | adversarial | 91.7% | 97.9% | 93.8-100% | 95.8% | 100% | $0.0002 |
+| Haiku, thinking disabled | explicit and reworded | 89.2% | 98.3% | 96.4-99.7% | 71.4% | 100% | $0.0003 |
+| Haiku, thinking disabled | adversarial | 89.6% | 91.7% | 77.1-100% | 91.7% | 100% | $0.0001 |
+
+"Extra cost per answer" spreads the feedback cost over every direct answer in the row, since only the wrong ones get feedback. Per fed-back answer it was $0.029 for Sonnet (about twice a first answer), $0.004 for Haiku and $0.003 with thinking disabled.
+
+- **One round is nearly always enough.** 56 of the 66 wrong plans were fixed in one round and 7 more in two; none needed a third. The findings name the rule, the semester and the courses, and the model moved the course or added the missing one. For example, Haiku's M39 plan had CS2101 in two semesters, one of them apart from CS2103T; after one round, CS2101 was only in semester 7, beside CS2103T.
+- **Every wrong plan for an impossible student became a correct "impossible"** (13 of 13): told that a must-take course can't fit, the model concluded that no plan can.
+- **The 3 failures went the other way.** With thinking disabled, Haiku answered three feedback rounds (M01 run 2, M06 runs 2 and 3) with "impossible", claiming that CS2101 is not offered in any semester, which is false.
+- **Feedback can't reach a wrong "impossible".** Sonnet's 8 adversarial errors of this kind (A11, A13, A14) stay wrong, so feedback only fixed its 2 rule-breaking plans on A12. With the solver, an "impossible" could be checked too, but then the solver does the planning.
+- **The comparison with tool-assisted is not like for like.** Feedback checks against the gold scenario, as if the student had confirmed their seven fields. Under that assumption, tool-assisted is the gold row: 100% in one call, at a fifth of direct's first-answer cost with Sonnet. The fair reading is that, given confirmed details, a rule checker lifts direct planning to about the ceiling as well, but only for plans, and at direct's cost. Without confirmed details, the checker would need the translated fields, and translation errors would pass through it as they do through the solver; we didn't run that.
+- **What it shows for deployment.** A direct planner behind the validator is safe for plans (none that breaks a rule reaches the student) and, with feedback, almost always ends with a valid one. Its "impossible" is still unchecked.
+
+## 12. Decisions for the team
 
 1. **The ceiling effect.** We ran the reworded set, and with Sonnet accuracy still doesn't separate the approaches.
    - Done: the report says so, and compares the approaches on what does differ: cost, speed, consistency, scaling with the horizon, robustness to adversarial messages, and guarantees. It also adds the smaller model, where accuracy does separate them (section 8).
    - On guarantees: a tool plan is valid whenever the translation is right. A direct plan has to be checked, and the validator catches every direct mistake.
-2. **Hybrid (open item 5). Dropped.**
-   - With 2 wrong Sonnet answers in 360, there's nothing for it to fix that we could measure.
-   - A validator-feedback loop would probably catch both, and it's natural future work, more so for Haiku.
+2. **Hybrid (open item 5). Done** as validator feedback (section 11). It was dropped while Sonnet's 2 wrong answers in 360 gave it nothing to fix, and built once Haiku did.
 3. **Optimisation (open item 6). Done.** Weng Mun added the objective to `solver.py` (design.md 6.2), and section 5 shows it closes the plan-quality gap. Evaluating it cost no API money: gold was re-run, and `planner/analyze.py` re-solved the saved translations. The report says we chose the objective after seeing direct's plans.
 4. **What a deployment would add (report, discussion).** Show the student the seven fields to confirm, ask a follow-up question when a field is `null`, and check claims such as waivers against student records. None of this is built.
 
-## 12. Caveats
+## 13. Caveats
 
 - **The message sets were generated from templates** from the gold JSON, so the wording is varied but not as messy as real students' messages. The reworded set deliberately leaves out course titles and phrases like "the usual first-year mods", because neither prompt lists course titles or a recommended schedule.
-- **Sample size:** 60 scenarios (16 adversarial), 3 runs per approach, set and model. Sonnet's 2-against-0 error count is not significant. The 95% intervals treat the 3 runs of a scenario as independent, so they are somewhat too narrow.
+- **Validator feedback** used the gold scenario, as if the student had confirmed their details (section 11), and was run once, on the saved first answers.
+- **Sample size:** 60 scenarios (16 adversarial), 3 runs per approach, set and model. Sonnet's 2-against-0 error count is not significant, and with 60 students only gaps of about 10 points can be told from chance. Intervals and tests count students, not answers (section 1).
 - **"Thinking disabled"** didn't stop Haiku reasoning on the direct prompt (section 8).
 - **Stand-in years:** later years use the AY2026/27 data (design.md 2).
 - **Plan quality:** we chose the solver's objective after seeing direct's plans, so matching them is what it was built to do. We didn't try other objectives, such as balancing hours.
+- **Degree rules we don't model** (design.md 2): the common curriculum, the 160-unit total, the 12 units required at level 4000, and 6-12 units of industry experience. `python -m planner.level4000` adds the level-4000 rule: all 37 feasible main scenarios still have a plan, so no label changes, but all 37 of the solver's current plans fall short of it, because the objective plans as few named courses as possible.
+- **Prerequisites outside the catalog** count as never met (`data/build_catalog.py`), so CS3242, CS3282 and CS4330 can never be planned here, although real students take them: CS3282 needs CS3281, CS3242 needs H2 Physics or PC1201, and CS4330 needs CS2220 or a life-sciences course. M30, R30 and A01 are impossible because they must take CS3282.
