@@ -39,13 +39,14 @@ def client():
 
 def ask(system, user):
     """Send one prompt and return (reply_text, usage), usage = {"input_tokens", "output_tokens", "seconds", ...}.
+    user is the message, or a list of turns for a conversation (planner/feedback.py).
     The system prompt is cached, so a long prompt shared by every scenario is billed in full only once."""
     start = time.monotonic()
     with client().messages.stream(
         model=MODEL,
         max_tokens=64000,
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-        messages=[{"role": "user", "content": user}],
+        messages=user if isinstance(user, list) else [{"role": "user", "content": user}],
         thinking={"type": "adaptive" if THINKING else THINKING_OFF.get(MODEL, "disabled")},
         output_config={"effort": EFFORT},
     ) as stream:
