@@ -1,10 +1,13 @@
 """Run one approach over a scenario file, score every answer and save the results. Owner: Javier.
 
-Usage:  python -m planner.run <approach> <scenario file> [runs]      e.g.  python -m planner.run direct examples 1
+Usage:  python -m planner.run <approach> <scenario file> [runs] [--model <id>] [--no-thinking]
+        e.g.  python -m planner.run direct examples 1
+              python -m planner.run tool main --model claude-haiku-5-5 --no-thinking
   direct  the LLM writes the plan itself (planner/direct.py)
   tool    the LLM turns the message into a scenario and the solver plans (planner/translate.py, planner/solver.py)
   gold    the solver plans from the gold scenario: the perfect-translation ablation (design.md section 8.2)
-Runs default to 3, or to 1 for gold, which is deterministic.
+Runs default to 3, or to 1 for gold, which is deterministic. The model defaults to Claude Sonnet 5.5 with adaptive
+thinking (planner/llm.py); --model and --no-thinking give the smaller-model runs (design.md section 8.4).
 """
 import json
 import sys
@@ -69,13 +72,22 @@ def main(argv=None):
     """For each scenario: run the approach, validate its plan, score it with outcome() and append one JSON line
     (id, approach, run, model, plan, violations, outcome, each LLM call's raw reply and tokens, cost, seconds) to
     results/<date>-<time>-<approach>.jsonl. Then print the outcome table, the accuracy and the cost."""
-    argv = sys.argv[1:] if argv is None else argv
-    if len(argv) not in (2, 3) or argv[0] not in ("direct", "tool", "gold"):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if "--no-thinking" in argv:
+        argv.remove("--no-thinking")
+        llm.THINKING = False
+    if "--model" in argv:
+        i = argv.index("--model")
+        llm.MODEL = argv[i + 1] if i + 1 < len(argv) else ""
+        del argv[i:i + 2]
+    if len(argv) not in (2, 3) or argv[0] not in ("direct", "tool", "gold") or llm.MODEL not in llm.PRICES:
         sys.exit(__doc__)
     approach, name = argv[:2]
     runs = int(argv[2]) if len(argv) == 3 else 1 if approach == "gold" else 3
     entries = load_scenarios(name)
-    path = ROOT / "results" / f"{datetime.now():%Y-%m-%d-%H%M}-{approach}.jsonl"
+    tag = "" if llm.MODEL == "claude-sonnet-5-5" else "-" + llm.MODEL.split("-")[1]  # e.g. -haiku
+    tag += "" if llm.THINKING else "-nothink"
+    path = ROOT / "results" / f"{datetime.now():%Y-%m-%d-%H%M}-{approach}{tag}.jsonl"
     path.parent.mkdir(exist_ok=True)
     rows = []
     with path.open("a") as out:
@@ -86,7 +98,7 @@ def main(argv=None):
                 plan, extra = answer(approach, entry)
                 violations, result = score(entry, plan)
                 row = {"id": entry["id"], "approach": approach, "run": run, "model": llm.MODEL if llm.CALLS else None,
-                       "plan": plan, "violations": violations, "outcome": result, **extra, "calls": list(llm.CALLS),
+                       "thinking": llm.THINKING if llm.CALLS else None, "plan": plan, "violations": violations, "outcome": result, **extra, "calls": list(llm.CALLS),
                        "cost": round(sum(llm.cost(call["usage"]) for call in llm.CALLS), 4),
                        "seconds": round(time.monotonic() - start, 1)}
                 out.write(json.dumps(row) + "\n")
@@ -112,7 +124,7 @@ def report(rows):
     calls = [call for row in rows for call in row["calls"]]
     if calls:
         total = sum(row["cost"] for row in rows)
-        tokens = {name: sum(call["usage"][name] for call in calls) for name in llm.PRICES}
+        tokens = {name: sum(call["usage"][name] for call in calls) for name in llm.PRICES[llm.MODEL]}
         print(f"cost: ${total:.2f}, ${total / len(rows):.3f} per answer, {sum(row['seconds'] for row in rows):.0f} s; "
               f"tokens: {tokens}")
 

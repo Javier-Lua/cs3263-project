@@ -8,11 +8,15 @@ Can a frontier LLM plan an NUS Computer Science student's remaining semesters by
 
 ## Results
 
-60 test students (37 who can finish their degree, 23 who can't), each asked 3 times in plainly worded and loosely worded messages, with Claude Sonnet 5.5:
+60 test students (37 who can finish their degree, 23 who can't), each asked 3 times in plainly worded and loosely worded messages, plus 16 messages that push the assistant to bend a rule:
 
-- **Both approaches are nearly always right.** Direct scored 99.4% (2 slips in 360 answers) and tool-assisted 100%. The gap isn't statistically significant.
+- **With Claude Sonnet 5.5, both approaches are nearly always right.** Direct scored 99.4% (2 slips in 360 answers) and tool-assisted 100%. The gap isn't statistically significant.
 - **Tool-assisted is about 5 times cheaper and 3 times faster, and gives the same plan every time.** Direct's plans differ between runs, and its effort grows with the number of semesters to plan.
 - **Plan quality is even** once the solver has an objective, which we chose after seeing direct's plans.
+- **With the smaller Claude Haiku 5.5, translation breaks first.** Direct scored 93.9% and tool-assisted 88.6%, a gap that could still be chance with 60 students. Every wrong tool answer came from a misread message; the solver then planned correctly for the wrong student. With thinking disabled the gap widens to 89.2% against 71.4%, and that one is significant.
+- **Adversarial messages:** with Sonnet, tool-assisted stayed at 100% and direct fell to 79%, mostly by saying "impossible" to students who could finish. A message can change the seven translated fields, never the solver's rules. Tool's 100% is partly because it silently drops requests it can't encode, without telling the student.
+- **Validator feedback (the hybrid) fixes nearly every direct plan that breaks a rule** (`planner/feedback.py`). Sending the validator's findings back fixed 63 of 66 such plans, mostly in one round, and lifted Haiku's direct accuracy from 93.9% to 100%. It can't fix a wrong "impossible", and it checks plans against the student's true details, as if they had been confirmed.
+- **Every "impossible" can be explained** with the smallest change to the student's own choices that makes a plan exist (`planner/explain.py`).
 
 The tables, figures and caveats are in [docs/analysis.md](docs/analysis.md).
 
@@ -26,7 +30,7 @@ pytest
 
 Tests never call the LLM.
 
-To call the LLM, copy `.env.example` to `.env` (git-ignored) and put the Claude API key in it. Then run an approach over a scenario file, for example `python -m planner.run direct examples 1`; the usage is in [planner/run.py](planner/run.py). `gold` runs the solver on the gold scenarios and needs no key. Each run saves a file in `results/`. `python -m planner.analyze <results files>` prints the analysis tables. The exact command is at the top of [docs/analysis.md](docs/analysis.md).
+To call the LLM, copy `.env.example` to `.env` (git-ignored) and put the Claude API key in it. Then run an approach over a scenario file, for example `python -m planner.run direct examples 1`; the usage is in [planner/run.py](planner/run.py). `gold` runs the solver on the gold scenarios and needs no key. `--model claude-haiku-5-5` and `--no-thinking` run a smaller model. `python -m planner.explain main` explains each impossible scenario with the smallest change that makes a plan exist, also without a key. `python -m planner.feedback <direct results files>` sends the validator's findings back on every wrong direct plan (needs a key). `python -m planner.level4000` checks whether NUS's level-4000 rule, which we don't model, would change any label. Each run saves a file in `results/`. `python -m planner.analyze <results files>` prints the analysis tables. The exact command is at the top of [docs/analysis.md](docs/analysis.md).
 
 ## Layout
 
@@ -38,7 +42,7 @@ To call the LLM, copy `.env.example` to `.env` (git-ignored) and put the Claude 
 | `data/catalog/<AY>.json` | Frozen NUSMods data, one file per academic year. Generated; don't edit by hand. |
 | `data/requirements/<AY>.json` | Degree rules typed in from the SoC pages, one file per first cohort they apply to |
 | `data/build_catalog.py` | Rebuilds the catalogs: `python data/build_catalog.py 2025-2026 2026-2027` |
-| `scenarios/` | Test students: English text, gold JSON, expected answer. `main.json` (M01-M60, plainly worded), `reworded.json` (R01-R60, the same students worded loosely), `examples.json` (5 hand-checked examples) |
+| `scenarios/` | Test students: English text, gold JSON, expected answer. `main.json` (M01-M60, plainly worded), `reworded.json` (R01-R60, the same students worded loosely), `adversarial.json` (A01-A16, messages that push the assistant to bend a rule), `examples.json` (5 hand-checked examples) |
 | `planner/` | Data loading, validator, solver, LLM approaches, experiment runner, analysis (owners in the design doc) |
 | `results/` | One file per run: every answer, its score and its cost |
-| `tests/` | Data checks, and tests for the validator, solver, both approaches, runner and analysis |
+| `tests/` | Data checks, and tests for the validator, solver, both approaches, runner, analysis, explanations and feedback |

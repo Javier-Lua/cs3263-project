@@ -1289,7 +1289,7 @@
    ]
   },
   "expected": "impossible",
-  "why": "Semester 8 must hold CS3235 and CS4230 (they need CS2106, CS2107 and CS3230 from semester 7) and CS4231, CS3236 and CS4222 (Semester 2 only), so CS4248 has to go in semester 7 with CS2107, and their exams clash."
+  "why": "CS4231, CS3236 and CS4222 (all Semester 2 only) must all go in semester 8, the only Semester 2 left, but CS4222's lecture clashes with CS4231's and its exam clashes with CS3236's."
  },
  {
   "id": "M26",

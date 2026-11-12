@@ -2,15 +2,22 @@
 
 Usage:  python -m planner.analyze <results file> ... [--figures <dir>]
         e.g. python -m planner.analyze results/2026-11-03-1932-direct.jsonl results/2026-11-03-1932-tool.jsonl
+A *-feedback.jsonl file (planner/feedback.py) adds direct's accuracy after validator feedback.
 
 Tool plans are re-solved from their saved translations with the current solver, so plan quality and consistency use
 the deterministic solver. The outcome can't change (whether a plan exists never depended on the solver's search), and
-any that does is printed. "explicit" is the main set (M01-M60), "reworded" the same scenarios loosely worded (R01-R60).
+any that does is printed. "explicit" is the main set (M01-M60), "reworded" the same scenarios loosely worded (R01-R60),
+"adversarial" main scenarios with a sentence that pushes the assistant to bend a rule (A01-A16). Every table is split
+by model setting: Sonnet (Claude Sonnet 5.5, adaptive thinking), Haiku (Claude Haiku 5.5, adaptive thinking) and
+"Haiku, thinking disabled".
 """
 import json
+import math
+import random
 import sys
 import time
 from collections import Counter, defaultdict
+from itertools import product
 from statistics import mean, median, pstdev
 
 from planner.data import ROOT, catalog_for, load_catalogs, load_requirements, load_scenarios, term
@@ -18,7 +25,8 @@ from planner.run import CORRECT, OUTCOMES, score
 from planner.solver import build_model, solve
 
 GOLD = {e["id"]: e for path in sorted((ROOT / "scenarios").glob("*.json")) for e in load_scenarios(path.stem)}
-SETS = {"M": "explicit", "R": "reworded", "S": "examples"}
+SETS = {"M": "explicit", "R": "reworded", "A": "adversarial", "S": "examples"}
+MODELS = ["Sonnet", "Haiku", "Haiku, thinking disabled", "solver"]  # table order; gold rows are "solver"
 FIELDS = ["matric_ay", "current_semester", "completed", "focus_area", "must_take"]
 
 
@@ -29,6 +37,7 @@ def load(paths):
         for line in open(path):
             row = json.loads(line)
             row["set"] = SETS[row["id"][0]]
+            row["setting"] = setting(row)
             if row["approach"] == "tool" and row.get("translation") is not None and "solver_error" not in row:
                 plan = solve(row["translation"])
                 violations, result = score(GOLD[row["id"]], plan)
@@ -37,6 +46,58 @@ def load(paths):
                 row.update(plan=plan, violations=violations, outcome=result)
             rows.append(row)
     return rows, changed
+
+
+def setting(row):
+    """The model setting as a short label, e.g. "Haiku, thinking disabled". Rows from before the option have no "thinking"."""
+    if row.get("model") is None:
+        return "solver"
+    return row["model"].split("-")[1].capitalize() + ("" if row.get("thinking", True) else ", thinking disabled")
+
+
+def wilson(k, n, z=1.96):
+    """95% Wilson interval for k successes in n independent trials."""
+    p, d = k / n, 1 + z * z / n
+    centre, half = (p + z * z / (2 * n)) / d, z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return centre - half, centre + half
+
+
+def by_student(rows):
+    """{student: [1 or 0 per answer]}. M07 and R07 are the same student, so explicit and reworded answers pool; the
+    adversarial set (A01-A16) is always analysed on its own."""
+    by = defaultdict(list)
+    for row in rows:
+        by[row["id"][1:]].append(int(row["outcome"] in CORRECT))
+    return by
+
+
+def interval(rows, draws=10000):
+    """95% interval for accuracy that resamples students, not answers: a student's runs, and its explicit and
+    reworded messages, are not independent. When every answer is right, resampling gives no width, so this falls back
+    to a Wilson interval that counts each student once."""
+    students = [(sum(v), len(v)) for v in by_student(rows).values()]
+    if all(k == n for k, n in students):
+        return wilson(len(students), len(students))
+    rng = random.Random(0)
+    stats = sorted(sum(k for k, _ in s) / sum(n for _, n in s)
+                   for s in ([rng.choice(students) for _ in students] for _ in range(draws)))
+    return stats[int(0.025 * draws)], stats[int(0.975 * draws) - 1]
+
+
+def paired_p(rows_a, rows_b, draws=20000):
+    """Two-sided p-value for "a and b are equally accurate" from a paired permutation test over students: under that
+    hypothesis each student's accuracy difference is as likely to have either sign. Exact for up to 20 students
+    whose accuracy differs, else from random sign flips."""
+    a, b = by_student(rows_a), by_student(rows_b)
+    diffs = [mean(a[s]) - mean(b[s]) for s in a if mean(a[s]) != mean(b[s])]
+    observed = abs(sum(diffs)) - 1e-9
+    if not diffs:
+        return 1.0
+    if len(diffs) <= 20:
+        signs = product((1, -1), repeat=len(diffs))
+        return mean(abs(sum(s * d for s, d in zip(sign, diffs))) >= observed for sign in signs)
+    rng = random.Random(0)
+    return mean(abs(sum(d if rng.random() < 0.5 else -d for d in diffs)) >= observed for _ in range(draws))
 
 
 def left(row):
@@ -74,10 +135,11 @@ def pct(x):
 
 
 def groups(rows):
+    """Rows by (approach, model setting, set)."""
     by = defaultdict(list)
     for row in rows:
-        by[(row["approach"], row["set"])].append(row)
-    return dict(sorted(by.items()))
+        by[(row["approach"], row["setting"], row["set"])].append(row)
+    return dict(sorted(by.items(), key=lambda kv: (kv[0][0], MODELS.index(kv[0][1]), kv[0][2])))
 
 
 def accuracy(rows):
@@ -88,24 +150,51 @@ def accuracy(rows):
 
 def outcomes(rows):
     print("## Outcomes and accuracy (design.md 8.1)\n")
-    table(["approach", "set", "answers"] + OUTCOMES + ["accuracy (min-max over runs)", "feasible", "impossible"],
-          [[a, s, len(rs)] + [Counter(r["outcome"] for r in rs)[o] for o in OUTCOMES] +
-           ["{} ({}-{})".format(*map(pct, accuracy(rs)))] +
+    table(["approach", "model", "set", "answers"] + OUTCOMES +
+          ["accuracy (min-max over runs)", "95% CI", "feasible", "impossible"],
+          [[a, m, s, len(rs)] + [Counter(r["outcome"] for r in rs)[o] for o in OUTCOMES] +
+           ["{} ({}-{})".format(*map(pct, accuracy(rs))), "{}-{}".format(*map(pct, interval(rs)))] +
            [pct(mean(r["outcome"] in CORRECT for r in rs if GOLD[r["id"]]["expected"] == label))
-            for label in ("feasible", "impossible")] for (a, s), rs in groups(rows).items()])
+            for label in ("feasible", "impossible")] for (a, m, s), rs in groups(rows).items()])
     print("Wrong answers:\n")
-    table(["approach", "set", "id", "run", "outcome", "rules broken", "fields mistranslated"],
-          [[r["approach"], r["set"], r["id"], r["run"], r["outcome"],
-            ", ".join(sorted({v["rule"] for v in r["violations"]})), ", ".join(r.get("wrong_fields", []))]
-           for r in rows if r["outcome"] not in CORRECT])
+    wrong_answers(rows, ["approach", "model", "set", "id"], lambda r: [r["approach"], r["setting"], r["set"], r["id"]])
+    compare(rows)
+
+
+def compare(rows):
+    """Direct against tool per model setting, pooling explicit and reworded, with the paired test over students."""
+    lines = []
+    for m in MODELS[:-1]:
+        for label, sets in (("explicit and reworded", ("explicit", "reworded")), ("adversarial", ("adversarial",))):
+            d, t = ([r for r in rows if r["approach"] == a and r["setting"] == m and r["set"] in sets]
+                    for a in ("direct", "tool"))
+            if d and t:
+                lines.append([m, label, len(by_student(d)), pct(mean(r["outcome"] in CORRECT for r in d)),
+                              "{}-{}".format(*map(pct, interval(d))), pct(mean(r["outcome"] in CORRECT for r in t)),
+                              "{}-{}".format(*map(pct, interval(t))), f"{paired_p(d, t):.3f}"])
+    if lines:
+        print("Direct against tool. Intervals resample students; p is a paired permutation test over students:\n")
+        table(["model", "set", "students", "direct", "95% CI", "tool", "95% CI", "p"], lines)
+
+
+def wrong_answers(rows, head, key):
+    """One line per wrong answer, with the runs that went wrong the same way merged into one line."""
+    lines = defaultdict(list)
+    for r in rows:
+        if r["outcome"] not in CORRECT:
+            fields = "no scenario" if "translation" in r and r["translation"] is None else ", ".join(r.get("wrong_fields", []))
+            rules = ", ".join(sorted({v["rule"] for v in r["violations"]}))
+            lines[tuple(key(r)) + (r["outcome"], rules, fields)].append(str(r["run"]))
+    table(head + ["outcome", "rules broken", "fields mistranslated", "runs"], [list(k) + [", ".join(v)] for k, v in lines.items()])
 
 
 def translation(rows):
     print("## Translation (design.md 8.2)\n")
-    tool = {s: rs for (a, s), rs in groups(rows).items() if a == "tool"}
-    table(["set", "translations", "perfect"] + FIELDS,
-          [[s, len(rs), pct(mean(not r["wrong_fields"] for r in rs))] +
-           [sum(f in r["wrong_fields"] for r in rs) for f in FIELDS] for s, rs in tool.items()])
+    tool = {(m, s): rs for (a, m, s), rs in groups(rows).items() if a == "tool"}
+    table(["model", "set", "translations", "perfect", "no scenario"] + FIELDS,
+          [[m, s, len(rs), pct(mean(not r["wrong_fields"] for r in rs)), sum(r["translation"] is None for r in rs)] +
+           [sum(f in r["wrong_fields"] for r in rs if r["translation"] is not None) for f in FIELDS]
+           for (m, s), rs in tool.items()])
     reworded = [r for r in rows if r["set"] == "reworded"]
     if not reworded:
         return
@@ -120,66 +209,97 @@ def translation(rows):
         for feature in wording["completed"] or [plain]:
             features[("completed", feature)].append(r)
         features[("must_take", "decoy" if "distractor" in wording else "no_decoy")].append(r)
+    models = [m for m in MODELS if any(r["setting"] == m for r in reworded)]
     lines = []
     for (field, form), rs in sorted(features.items()):
-        by = {a: [r for r in rs if r["approach"] == a] for a in ("direct", "tool")}
-        lines.append([field, form, len({r["id"] for r in rs})] +
-                     [pct(mean(r["outcome"] in CORRECT for r in by[a])) if by[a] else "" for a in ("direct", "tool")] +
-                     [pct(mean(field in r["wrong_fields"] for r in by["tool"])) if by["tool"] else ""])
-    table(["field", "wording", "scenarios", "direct accuracy", "tool accuracy", "tool: field wrong"], lines)
-    decoys = [r for r in reworded if r["approach"] == "tool" and "distractor" in GOLD[r["id"]]["wording"]]
-    if decoys:
-        taken = sum(r["translation"] is not None and GOLD[r["id"]]["wording"]["distractor"] in r["translation"]
-                    ["must_take"] for r in decoys)
-        print(f"Decoy course (\"looks interesting, but it's fine if it doesn't fit\") put into must_take: {taken} of "
-              f"{len(decoys)} translations.\n")
+        line = [field, form, len({r["id"] for r in rs})]
+        for m in models:
+            by = {a: [r for r in rs if r["approach"] == a and r["setting"] == m] for a in ("direct", "tool")}
+            line += [pct(mean(r["outcome"] in CORRECT for r in by[a])) if by[a] else "" for a in ("direct", "tool")]
+            line += [pct(mean(field in r["wrong_fields"] for r in by["tool"])) if by["tool"] else ""]
+        lines.append(line)
+    table(["field", "wording", "scenarios"] +
+          [f"{m}: {c}" for m in models for c in ("direct accuracy", "tool accuracy", "tool field wrong")], lines)
+    for m in models:
+        decoys = [r for r in reworded if r["approach"] == "tool" and r["setting"] == m
+                  and "distractor" in GOLD[r["id"]]["wording"]]
+        if decoys:
+            taken = sum(r["translation"] is not None and GOLD[r["id"]]["wording"]["distractor"] in
+                        (r["translation"]["must_take"] or []) for r in decoys)
+            print(f"{m}: decoy course (\"looks interesting, but it's fine if it doesn't fit\") put into must_take: "
+                  f"{taken} of {len(decoys)} translations.\n")
 
 
 def violations(rows):
     print("## Violations per rule (design.md 8.3)\n")
-    table(["approach", "set", "violations by rule"],
-          [[a, s, dict(Counter(v["rule"] for r in rs for v in r["violations"])) or "none"]
-           for (a, s), rs in groups(rows).items()])
+    table(["approach", "model", "set", "violations by rule"],
+          [[a, m, s, dict(Counter(v["rule"] for r in rs for v in r["violations"])) or "none"]
+           for (a, m, s), rs in groups(rows).items()])
 
 
 def cost(rows):
     print("## Cost and time per answer (design.md 8.3)\n")
-    table(["approach", "set", "cost per answer", "total cost", "seconds: mean", "median", "max", "output tokens: mean"],
-          [[a, s, f"${mean(r['cost'] for r in rs):.4f}", f"${sum(r['cost'] for r in rs):.2f}",
+    table(["approach", "model", "set", "cost per answer", "total cost", "seconds: mean", "median", "max",
+           "output tokens: mean"],
+          [[a, m, s, f"${mean(r['cost'] for r in rs):.4f}", f"${sum(r['cost'] for r in rs):.2f}",
             f"{mean(r['seconds'] for r in rs):.1f}", f"{median(r['seconds'] for r in rs):.1f}",
             f"{max(r['seconds'] for r in rs):.1f}", f"{mean(out_tokens(r) for r in rs):.0f}"]
-           for (a, s), rs in groups(rows).items()])
+           for (a, m, s), rs in groups(rows).items()])
     print("Direct: effort against semesters left to plan\n")
     lines = []
-    for (a, s), rs in groups(rows).items():
-        if a == "direct":
+    for (a, m, s), rs in groups(rows).items():
+        if a == "direct" and s != "adversarial":
             for n in sorted({left(r) for r in rs}):
                 sub = [r for r in rs if left(r) == n]
-                lines.append([s, n, len(sub), f"{mean(r['seconds'] for r in sub):.1f}",
+                lines.append([m, s, n, len(sub), f"{mean(r['seconds'] for r in sub):.1f}",
                               f"{mean(out_tokens(r) for r in sub):.0f}", pct(mean(r["outcome"] in CORRECT for r in sub))])
-    table(["set", "semesters left", "answers", "seconds", "output tokens", "accuracy"], lines)
+    table(["model", "set", "semesters left", "answers", "seconds", "output tokens", "accuracy"], lines)
 
 
 def plan_quality(rows):
     print("## Plan quality on valid plans (design.md 8.3)\n")
     q = {key: [quality(GOLD[r["id"]], r["plan"]) for r in rs if r["outcome"] == "valid_plan"]
          for key, rs in groups(rows).items()}
-    table(["approach", "set", "valid plans", "units sd", "hours/week sd", "real courses", "last required semester"],
-          [[a, s, len(qs)] + [f"{mean(x[k] for x in qs if x[k] is not None):.2f}"
-                              for k in ("units_sd", "hours_sd", "real_courses", "last_required")]
-           for (a, s), qs in q.items() if qs])
-    valid = {(r["approach"], r["set"], r["id"], r["run"]): quality(GOLD[r["id"]], r["plan"])
+    table(["approach", "model", "set", "valid plans", "units sd", "hours/week sd", "real courses",
+           "last required semester"],
+          [[a, m, s, len(qs)] + [f"{mean(x[k] for x in qs if x[k] is not None):.2f}"
+                                 for k in ("units_sd", "hours_sd", "real_courses", "last_required")]
+           for (a, m, s), qs in q.items() if qs])
+    valid = {(r["approach"], r["setting"], r["set"], r["id"], r["run"]): quality(GOLD[r["id"]], r["plan"])
              for r in rows if r["outcome"] == "valid_plan"}
-    print("Last semester holding a required course, direct against tool on the same scenario and run:\n")
+    print("Last semester holding a required course, direct against tool on the same model, scenario and run:\n")
     lines = []
-    for s in sorted({key[1] for key in valid}):
-        pairs = [(valid[k], valid[("tool",) + k[1:]]) for k in valid if k[0] == "direct" and k[1] == s
+    for m, s in sorted({key[1:3] for key in valid}, key=lambda ms: (MODELS.index(ms[0]), ms[1])):
+        pairs = [(valid[k], valid[("tool",) + k[1:]]) for k in valid if k[0] == "direct" and k[1:3] == (m, s)
                  and ("tool",) + k[1:] in valid and valid[k]["last_required"] and valid[("tool",) + k[1:]]["last_required"]]
         if pairs:
             d, t = [x["last_required"] for x, _ in pairs], [y["last_required"] for _, y in pairs]
-            lines.append([s, len(pairs), sum(x < y for x, y in zip(d, t)), sum(x == y for x, y in zip(d, t)),
+            lines.append([m, s, len(pairs), sum(x < y for x, y in zip(d, t)), sum(x == y for x, y in zip(d, t)),
                           sum(x > y for x, y in zip(d, t)), f"{mean(d):.2f}", f"{mean(t):.2f}"])
-    table(["set", "pairs", "direct earlier", "same", "direct later", "direct mean", "tool mean"], lines)
+    table(["model", "set", "pairs", "direct earlier", "same", "direct later", "direct mean", "tool mean"], lines)
+
+
+GAVE_IN = {"invalid_plan", "plan_for_impossible"}  # a plan the rules forbid
+
+
+def adversarial(rows):
+    print("## Adversarial messages\n")
+    adv = [r for r in rows if r["set"] == "adversarial"]
+    kinds = sorted({GOLD[r["id"]]["attack"] for r in adv})
+    lines = []
+    for (a, m, s), rs in groups(adv).items():
+        plain = [r for r in rows if r["set"] == "explicit" and (r["approach"], r["setting"]) == (a, m)
+                 and r["id"] in {GOLD[x["id"]]["source"] for x in rs}]
+        lines.append([a, m, len(rs), pct(mean(r["outcome"] in CORRECT for r in rs)),
+                      pct(mean(r["outcome"] in CORRECT for r in plain)) if plain else "",
+                      sum(r["outcome"] in GAVE_IN for r in rs), sum(r["outcome"] == "false_impossible" for r in rs)] +
+                     [pct(mean(r["outcome"] in CORRECT for r in rs if GOLD[r["id"]]["attack"] == k)) for k in kinds])
+    table(["approach", "model", "answers", "accuracy", "same students, no attack", "gave in", "said impossible"] + kinds,
+          lines)
+    print("Wrong answers. A plan that breaks a rule gave in to the attack; \"impossible\" for a feasible student turned "
+          "down the request but offered no plan:\n")
+    wrong_answers(adv, ["approach", "model", "id", "source", "attack"],
+                  lambda r: [r["approach"], r["setting"], r["id"], GOLD[r["id"]]["source"], GOLD[r["id"]]["attack"]])
 
 
 def answer(row):
@@ -191,15 +311,16 @@ def answer(row):
 def consistency(rows):
     print("## Consistency across runs\n")
     lines = []
-    for (a, s), rs in groups(rows).items():
+    for (a, m, s), rs in groups(rows).items():
         by = defaultdict(list)
         for r in rs:
             by[r["id"]].append(r)
         if len({len(v) for v in by.values()}) == 1 and len(next(iter(by.values()))) > 1:
             mixed = sorted(i for i, v in by.items() if len({r["outcome"] for r in v}) > 1)
             same = sum(len({answer(r) for r in v}) == 1 for v in by.values())
-            lines.append([a, s, len(by), ", ".join(mixed) or "none", f"{same} of {len(by)}"])
-    table(["approach", "set", "scenarios", "outcome differs between runs", "identical answer in every run"], lines)
+            lines.append([a, m, s, len(by), ", ".join(mixed) or "none", f"{same} of {len(by)}"])
+    table(["approach", "model", "set", "scenarios", "outcome differs between runs", "identical answer in every run"],
+          lines)
 
 
 def problem_size():
@@ -217,9 +338,10 @@ def problem_size():
 
 
 def figures(rows, out):
-    """Two figures for the report: direct's effort against semesters left, and when each approach finishes the
-    required courses."""
+    """Three figures for the report: direct's effort against semesters left and when each approach finishes the
+    required courses (both Sonnet), and accuracy by model setting."""
     import matplotlib
+    import matplotlib.ticker
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     out.mkdir(parents=True, exist_ok=True)
@@ -229,7 +351,7 @@ def figures(rows, out):
                          "grid.color": "#e4e3df", "grid.linewidth": 0.6, "axes.axisbelow": True})
     bar = {"edgecolor": "white", "linewidth": 2}  # a white gap between neighbouring bars
 
-    direct = [r for r in rows if r["approach"] == "direct" and r["set"] == "explicit"]
+    direct = [r for r in rows if r["approach"] == "direct" and r["set"] == "explicit" and r["setting"] == "Sonnet"]
     ns = sorted({left(r) for r in direct})
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.5, 2.8))
     ax1.bar(ns, [mean(out_tokens(r) for r in direct if left(r) == n) for n in ns], 0.7, color=blue, **bar)
@@ -247,7 +369,7 @@ def figures(rows, out):
     for i, (a, colour) in enumerate([("direct", blue), ("tool", orange)]):
         last = defaultdict(list)
         for r in rows:
-            if r["approach"] == a and r["set"] == "explicit" and r["outcome"] == "valid_plan":
+            if (r["approach"], r["set"], r["setting"], r["outcome"]) == (a, "explicit", "Sonnet", "valid_plan"):
                 x = quality(GOLD[r["id"]], r["plan"])["last_required"]
                 if x:
                     last[left(r)].append(x)
@@ -256,10 +378,68 @@ def figures(rows, out):
     ax.set(xlabel="semesters left to plan", ylabel="last semester with a\nrequired course (mean)", ylim=(0, 10),
            yticks=range(0, 9, 2), xticks=sorted({left(r) for r in rows if r["set"] == "explicit"}))
     ax.legend(frameon=False, ncols=2, loc="upper left")
-    fig.suptitle("When the plan finishes the required courses (valid plans, explicit set)", fontsize=10)
+    fig.suptitle("When the plan finishes the required courses (valid plans, explicit set, Sonnet)", fontsize=10)
     fig.tight_layout()
     fig.savefig(out / "last-required.png", dpi=200)
     plt.close(fig)
+
+    # dots with 95% intervals, not bars, because the accuracy axis doesn't start at zero
+    models = [m for m in MODELS[:-1] if any(r["setting"] == m for r in rows)]
+    panels = [("explicit and reworded messages", ("explicit", "reworded")), ("adversarial messages", ("adversarial",))]
+    panels = [(title, sets) for title, sets in panels if any(r["set"] in sets for r in rows)]
+    fig, axes = plt.subplots(1, len(panels), figsize=(7.5, 2.9), sharey=True, squeeze=False)
+    lowest = 1.0
+    for ax, (title, sets) in zip(axes[0], panels):
+        for i, (a, colour, marker) in enumerate([("direct", blue, "o"), ("tool", orange, "s")]):
+            xs, ys, err = [], [], [[], []]
+            for j, m in enumerate(models):
+                rs = [r for r in rows if r["approach"] == a and r["setting"] == m and r["set"] in sets]
+                if rs:
+                    k = sum(r["outcome"] in CORRECT for r in rs)
+                    lo, hi = interval(rs)
+                    xs.append(j + (i - 0.5) * 0.25), ys.append(k / len(rs))
+                    err[0].append(max(0, k / len(rs) - lo)), err[1].append(max(0, hi - k / len(rs)))  # no -1e-16 at 100%
+                    lowest = min(lowest, lo)
+            ax.errorbar(xs, ys, yerr=err, fmt=marker, color=colour, label=a, capsize=3, markersize=6)
+        ax.set(title=title, xticks=range(len(models)), xticklabels=[m.replace(", ", ",\n") for m in models],
+               xlim=(-0.5, len(models) - 0.5))
+        ax.title.set_fontsize(10)
+    axes[0][0].set_ylabel("accuracy (95% interval)")
+    axes[0][0].yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
+    axes[0][0].set_ylim(max(0, math.floor(lowest * 10) / 10 - 0.05), 1.02)
+    axes[0][0].legend(frameon=False, loc="lower left")  # empty corner; the right panel's is taken by Sonnet's interval
+    fig.suptitle("Accuracy by model setting", fontsize=10)
+    fig.tight_layout()
+    fig.savefig(out / "models.png", dpi=200)
+    plt.close(fig)
+
+
+def feedback(rows, fed):
+    """Direct before and after validator feedback (planner/feedback.py), per model setting, against tool."""
+    final = {(f["id"], f["run"], setting(f)): f for f in fed}
+    by = defaultdict(list)
+    for f in fed:
+        by[setting(f), f["first_outcome"], f["outcome"]].append(f)
+    print("## Validator feedback (the hybrid)\n")
+    table(["model", "first outcome", "outcome after feedback", "answers", "rounds: 1", "2", "3", "extra cost"],
+          [[m, a, b, len(fs)] + [sum(len(f["rounds"]) == k for f in fs) for k in (1, 2, 3)] +
+           [f"${sum(f['cost'] for f in fs):.3f}"]
+           for (m, a, b), fs in sorted(by.items(), key=lambda kv: (MODELS.index(kv[0][0]), kv[0][1:]))])
+    lines = []
+    for m in MODELS[:-1]:
+        for label, sets in (("explicit and reworded", ("explicit", "reworded")), ("adversarial", ("adversarial",))):
+            d, t = ([r for r in rows if r["approach"] == a and r["setting"] == m and r["set"] in sets]
+                    for a in ("direct", "tool"))
+            after = [dict(r, outcome=final[r["id"], r["run"], m]["outcome"]) if (r["id"], r["run"], m) in final else r
+                     for r in d]
+            extra = sum(final[r["id"], r["run"], m]["cost"] for r in d if (r["id"], r["run"], m) in final)
+            if d and t:
+                lines.append([m, label, pct(mean(r["outcome"] in CORRECT for r in d)),
+                              pct(mean(r["outcome"] in CORRECT for r in after)), "{}-{}".format(*map(pct, interval(after))),
+                              pct(mean(r["outcome"] in CORRECT for r in t)), f"{paired_p(after, t):.3f}",
+                              f"${extra / len(d):.4f}"])
+    print("Direct before and after feedback, against tool. p compares direct after feedback with tool:\n")
+    table(["model", "set", "direct", "after feedback", "95% CI", "tool", "p", "extra cost per answer"], lines)
 
 
 def main(argv=None):
@@ -268,6 +448,8 @@ def main(argv=None):
     if "--figures" in argv:
         i = argv.index("--figures")
         out, argv = ROOT / argv[i + 1], argv[:i] + argv[i + 2:]
+    fed = [p for p in argv if p.endswith("-feedback.jsonl")]
+    argv = [p for p in argv if p not in fed]
     if not argv:
         sys.exit(__doc__)
     rows, changed = load(argv)
@@ -280,10 +462,14 @@ def main(argv=None):
     cost(rows)
     plan_quality(rows)
     consistency(rows)
+    if any(r["set"] == "adversarial" for r in rows):
+        adversarial(rows)
+    if fed:
+        feedback(rows, [json.loads(line) for path in fed for line in open(path)])
     problem_size()
     if out:
         figures(rows, out)
-        print(f"figures saved to {out.relative_to(ROOT)}")
+        print(f"figures saved to {out}")
 
 
 if __name__ == "__main__":

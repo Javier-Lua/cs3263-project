@@ -46,3 +46,20 @@ def test_a_translation_that_crashes_the_solver_is_no_answer(monkeypatch):
     assert plan is None and "current_semester" in extra["solver_error"]
     assert extra["wrong_fields"] == ["current_semester"]
     assert run.score(entry, plan) == ([], "no_answer")
+
+
+def test_model_options_name_the_file_and_are_logged(tmp_path, monkeypatch):
+    def fake_direct(text):  # one free "call", so the row records the model
+        run.llm.CALLS.append({"reply": "", "usage": dict.fromkeys(run.llm.PRICES["claude-haiku-5-5"], 0),
+                              "stop_reason": "end_turn"})
+        return {"status": "impossible"}
+
+    monkeypatch.setattr(run.llm, "MODEL", run.llm.MODEL)  # restored after the test
+    monkeypatch.setattr(run.llm, "THINKING", run.llm.THINKING)
+    monkeypatch.setattr(run, "ROOT", tmp_path)
+    monkeypatch.setattr(run, "plan_direct", fake_direct)
+    run.main(["direct", "examples", "1", "--model", "claude-haiku-5-5", "--no-thinking"])
+    (path,) = (tmp_path / "results").iterdir()
+    assert path.name.endswith("-direct-haiku-nothink.jsonl")
+    row = json.loads(path.read_text().splitlines()[0])
+    assert (row["model"], row["thinking"]) == ("claude-haiku-5-5", False)
